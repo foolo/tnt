@@ -11,6 +11,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import util.MessageBox;
 import util.XmlUtil;
@@ -86,7 +87,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 		// todo handle multiple files
 		FileTag fileTag = xliffFile.getFiles().get(0);
-		undoManager = new UndoManager(new UndoableState(fileTag, 0, 0), this);
+		undoManager = new UndoManager(new UndoableState(fileTag, new CaretPosition(0, CaretPosition.Column.SOURCE, 0)), this);
 		notify_undo(0); // todo add wrapper called update_model
 
 		// todo move to init, need to set undo manager

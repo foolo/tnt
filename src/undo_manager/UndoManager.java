@@ -26,7 +26,7 @@ public class UndoManager {
 	}
 
 	public final void save() {
-		System.out.println("SAVE " + currentState.item_index);
+		System.out.println("SAVE " + currentState.getPosition().getItemIndex());
 		if (currentState.getModel().isModified()) {
 			push_snapshot();
 		}
@@ -34,7 +34,7 @@ public class UndoManager {
 
 	void print_buffer() {
 		for (UndoableState s : undoBuffer) {
-			System.out.println("> " + s.item_index);
+			System.out.println("> " + s.getPosition().getItemIndex());
 		}
 	}
 	
@@ -51,14 +51,14 @@ public class UndoManager {
 		
 		if (currentState.getModel().isModified() == false) {
 			System.out.println("nothing is modified, jump to previous index");
-			newEditingIndex = undoBuffer.peek().getItemIndex();
+			newEditingIndex = undoBuffer.peek().getPosition().getItemIndex();
 			if (undoBuffer.size() >= 2) {
 				undoBuffer.pop();
 			}
 		}
 		else {
 			System.out.println("undoing current state");
-			newEditingIndex = currentState.item_index;
+			newEditingIndex = currentState.getPosition().getItemIndex();
 		}
 		System.out.println("new item index: " + newEditingIndex);
 		currentState = undoBuffer.peek().copy();

@@ -4,6 +4,7 @@ import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import undo_manager.CaretPosition;
 import undo_manager.UndoManager;
 import xliff_model.SegmentTag;
 
@@ -14,22 +15,19 @@ public class SegmentView extends javax.swing.JPanel {
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			segmentTag.setSourceText(jTextPaneSource.getText());
-			undoManager.getCurrentState().setTextPosition(jTextPaneSource.getCaretPosition());
-			undoManager.getCurrentState().setItemIndex(item_index);
+			undoManager.getCurrentState().setPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
 		}
 		
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			segmentTag.setSourceText(jTextPaneSource.getText());
-			undoManager.getCurrentState().setTextPosition(jTextPaneSource.getCaretPosition());
-			undoManager.getCurrentState().setItemIndex(item_index);
+			undoManager.getCurrentState().setPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
 		}
 		
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			segmentTag.setSourceText(jTextPaneSource.getText());
-			undoManager.getCurrentState().setTextPosition(jTextPaneSource.getCaretPosition());
-			undoManager.getCurrentState().setItemIndex(item_index);
+			undoManager.getCurrentState().setPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
 		}
 	};
 	
@@ -38,22 +36,19 @@ public class SegmentView extends javax.swing.JPanel {
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			segmentTag.setTargetText(jTextPaneTarget.getText());
-			undoManager.getCurrentState().setTextPosition(jTextPaneTarget.getCaretPosition());
-			undoManager.getCurrentState().setItemIndex(item_index);
+			undoManager.getCurrentState().setPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneTarget.getCaretPosition()));
 		}
 		
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			segmentTag.setTargetText(jTextPaneTarget.getText());
-			undoManager.getCurrentState().setTextPosition(jTextPaneTarget.getCaretPosition());
-			undoManager.getCurrentState().setItemIndex(item_index);
+			undoManager.getCurrentState().setPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneTarget.getCaretPosition()));
 		}
 		
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			segmentTag.setTargetText(jTextPaneTarget.getText());
-			undoManager.getCurrentState().setTextPosition(jTextPaneTarget.getCaretPosition());
-			undoManager.getCurrentState().setItemIndex(item_index);
+			undoManager.getCurrentState().setPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneTarget.getCaretPosition()));
 		}
 	};
 	
