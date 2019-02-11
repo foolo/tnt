@@ -6,7 +6,4 @@ public interface Item {
 	ArrayList<SegmentTag> getSegmentsArray();
 	
 	Item copy();
-	
-	boolean isModified();
-	void clearModified();
 }

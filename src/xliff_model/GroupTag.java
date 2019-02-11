@@ -48,21 +48,4 @@ public class GroupTag implements Item {
 	public Item copy() {
 		return new GroupTag(this);
 	}
-
-	@Override
-	public boolean isModified() {
-		for (Item i : items) {
-			if (i.isModified()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public void clearModified() {
-		for (Item i : items) {
-			i.clearModified();
-		}
-	}
 }

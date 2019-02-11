@@ -44,21 +44,4 @@ public class UnitTag implements Item {
 	public Item copy() {
 		return new UnitTag(this);
 	}
-
-	@Override
-	public boolean isModified() {
-		for (SegmentTag st : segments) {
-			if (st.isModified()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public void clearModified() {
-		for (SegmentTag st : segments) {
-			st.clearModified();
-		}
-	}
 }

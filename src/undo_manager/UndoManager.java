@@ -20,14 +20,14 @@ public class UndoManager {
 	final void push_snapshot() {
 		System.out.println("PUSH");
 		undoBuffer.push(currentState.copy());
-		currentState.getModel().clearModified();
-		System.out.println("is mod: " + currentState.getModel().isModified());
+		currentState.clearModified();
+		System.out.println("is mod: " + currentState.isModified());
 		print_buffer();
 	}
 
 	public final void save() {
 		System.out.println("SAVE " + currentState.getPosition().getItemIndex());
-		if (currentState.getModel().isModified()) {
+		if (currentState.isModified()) {
 			push_snapshot();
 		}
 	}
@@ -49,7 +49,7 @@ public class UndoManager {
 
 		int newEditingIndex = -1;
 		
-		if (currentState.getModel().isModified() == false) {
+		if (currentState.isModified() == false) {
 			System.out.println("nothing is modified, jump to previous index");
 			newEditingIndex = undoBuffer.peek().getPosition().getItemIndex();
 			if (undoBuffer.size() >= 2) {

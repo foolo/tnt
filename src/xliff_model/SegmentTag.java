@@ -8,7 +8,6 @@ public class SegmentTag {
 
 	String source;
 	String target;
-	boolean modified = false;
 
 	public SegmentTag(Node node) throws InvalidXliffFormatException {
 		for (Node n : new NodeArray(node.getChildNodes())) {
@@ -55,19 +54,9 @@ public class SegmentTag {
 
 	public void setSourceText(String s) {
 		source = s;
-		modified = true;
 	}
 
 	public void setTargetText(String s) {
 		target = s;
-		modified = true;
-	}
-	
-	public boolean isModified() {
-		return modified;
-	}
-	
-	void clearModified() {
-		modified = false;
 	}
 }

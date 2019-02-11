@@ -45,23 +45,6 @@ public class FileTag implements UndoableModel {
 	}
 
 	@Override
-	public boolean isModified() {
-		for (Item i : items) {
-			if (i.isModified()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public void clearModified() {
-		for (Item i : items) {
-			i.clearModified();
-		}
-	}
-
-	@Override
 	public UndoableModel copy() {
 		return new FileTag(this);
 	}
