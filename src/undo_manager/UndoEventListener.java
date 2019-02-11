@@ -2,7 +2,7 @@ package undo_manager;
 
 public interface UndoEventListener {
 
-	void notify_undo(int new_editing_index);
+	void notify_undo(CaretPosition newEditingPosition);
 
 	void stop_editing();
 }

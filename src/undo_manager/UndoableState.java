@@ -3,12 +3,20 @@ package undo_manager;
 public class UndoableState {
 
 	UndoableModel model;
-	private CaretPosition position;
+	private CaretPosition startPosition = null;
+	private CaretPosition endPosition = null;
 	boolean modified = false;
+	UndoManager undoManager;
 
-	public UndoableState(UndoableModel model, CaretPosition position) {
+	public UndoableState(UndoableModel model, UndoManager undoManager) {
 		this.model = model;
-		this.position = position;
+		this.undoManager = undoManager;
+	}
+	public UndoableState(UndoableModel model, CaretPosition startPosition, CaretPosition endPosition, UndoManager undoManager) {
+		this.model = model;
+		this.startPosition = startPosition;
+		this.endPosition = startPosition;
+		this.undoManager = undoManager;
 	}
 
 	public UndoableModel getModel() {
@@ -16,16 +24,27 @@ public class UndoableState {
 	}
 
 	public UndoableState copy() {
-		return new UndoableState(model.copy(), position.copy());
+		return new UndoableState(model.copy(), startPosition.copy(), endPosition.copy(), undoManager);
 	}
 
 	public void setModified(CaretPosition position) {
-		modified = true;
-		this.position = position;
+		if (!modified) {
+			startPosition = undoManager.getCaretPosition().copy();
+			modified = true;
+		}
+		this.endPosition = position;
 	}
 
-	public CaretPosition getPosition() {
-		return position;
+	public void setPosition(CaretPosition position) {
+		this.endPosition = position;
+	}
+
+	public CaretPosition getEndPosition() {
+		return endPosition;
+	}
+	
+	public CaretPosition getStartPosition() {
+		return startPosition;
 	}
 
 	public boolean isModified() {

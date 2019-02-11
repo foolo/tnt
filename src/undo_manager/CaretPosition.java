@@ -6,9 +6,9 @@ public class CaretPosition {
 		SOURCE, TARGET
 	}
 
-	private int item_index;
-	private Column column;
-	private int text_position;
+	private final int item_index;
+	private final Column column;
+	private final int text_position;
 
 	public CaretPosition(int item_index, Column column, int text_position) {
 		this.item_index = item_index;
@@ -16,12 +16,25 @@ public class CaretPosition {
 		this.column = column;
 	}
 
+	// todo coule be immutable, no need for copy
 	public CaretPosition copy() {
 		return new CaretPosition(item_index, column, text_position);
 	}
-	
-	int getItemIndex() {
+
+	public int getItemIndex() {
 		return item_index;
 	}
-	
+
+	public Column getColumn() {
+		return column;
+	}
+
+	public int getTextPosition() {
+		return text_position;
+	}
+
+	@Override
+	public String toString() {
+		return "#" + item_index + ", " + column + ", " + text_position;
+	}
 }

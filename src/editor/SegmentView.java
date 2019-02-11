@@ -9,98 +9,110 @@ import undo_manager.UndoManager;
 import xliff_model.SegmentTag;
 
 public class SegmentView extends javax.swing.JPanel {
-	
+
 	DocumentListener sourceDocumentListener = new DocumentListener() {
-		
+
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			segmentTag.setSourceText(jTextPaneSource.getText());
 			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
 		}
-		
+
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			segmentTag.setSourceText(jTextPaneSource.getText());
 			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
 		}
-		
+
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			segmentTag.setSourceText(jTextPaneSource.getText());
 			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
 		}
 	};
-	
+
 	DocumentListener targetDocumentListener = new DocumentListener() {
-		
+
 		@Override
 		public void insertUpdate(DocumentEvent e) {
 			segmentTag.setTargetText(jTextPaneTarget.getText());
 			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition()));
 		}
-		
+
 		@Override
 		public void removeUpdate(DocumentEvent e) {
 			segmentTag.setTargetText(jTextPaneTarget.getText());
 			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition()));
 		}
-		
+
 		@Override
 		public void changedUpdate(DocumentEvent e) {
 			segmentTag.setTargetText(jTextPaneTarget.getText());
 			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition()));
 		}
 	};
-	
+
 	SegmentTag segmentTag;
 	int item_index;
-	
+
 	UndoManager undoManager = null;
-	
+
 	public SegmentView() {
 		initComponents();
 	}
-	
+
 	SegmentView(UndoManager undoManager) {
 		initComponents();
 		this.undoManager = undoManager;
 	}
+
 	public void setSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
 		jTextPaneSource.setText(segmentTag.getSourceText());
 		jTextPaneTarget.setText(segmentTag.getTargetText());
 		item_index = -1;
 	}
+
 	public void setSegmentTag(SegmentTag segmentTag, int item_index) {
 		System.out.println("editor.SegmentView.setSegmentTag()");
 		setSegmentTag(segmentTag);
 		//undoManager.getCurrentState().setItemIndex(item_index);
 		this.item_index = item_index;
 	}
-	
+
 	public SegmentTag getSegmentTag() {
 		return segmentTag;
 	}
-	
+
 	public void registerListeners() {
 		jTextPaneSource.getDocument().addDocumentListener(sourceDocumentListener);
 		jTextPaneTarget.getDocument().addDocumentListener(targetDocumentListener);
 	}
-	
+
 	public void unregisterListeners() {
 		jTextPaneSource.getDocument().removeDocumentListener(sourceDocumentListener);
-		jTextPaneSource.getDocument().removeDocumentListener(targetDocumentListener);
+		jTextPaneTarget.getDocument().removeDocumentListener(targetDocumentListener);
 	}
-	
-	public void setTextPosition(boolean source, int position) {
-		if (source) {
-			jTextPaneTarget.setCaretPosition(position);
+
+	public void setTextPosition(CaretPosition.Column column, int position) {
+		if (column == CaretPosition.Column.SOURCE) {
+			jTextPaneSource.setCaretPosition(position);
+			jTextPaneSource.grabFocus();
 		}
 		else {
-			jTextPaneSource.setCaretPosition(position);
+			jTextPaneTarget.setCaretPosition(position);
+			jTextPaneTarget.grabFocus();
 		}
 	}
-	
+
+	void handleKeyPress(KeyEvent evt) {
+		boolean ctrl = evt.getModifiers() == CTRL_MASK;
+		boolean z = evt.getKeyCode() == KeyEvent.VK_Z;
+		if (ctrl && z) {
+			undoManager.undo();
+		}
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -116,9 +128,6 @@ public class SegmentView extends javax.swing.JPanel {
             }
         });
         jTextPaneSource.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextPaneSourceKeyTyped(evt);
-            }
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextPaneSourceKeyPressed(evt);
             }
@@ -126,6 +135,16 @@ public class SegmentView extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTextPaneSource);
         jTextPaneSource.getAccessibleContext().setAccessibleName("");
 
+        jTextPaneTarget.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTextPaneTargetFocusGained(evt);
+            }
+        });
+        jTextPaneTarget.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextPaneTargetKeyPressed(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTextPaneTarget);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -150,23 +169,23 @@ public class SegmentView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextPaneSourceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneSourceKeyTyped
-    }//GEN-LAST:event_jTextPaneSourceKeyTyped
-
     private void jTextPaneSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneSourceKeyPressed
-		boolean ctrl = evt.getModifiers() == CTRL_MASK;
-		boolean z = evt.getKeyCode() == KeyEvent.VK_Z;
-		if (ctrl && z) {
-			undoManager.undo();
-		}
+		handleKeyPress(evt);
     }//GEN-LAST:event_jTextPaneSourceKeyPressed
 
     private void jTextPaneSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneSourceFocusGained
-        // TODO add your handling code here:
-		System.out.println("editor.SegmentView.jTextPaneSourceFocusGained()");
-		//undoManager.getCurrentState().setItemIndex(WIDTH);
 		undoManager.save();
+		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition()));
     }//GEN-LAST:event_jTextPaneSourceFocusGained
+
+    private void jTextPaneTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneTargetFocusGained
+		undoManager.save();
+		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition()));
+    }//GEN-LAST:event_jTextPaneTargetFocusGained
+
+    private void jTextPaneTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneTargetKeyPressed
+		handleKeyPress(evt);
+    }//GEN-LAST:event_jTextPaneTargetKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

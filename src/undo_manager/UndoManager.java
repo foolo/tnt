@@ -10,7 +10,12 @@ public class UndoManager {
 
 	UndoEventListener listener;
 
-	public UndoManager(UndoableState currentState, UndoEventListener listener) {
+	CaretPosition caretPosition;
+
+	public UndoManager() {
+	}
+
+	public void initialize(UndoableState currentState, UndoEventListener listener) {
 		this.currentState = currentState;
 		this.listener = listener;
 		//this.listener.notify_undo();
@@ -26,7 +31,6 @@ public class UndoManager {
 	}
 
 	public final void save() {
-		System.out.println("SAVE " + currentState.getPosition().getItemIndex());
 		if (currentState.isModified()) {
 			push_snapshot();
 		}
@@ -34,10 +38,10 @@ public class UndoManager {
 
 	void print_buffer() {
 		for (UndoableState s : undoBuffer) {
-			System.out.println("> " + s.getPosition().getItemIndex());
+			System.out.println("> start " + s.getStartPosition() + ", end: " + s.getEndPosition());
 		}
 	}
-	
+
 	public void undo() {
 		System.out.println("UNDO");
 		print_buffer();
@@ -47,25 +51,33 @@ public class UndoManager {
 		}
 		//listener.stop_editing();
 
-		int newEditingIndex = -1;
-		
+		CaretPosition newEditingPosition = null;
+
 		if (currentState.isModified() == false) {
 			System.out.println("nothing is modified, jump to previous index");
-			newEditingIndex = undoBuffer.peek().getPosition().getItemIndex();
+			newEditingPosition = undoBuffer.peek().getStartPosition().copy();
 			if (undoBuffer.size() >= 2) {
 				undoBuffer.pop();
 			}
 		}
 		else {
 			System.out.println("undoing current state");
-			newEditingIndex = currentState.getPosition().getItemIndex();
+			newEditingPosition = currentState.getStartPosition().copy();
 		}
-		System.out.println("new item index: " + newEditingIndex);
-		currentState = undoBuffer.peek().copy();
-		listener.notify_undo(newEditingIndex);
+		System.out.println("new item index: " + newEditingPosition);
+		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
+		listener.notify_undo(newEditingPosition);
 	}
-	
+
 	public UndoableState getCurrentState() {
 		return currentState;
+	}
+
+	public void setCaretPosition(CaretPosition position) {
+		caretPosition = position;
+	}
+
+	public CaretPosition getCaretPosition() {
+		return caretPosition;
 	}
 }

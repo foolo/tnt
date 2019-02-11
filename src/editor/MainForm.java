@@ -22,55 +22,58 @@ import undo_manager.UndoableState;
 import xliff_model.SegmentTag;
 
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
-	
+
 	public MainForm() {
 		initComponents();
-		
+
 		segmentTableModel.addTableModelListener(new TableModelListener() {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				System.out.println(".tableChanged() " + e);
 			}
 		});
-		
+
 	}
-	
+
 	UndoManager undoManager;
 	SegmentTableModel segmentTableModel = new SegmentTableModel();
-	
+
 	@Override
-	public void notify_undo(int newEditingRow) {
+	public void notify_undo(CaretPosition newEditingPosition) {
 		//FileTag fileTag = (FileTag) undoManager.getCurrentState().getModel();
 		FileTag fileTag = (FileTag) undoManager.getCurrentState().getModel();
 		segmentTableModel.loadSegments(fileTag.getSegmentsArray());
 		segmentTableModel.fireTableDataChanged();
-		
+
 		if (jTable1.isEditing()) {
 			int currentEditingRow = jTable1.getEditingRow();
 			//int newEditingRow = undoManager.getCurrentState().getItemIndex();
-			if (newEditingRow != currentEditingRow) {
+			if (newEditingPosition.getItemIndex() != currentEditingRow) {
 				jTable1.getCellEditor().stopCellEditing();
-				
+
 				EventQueue.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						jTable1.editCellAt(newEditingRow, 0);
+						jTable1.editCellAt(newEditingPosition.getItemIndex(), 0);
 						jTable1.transferFocus();
+						Component c = jTable1.getEditorComponent();
+						SegmentView segmentView = (SegmentView) c;
+						segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
 					}
 				});
-
 			}
 			else {
 				Component c = jTable1.getEditorComponent();
 				SegmentView segmentView = (SegmentView) c;
-				SegmentTag segmentTag = (SegmentTag) segmentTableModel.getValueAt(newEditingRow, 0);
+				SegmentTag segmentTag = (SegmentTag) segmentTableModel.getValueAt(newEditingPosition.getItemIndex(), 0);
 				segmentView.unregisterListeners(); // todo possible to move to SegmentView.setSegmentTag ?
-				segmentView.setSegmentTag(segmentTag, newEditingRow);
+				segmentView.setSegmentTag(segmentTag, newEditingPosition.getItemIndex());
 				segmentView.registerListeners(); // todo possible to move to SegmentView.setSegmentTag ?*/
+				segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
 			}
 		}
 	}
-	
+
 	@Override
 	public void stop_editing() {
 		TableCellEditor tableCellEditor = jTable1.getCellEditor();
@@ -78,7 +81,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			tableCellEditor.stopCellEditing();
 		}
 	}
-	
+
 	public void load_file(File f) throws InvalidXliffFormatException {
 		Document doc = XmlUtil.read_xml(f);
 		Node root = doc.getDocumentElement();
@@ -87,8 +90,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 		// todo handle multiple files
 		FileTag fileTag = xliffFile.getFiles().get(0);
-		undoManager = new UndoManager(new UndoableState(fileTag, new CaretPosition(0, CaretPosition.Column.SOURCE, 0)), this);
-		notify_undo(0); // todo add wrapper called update_model
+		undoManager = new UndoManager();
+		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0);
+		undoManager.initialize(new UndoableState(fileTag, pos.copy(), pos.copy(), undoManager), this);
+		notify_undo(new CaretPosition(0, CaretPosition.Column.SOURCE, 0)); // todo add wrapper called update_model
 
 		// todo move to init, need to set undo manager
 		jTable1.setModel(segmentTableModel);
@@ -96,7 +101,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		col.setCellEditor(new SegmentCellEditor(undoManager));
 		col.setCellRenderer(new SegmentCellRenderer());
 	}
-	
+
 	public void menu_open() {
 		// todo close current file
 		JFileChooser fc = new JFileChooser();
@@ -112,7 +117,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			MessageBox.error(ex.getMessage());
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
