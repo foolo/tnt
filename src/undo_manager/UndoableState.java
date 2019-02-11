@@ -35,7 +35,7 @@ public class UndoableState {
 		this.endPosition = position;
 	}
 
-	public void setPosition(CaretPosition position) {
+	public void setEndPosition(CaretPosition position) {
 		this.endPosition = position;
 	}
 

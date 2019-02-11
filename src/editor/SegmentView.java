@@ -76,7 +76,6 @@ public class SegmentView extends javax.swing.JPanel {
 	public void setSegmentTag(SegmentTag segmentTag, int item_index) {
 		System.out.println("editor.SegmentView.setSegmentTag()");
 		setSegmentTag(segmentTag);
-		//undoManager.getCurrentState().setItemIndex(item_index);
 		this.item_index = item_index;
 	}
 

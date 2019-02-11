@@ -49,7 +49,6 @@ public class UndoManager {
 			System.out.println("undo buffer empty");
 			return;
 		}
-		//listener.stop_editing();
 
 		CaretPosition newEditingPosition = null;
 
