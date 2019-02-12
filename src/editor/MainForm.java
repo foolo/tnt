@@ -32,7 +32,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	void populate_segments(FileTag fileTag) {
 		for (SegmentTag s : fileTag.getSegmentsArray()) {
-			System.out.println("editor.MainForm.populate_segments()");
 			jPanelItems.add(new SegmentView(undoManager));
 		}
 	}
