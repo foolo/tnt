@@ -1,6 +1,7 @@
 package xliff_model;
 
 import org.w3c.dom.Node;
+import undo_manager.CaretPosition;
 import util.Log;
 import util.NodeArray;
 
@@ -8,8 +9,10 @@ public class SegmentTag {
 
 	String source;
 	String target;
+	UnitTag parent;
 
-	public SegmentTag(Node node) throws InvalidXliffFormatException {
+	public SegmentTag(Node node, UnitTag parent) throws InvalidXliffFormatException {
+		this.parent = parent;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <segment>");
@@ -36,9 +39,10 @@ public class SegmentTag {
 		}
 	}
 
-	public SegmentTag(SegmentTag st) {
+	public SegmentTag(SegmentTag st, UnitTag parent) {
 		source = st.source;
 		target = st.target;
+		this.parent = parent;
 	}
 
 	public String getSourceText() {
@@ -52,11 +56,27 @@ public class SegmentTag {
 		return "";
 	}
 
+	public UnitTag getParent() {
+		return parent;
+	}
+
 	public void setSourceText(String s) {
 		source = s;
 	}
 
 	public void setTargetText(String s) {
 		target = s;
+	}
+
+	public SegmentTag split(CaretPosition pos) {
+		SegmentTag newSegmentTag = new SegmentTag(this, this.parent);
+		// todo create new node for new segment
+		String src0 = source.substring(0, pos.getTextPosition());
+		String src1 = source.substring(pos.getTextPosition(), source.length());
+
+		source = src0;
+		newSegmentTag.source = src1;
+		newSegmentTag.target = "";
+		return newSegmentTag;
 	}
 }

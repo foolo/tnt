@@ -1,15 +1,10 @@
 package editor;
 
 import java.awt.Component;
-import java.awt.EventQueue;
 import undo_manager.UndoManager;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import undo_manager.CaretPosition;
@@ -21,6 +16,7 @@ import xliff_model.InvalidXliffFormatException;
 import xliff_model.XliffTag;
 import undo_manager.UndoableState;
 import xliff_model.SegmentTag;
+import xliff_model.UnitTag;
 
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
@@ -30,8 +26,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	UndoManager undoManager;
 
-	void populate_segments(FileTag fileTag) {
-		for (SegmentTag s : fileTag.getSegmentsArray()) {
+	void populate_segments(ArrayList<SegmentTag> segments) {
+		for (SegmentTag s : segments) {
 			jPanelItems.add(new SegmentView(undoManager));
 		}
 	}
@@ -75,9 +71,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		// todo handle multiple files
 		FileTag fileTag = xliffFile.getFiles().get(0);
 		undoManager = new UndoManager();
-		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0);
+		ArrayList<SegmentTag> segments = fileTag.getSegmentsArray();
+		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0, segments.get(0));
 		undoManager.initialize(new UndoableState(fileTag, pos.copy(), pos.copy(), undoManager), this);
-		populate_segments(fileTag);
+		populate_segments(segments);
 		update_model();
 	}
 
@@ -107,6 +104,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenu1 = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -126,6 +124,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        jMenuItem1.setText("Split at current position");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -140,7 +147,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
         );
 
         pack();
@@ -150,10 +157,29 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		menu_open();
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+		CaretPosition p = undoManager.getCaretPosition();
+		if (p.getColumn() != CaretPosition.Column.SOURCE) {
+			System.err.println("can only split when caret is in source column");
+			return;
+		}
+		System.out.println("current pos: " + p);
+		UnitTag unitTag = p.getSegmentTag().getParent();
+		CaretPosition newPosition = unitTag.split(p);
+		if (newPosition == null) {
+			System.err.println("split failed");
+			return;
+		}
+		undoManager.getCurrentState().setModified(newPosition);
+		undoManager.save();
+		update_model();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane2;

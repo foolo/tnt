@@ -2,9 +2,9 @@ package xliff_model;
 
 import java.util.ArrayList;
 import org.w3c.dom.Node;
+import undo_manager.CaretPosition;
 import util.Log;
 import util.NodeArray;
-import util.XmlUtil;
 
 public class UnitTag implements Item {
 
@@ -17,7 +17,7 @@ public class UnitTag implements Item {
 				continue;
 			}
 			if (n.getNodeName().equals("segment")) {
-				SegmentTag segmentObj = new SegmentTag(n);
+				SegmentTag segmentObj = new SegmentTag(n, this);
 				segments.add(segmentObj);
 			}
 			else {
@@ -31,8 +31,20 @@ public class UnitTag implements Item {
 
 	UnitTag(UnitTag ut) {
 		for (SegmentTag s : ut.segments) {
-			segments.add(new SegmentTag(s));
+			segments.add(new SegmentTag(s, this));
 		}
+	}
+
+	public CaretPosition split(CaretPosition pos) {
+		SegmentTag segmentTag = pos.getSegmentTag();
+		int index = segments.indexOf(segmentTag);
+		if (index < 0) {
+			System.out.println("segment tag not found in unit");
+			return null;
+		}
+		SegmentTag newSegmentTag = segmentTag.split(pos);
+		segments.add(index + 1, newSegmentTag);
+		return new CaretPosition(pos.getItemIndex(), CaretPosition.Column.SOURCE, newSegmentTag.getSourceText().length(), newSegmentTag);
 	}
 
 	@Override
