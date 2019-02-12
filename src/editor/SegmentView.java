@@ -66,17 +66,13 @@ public class SegmentView extends javax.swing.JPanel {
 		this.undoManager = undoManager;
 	}
 
-	public void setSegmentTag(SegmentTag segmentTag) {
+	public void setSegmentTag(SegmentTag segmentTag, int item_index) {
 		this.segmentTag = segmentTag;
+		this.item_index = item_index;
+		unregisterListeners();
 		jTextPaneSource.setText(segmentTag.getSourceText());
 		jTextPaneTarget.setText(segmentTag.getTargetText());
-		item_index = -1;
-	}
-
-	public void setSegmentTag(SegmentTag segmentTag, int item_index) {
-		System.out.println("editor.SegmentView.setSegmentTag()");
-		setSegmentTag(segmentTag);
-		this.item_index = item_index;
+		registerListeners();
 	}
 
 	public SegmentTag getSegmentTag() {
