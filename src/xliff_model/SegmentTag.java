@@ -4,15 +4,18 @@ import org.w3c.dom.Node;
 import undo_manager.CaretPosition;
 import util.Log;
 import util.NodeArray;
+import util.XmlUtil;
 
 public class SegmentTag {
 
 	String source;
 	String target;
 	UnitTag parent;
+	private Node node;
 
 	public SegmentTag(Node node, UnitTag parent) throws InvalidXliffFormatException {
 		this.parent = parent;
+		this.node = node;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <segment>");
@@ -43,6 +46,14 @@ public class SegmentTag {
 		source = st.source;
 		target = st.target;
 		this.parent = parent;
+		node = st.node;
+	}
+
+	public SegmentTag(String source, String target, UnitTag parent, Node node) {
+		this.source = source;
+		this.target = target;
+		this.parent = parent;
+		this.node = node;
 	}
 
 	public String getSourceText() {
@@ -60,6 +71,10 @@ public class SegmentTag {
 		return parent;
 	}
 
+	public Node getNode() {
+		return node;
+	}
+
 	public void setSourceText(String s) {
 		source = s;
 	}
@@ -69,14 +84,27 @@ public class SegmentTag {
 	}
 
 	public SegmentTag split(CaretPosition pos) {
-		SegmentTag newSegmentTag = new SegmentTag(this, this.parent);
-		// todo create new node for new segment
 		String src0 = source.substring(0, pos.getTextPosition());
 		String src1 = source.substring(pos.getTextPosition(), source.length());
-
 		source = src0;
-		newSegmentTag.source = src1;
-		newSegmentTag.target = "";
-		return newSegmentTag;
+		return new SegmentTag(src1, "", this.parent, node.cloneNode(true));
+	}
+
+	public void save() {
+		for (Node n : new NodeArray(node.getChildNodes())) {
+			if (n.getNodeName().equals("source")) {
+				System.out.println("set source: " + source);
+				
+				System.out.println(XmlUtil.getNodeString(n));
+				System.out.println(n.getNodeValue());
+				System.out.println(n.getTextContent());
+				
+				n.setTextContent(source);
+			}
+			else if (n.getNodeName().equals("target")) {
+				System.out.println("set target: " + target);
+				n.setTextContent(target);
+			}
+		}
 	}
 }

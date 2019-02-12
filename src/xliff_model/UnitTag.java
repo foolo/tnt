@@ -2,6 +2,7 @@ package xliff_model;
 
 import java.util.ArrayList;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import undo_manager.CaretPosition;
 import util.Log;
 import util.NodeArray;
@@ -9,8 +10,10 @@ import util.NodeArray;
 public class UnitTag implements Item {
 
 	ArrayList<SegmentTag> segments = new ArrayList<>();
+	Node node;
 
 	UnitTag(Node node) throws InvalidXliffFormatException {
+		this.node = node;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <unit>");
@@ -30,6 +33,7 @@ public class UnitTag implements Item {
 	}
 
 	UnitTag(UnitTag ut) {
+		node = ut.node;
 		for (SegmentTag s : ut.segments) {
 			segments.add(new SegmentTag(s, this));
 		}
@@ -55,5 +59,37 @@ public class UnitTag implements Item {
 	@Override
 	public Item copy() {
 		return new UnitTag(this);
+	}
+
+	Node findNode(Node n) {
+		NodeList childNodes = node.getChildNodes();
+		for (int i = 0; i < childNodes.getLength(); i++) {
+			return childNodes.item(i);
+		}
+		return null;
+	}
+
+	void insertAfter(Node newNode, Node refNode) {
+		node.insertBefore(newNode, refNode.getNextSibling());
+	}
+
+	@Override
+	public void save() {
+		for (SegmentTag st : segments) {
+			st.save();
+		}
+		Node lastFoundNode = null;
+		for (int i = 0; i < segments.size(); i++) {
+			SegmentTag st = segments.get(i);
+			Node n = st.getNode();
+			Node foundNode = findNode(n);
+			if (foundNode != null) {
+				lastFoundNode = foundNode;
+			}
+			else {
+				insertAfter(n, lastFoundNode);
+			}
+		}
+		// todo remove removed segments
 	}
 }

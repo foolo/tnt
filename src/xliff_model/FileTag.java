@@ -9,8 +9,10 @@ import undo_manager.UndoableModel;
 public class FileTag implements UndoableModel {
 
 	ArrayList<Item> items = new ArrayList<>();
+	Node node;
 
 	public FileTag(Node node) throws InvalidXliffFormatException {
+		this.node = node;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <file>");
@@ -47,5 +49,11 @@ public class FileTag implements UndoableModel {
 	@Override
 	public UndoableModel copy() {
 		return new FileTag(this);
+	}
+	
+	void save() {
+		for (Item i : items) {
+			i.save();
+		}
 	}
 }

@@ -16,7 +16,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XmlUtil {
@@ -50,7 +49,8 @@ public class XmlUtil {
 			Log.err(ex.toString());
 		}
 		catch (TransformerException ex) {
-			Log.err(ex.toString());
+			//Log.err(ex.toString());
+			System.err.println(ex.toString());
 		}
 		return null;
 	}
@@ -60,8 +60,25 @@ public class XmlUtil {
 		if (parent == null) {
 			return node.getNodeName();
 		}
-		String index = ((Element)node).getAttribute("id");
+		String index = ((Element) node).getAttribute("id");
 		return getPath(parent) + "." + node.getNodeName() + "[" + index + "]";
+	}
+
+	public static String getNodeString(Node node) {
+		try {
+			StringWriter writer = new StringWriter();
+			Transformer tr = TransformerFactory.newInstance().newTransformer();
+			tr.setOutputProperty(OutputKeys.METHOD, "xml");
+			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			tr.setOutputProperty(OutputKeys.INDENT, "yes");
+			tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			tr.transform(new DOMSource(node), new StreamResult(writer));
+			return writer.toString();
+		}
+		catch (TransformerException e) {
+			e.printStackTrace();
+		}
+		return node.getTextContent();
 	}
 
 }

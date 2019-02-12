@@ -1,6 +1,7 @@
 package xliff_model;
 
 import java.util.ArrayList;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import util.Log;
 import util.NodeArray;
@@ -9,7 +10,12 @@ public class XliffTag {
 
 	ArrayList<FileTag> files = new ArrayList<>();
 
-	public XliffTag(Node node) throws InvalidXliffFormatException {
+	Node node;
+	Document document;
+
+	public XliffTag(Document doc) throws InvalidXliffFormatException {
+		this.node = doc.getDocumentElement();
+		this.document = doc;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <xliff>");
@@ -30,5 +36,23 @@ public class XliffTag {
 
 	public ArrayList<FileTag> getFiles() {
 		return files;
+	}
+
+	public void setFiles(ArrayList<FileTag> files) {
+		this.files = files;
+	}
+
+	public void save() {
+		for (FileTag f : files) {
+			f.save();
+		}
+	}
+	
+	public Node getNode() {
+		return node;
+	}
+	
+	public Document getDocument() {
+		return document;
 	}
 }

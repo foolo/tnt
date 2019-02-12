@@ -5,6 +5,7 @@ import undo_manager.UndoManager;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import undo_manager.CaretPosition;
@@ -25,6 +26,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	UndoManager undoManager;
+	XliffTag xliffFile;
 
 	void populate_segments(ArrayList<SegmentTag> segments) {
 		for (SegmentTag s : segments) {
@@ -64,9 +66,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	public void load_file(File f) throws InvalidXliffFormatException {
 		Document doc = XmlUtil.read_xml(f);
-		Node root = doc.getDocumentElement();
-		System.out.println("root node: " + root);
-		XliffTag xliffFile = new XliffTag(root);
+		xliffFile = new XliffTag(doc);
+		
+		
+		// test
+		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
+		
 
 		// todo handle multiple files
 		FileTag fileTag = xliffFile.getFiles().get(0);
@@ -103,6 +108,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -120,6 +126,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu1.add(jMenuItemOpen);
+
+        jMenuItem2.setText("Save");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
 
         jMenuBar1.add(jMenu1);
 
@@ -175,11 +189,24 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		update_model();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+		FileTag fileTag = (FileTag)undoManager.getCurrentState().getModel();
+		ArrayList<FileTag> files = new ArrayList<>();
+		files.add(fileTag);
+		xliffFile.setFiles(files);
+		xliffFile.save();
+		//XmlUtil.write_xml(xliffFile.getDocument(), new StreamResult());
+		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
+		
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane2;

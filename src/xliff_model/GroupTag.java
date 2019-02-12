@@ -48,4 +48,11 @@ public class GroupTag implements Item {
 	public Item copy() {
 		return new GroupTag(this);
 	}
+
+	@Override
+	public void save() {
+		for (Item i : items) {
+			i.save();
+		}
+	}
 }
