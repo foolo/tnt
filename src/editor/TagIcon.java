@@ -12,7 +12,7 @@ class TagIcon extends ImageIcon {
 
 	final Tag tag;
 
-	public TagIcon(int tagIndex, Tag tag, URL imageUrl) {
+	public TagIcon(Tag tag, URL imageUrl) {
 		super(imageUrl);
 		this.tag = tag;
 	}

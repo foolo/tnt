@@ -2,6 +2,8 @@ package editor;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
@@ -20,13 +22,8 @@ public class MarkupView extends JTextPane {
 		super.setTransferHandler(newHandler);
 	}
 
-	void insertStartTag(int tagIndex) {
-		Icon icon = new TagIcon(tagIndex, new Tag(tagIndex, Tag.Type.START), getClass().getClassLoader().getResource("images/left-bracket.png"));
-		insertIcon(icon);
-	}
-
-	void insertEndTag(int tagIndex) {
-		Icon icon = new TagIcon(tagIndex, new Tag(tagIndex, Tag.Type.END), getClass().getClassLoader().getResource("images/right-bracket.png"));
+	void insertTag(Tag tag) {
+		Icon icon = new TagIcon(tag, getClass().getClassLoader().getResource("images/left-bracket.png"));
 		insertIcon(icon);
 	}
 
@@ -74,7 +71,7 @@ public class MarkupView extends JTextPane {
 		return sb.toString();
 	}
 
-	public ArrayList<Object> getTextAndTags() {
+	public TaggedText getTaggedText() {
 		ArrayList<Object> res = new ArrayList<>();
 		StyledDocument doc = getStyledDocument();
 		StringBuilder sb = new StringBuilder();
@@ -92,6 +89,30 @@ public class MarkupView extends JTextPane {
 			}
 		}
 		res.add(sb.toString());
-		return res;
+		return new TaggedText(res);
+	}
+
+	void appendText(String s) {
+		try {
+			getDocument().insertString(getDocument().getLength(), s, null);
+		}
+		catch (BadLocationException ex) {
+			Logger.getLogger(MarkupView.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	public void setTaggedText(TaggedText t) {
+		setText("");
+		for (Object o : t.getContent()) {
+			if (o instanceof String) {
+				appendText((String) o);
+			}
+			else if (o instanceof Tag) {
+				insertTag((Tag) o);
+			}
+			else {
+				System.out.println("unexpected tagged text content: " + o);
+			}
+		}
 	}
 }
