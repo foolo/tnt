@@ -1,5 +1,7 @@
 package editor;
 
+import xliff_model.TaggedText;
+import xliff_model.Tag;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -10,6 +12,8 @@ import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
+import xliff_model.TaggedTextContent;
+import xliff_model.Text;
 
 public class MarkupView extends JTextPane {
 
@@ -64,7 +68,7 @@ public class MarkupView extends JTextPane {
 		String docText = getDocText();
 		for (int i = p0; i < p1; i++) {
 			Element e = doc.getCharacterElement(i);
-			if (getIcon(e) != null) {
+			if (getIcon(e) == null) {
 				sb.appendCodePoint(docText.codePointAt(i));
 			}
 		}
@@ -72,7 +76,7 @@ public class MarkupView extends JTextPane {
 	}
 
 	public TaggedText getTaggedText() {
-		ArrayList<Object> res = new ArrayList<>();
+		ArrayList<TaggedTextContent> res = new ArrayList<>();
 		StyledDocument doc = getStyledDocument();
 		StringBuilder sb = new StringBuilder();
 		String docText = getDocText();
@@ -80,7 +84,7 @@ public class MarkupView extends JTextPane {
 			Element e = doc.getCharacterElement(i);
 			TagIcon icon = getIcon(e);
 			if (icon != null) {
-				res.add(sb.toString());
+				res.add(new Text(sb.toString()));
 				res.add(icon.tag);
 				sb = new StringBuilder();
 			}
@@ -88,7 +92,7 @@ public class MarkupView extends JTextPane {
 				sb.appendCodePoint(docText.codePointAt(i));
 			}
 		}
-		res.add(sb.toString());
+		res.add(new Text(sb.toString()));
 		return new TaggedText(res);
 	}
 
@@ -103,15 +107,15 @@ public class MarkupView extends JTextPane {
 
 	public void setTaggedText(TaggedText t) {
 		setText("");
-		for (Object o : t.getContent()) {
-			if (o instanceof String) {
-				appendText((String) o);
+		for (TaggedTextContent c : t.getContent()) {
+			if (c instanceof Text) {
+				appendText(((Text) c).getContent());
 			}
-			else if (o instanceof Tag) {
-				insertTag((Tag) o);
+			else if (c instanceof Tag) {
+				insertTag((Tag) c);
 			}
 			else {
-				System.out.println("unexpected tagged text content: " + o);
+				System.out.println("unexpected tagged text content: " + c);
 			}
 		}
 	}

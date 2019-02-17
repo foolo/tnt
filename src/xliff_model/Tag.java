@@ -1,8 +1,8 @@
-package editor;
+package xliff_model;
 
-public class Tag {
+public class Tag implements TaggedTextContent {
 
-	enum Type {
+	public enum Type {
 		START, END
 	};
 
@@ -14,11 +14,11 @@ public class Tag {
 		this.type = type;
 	}
 
-	int getIndex() {
+	public int getIndex() {
 		return index;
 	}
 
-	Type getType() {
+	public Type getType() {
 		return type;
 	}
 }
