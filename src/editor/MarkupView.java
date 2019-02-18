@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
@@ -27,8 +26,7 @@ public class MarkupView extends JTextPane {
 	}
 
 	void insertTag(Tag tag) {
-		Icon icon = new TagIcon(tag, getClass().getClassLoader().getResource("images/left-bracket.png"));
-		insertIcon(icon);
+		insertIcon(new TagIcon(tag));
 	}
 
 	TagIcon getIcon(Element e) {
