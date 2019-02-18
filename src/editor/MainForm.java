@@ -78,7 +78,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		undoManager = new UndoManager();
 		ArrayList<SegmentTag> segments = fileTag.getSegmentsArray();
 		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0, segments.get(0));
-		undoManager.initialize(new UndoableState(fileTag, pos.copy(), pos.copy(), undoManager), this);
+		undoManager.initialize(new UndoableState(fileTag, pos, pos, undoManager), this);
 		populate_segments(segments);
 		update_model();
 	}

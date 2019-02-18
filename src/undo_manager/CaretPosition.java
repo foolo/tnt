@@ -20,11 +20,6 @@ public class CaretPosition {
 		this.segmentTag = segmentTag;
 	}
 
-	// todo coule be immutable, no need for copy
-	public CaretPosition copy() {
-		return new CaretPosition(item_index, column, text_position, segmentTag);
-	}
-
 	public int getItemIndex() {
 		return item_index;
 	}

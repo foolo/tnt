@@ -54,14 +54,14 @@ public class UndoManager {
 
 		if (currentState.isModified() == false) {
 			System.out.println("nothing is modified, jump to previous index");
-			newEditingPosition = undoBuffer.peek().getStartPosition().copy();
+			newEditingPosition = undoBuffer.peek().getStartPosition();
 			if (undoBuffer.size() >= 2) {
 				undoBuffer.pop();
 			}
 		}
 		else {
 			System.out.println("undoing current state");
-			newEditingPosition = currentState.getStartPosition().copy();
+			newEditingPosition = currentState.getStartPosition();
 		}
 		System.out.println("new item index: " + newEditingPosition);
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);

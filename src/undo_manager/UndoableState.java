@@ -24,12 +24,12 @@ public class UndoableState {
 	}
 
 	public UndoableState copy() {
-		return new UndoableState(model.copy(), startPosition.copy(), endPosition.copy(), undoManager);
+		return new UndoableState(model.copy(), startPosition, endPosition, undoManager);
 	}
 
 	public void setModified(CaretPosition position) {
 		if (!modified) {
-			startPosition = undoManager.getCaretPosition().copy();
+			startPosition = undoManager.getCaretPosition();
 			modified = true;
 		}
 		this.endPosition = position;
