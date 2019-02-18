@@ -11,8 +11,8 @@ import javax.swing.ImageIcon;
 
 class TagIcon implements Icon {
 
-	final Tag tag;
-	ImageIcon icon;
+	private final Tag tag;
+	private final ImageIcon icon;
 
 	static ImageIcon leftBracketIcon = new ImageIcon(TagIcon.class.getClassLoader().getResource("images/left-bracket.png"));
 	static ImageIcon rightBracketIcon = new ImageIcon(TagIcon.class.getClassLoader().getResource("images/right-bracket.png"));

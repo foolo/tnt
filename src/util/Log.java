@@ -18,7 +18,7 @@ public class Log {
 	public static void err(String msg) {
 		logListener.log("ERROR: " + msg);
 	}
-	
+
 	public static void debug(String msg, Node location) {
 		System.out.println(msg + " (at " + XmlUtil.getPath(location) + ")");
 	}

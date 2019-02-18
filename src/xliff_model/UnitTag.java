@@ -9,8 +9,8 @@ import util.NodeArray;
 
 public class UnitTag implements Item {
 
-	ArrayList<SegmentTag> segments = new ArrayList<>();
-	Node node;
+	private ArrayList<SegmentTag> segments = new ArrayList<>();
+	private Node node;
 
 	UnitTag(Node node) throws InvalidXliffFormatException {
 		this.node = node;

@@ -2,16 +2,17 @@ package undo_manager;
 
 public class UndoableState {
 
-	UndoableModel model;
+	private final UndoableModel model;
 	private CaretPosition startPosition = null;
 	private CaretPosition endPosition = null;
-	boolean modified = false;
-	UndoManager undoManager;
+	private boolean modified = false;
+	private final UndoManager undoManager;
 
 	public UndoableState(UndoableModel model, UndoManager undoManager) {
 		this.model = model;
 		this.undoManager = undoManager;
 	}
+
 	public UndoableState(UndoableModel model, CaretPosition startPosition, CaretPosition endPosition, UndoManager undoManager) {
 		this.model = model;
 		this.startPosition = startPosition;
@@ -42,7 +43,7 @@ public class UndoableState {
 	public CaretPosition getEndPosition() {
 		return endPosition;
 	}
-	
+
 	public CaretPosition getStartPosition() {
 		return startPosition;
 	}

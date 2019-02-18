@@ -8,7 +8,7 @@ public class Tag implements TaggedTextContent {
 		START, END, EMPTY
 	};
 
-	Node node;
+	private final Node node;
 	private final Type type;
 
 	public Tag(Node node, Type type) {

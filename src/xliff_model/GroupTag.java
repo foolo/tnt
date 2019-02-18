@@ -7,7 +7,7 @@ import util.NodeArray;
 
 public class GroupTag implements Item {
 
-	ArrayList<Item> items = new ArrayList<>();
+	private ArrayList<Item> items = new ArrayList<>();
 
 	GroupTag(Node node) throws InvalidXliffFormatException {
 		for (Node n : new NodeArray(node.getChildNodes())) {

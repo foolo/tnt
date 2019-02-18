@@ -6,8 +6,8 @@ import org.w3c.dom.NodeList;
 
 public class NodeItr implements Iterator<Node> {
 
-	NodeList nodeList;
-	int next_index = 0;
+	private final NodeList nodeList;
+	private int next_index = 0;
 
 	public NodeItr(NodeList nodeList) {
 		this.nodeList = nodeList;

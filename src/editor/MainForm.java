@@ -5,9 +5,7 @@ import undo_manager.UndoManager;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
-import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import util.MessageBox;
@@ -67,12 +65,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	public void load_file(File f) throws InvalidXliffFormatException {
 		Document doc = XmlUtil.read_xml(f);
 		xliffFile = new XliffTag(doc);
-		
-		
+
 		// test
 		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
-		
-
 		// todo handle multiple files
 		FileTag fileTag = xliffFile.getFiles().get(0);
 		undoManager = new UndoManager();
@@ -190,15 +185,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-		FileTag fileTag = (FileTag)undoManager.getCurrentState().getModel();
+		// TODO add your handling code here:
+		FileTag fileTag = (FileTag) undoManager.getCurrentState().getModel();
 		ArrayList<FileTag> files = new ArrayList<>();
 		files.add(fileTag);
 		xliffFile.setFiles(files);
 		xliffFile.save();
 		//XmlUtil.write_xml(xliffFile.getDocument(), new StreamResult());
 		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
-		
+
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

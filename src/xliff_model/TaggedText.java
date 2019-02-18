@@ -2,7 +2,6 @@ package xliff_model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import util.Log;

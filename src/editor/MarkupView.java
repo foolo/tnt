@@ -83,7 +83,7 @@ public class MarkupView extends JTextPane {
 			TagIcon icon = getIcon(e);
 			if (icon != null) {
 				res.add(new Text(sb.toString()));
-				res.add(icon.tag);
+				res.add(icon.getTag());
 				sb = new StringBuilder();
 			}
 			else {

@@ -9,6 +9,4 @@ public class InvalidXliffFormatException extends Exception {
 	InvalidXliffFormatException(String msg) {
 		super(msg);
 	}
-
-
 }

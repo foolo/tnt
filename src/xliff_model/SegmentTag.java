@@ -9,9 +9,9 @@ import util.XmlUtil;
 
 public class SegmentTag {
 
-	TaggedText source;
-	TaggedText target;
-	UnitTag parent;
+	private TaggedText source;
+	private TaggedText target;
+	private UnitTag parent;
 	private Node node;
 
 	public SegmentTag(Node node, UnitTag parent) throws InvalidXliffFormatException {

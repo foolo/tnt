@@ -4,13 +4,10 @@ import java.util.Stack;
 
 public class UndoManager {
 
-	Stack<UndoableState> undoBuffer = new Stack<>();
-
-	UndoableState currentState;
-
-	UndoEventListener listener;
-
-	CaretPosition caretPosition;
+	private final Stack<UndoableState> undoBuffer = new Stack<>();
+	private UndoableState currentState;
+	private UndoEventListener listener;
+	private CaretPosition caretPosition;
 
 	public UndoManager() {
 	}

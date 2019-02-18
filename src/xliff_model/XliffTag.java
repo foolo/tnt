@@ -8,13 +8,11 @@ import util.NodeArray;
 
 public class XliffTag {
 
-	ArrayList<FileTag> files = new ArrayList<>();
-
-	Node node;
-	Document document;
+	private ArrayList<FileTag> files = new ArrayList<>();
+	private Document document;
 
 	public XliffTag(Document doc) throws InvalidXliffFormatException {
-		this.node = doc.getDocumentElement();
+		Node node = doc.getDocumentElement();
 		this.document = doc;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
@@ -47,11 +45,7 @@ public class XliffTag {
 			f.save();
 		}
 	}
-	
-	public Node getNode() {
-		return node;
-	}
-	
+
 	public Document getDocument() {
 		return document;
 	}

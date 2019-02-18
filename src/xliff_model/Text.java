@@ -2,7 +2,7 @@ package xliff_model;
 
 public class Text implements TaggedTextContent {
 
-	String content;
+	private final String content;
 
 	public Text(String content) {
 		this.content = content;
