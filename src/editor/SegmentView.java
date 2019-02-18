@@ -14,20 +14,20 @@ public class SegmentView extends javax.swing.JPanel {
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			segmentTag.setSourceText(jTextPaneSource.getText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition(), segmentTag));
+			segmentTag.setSourceText(markupViewSource.getTaggedText());
+			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition(), segmentTag));
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			segmentTag.setSourceText(jTextPaneSource.getText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition(), segmentTag));
+			segmentTag.setSourceText(markupViewSource.getTaggedText());
+			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition(), segmentTag));
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			segmentTag.setSourceText(jTextPaneSource.getText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition(), segmentTag));
+			segmentTag.setSourceText(markupViewSource.getTaggedText());
+			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition(), segmentTag));
 		}
 	};
 
@@ -35,20 +35,20 @@ public class SegmentView extends javax.swing.JPanel {
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			segmentTag.setTargetText(jTextPaneTarget.getText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition(), segmentTag));
+			segmentTag.setTargetText(markupViewTarget.getTaggedText());
+			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition(), segmentTag));
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			segmentTag.setTargetText(jTextPaneTarget.getText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition(), segmentTag));
+			segmentTag.setTargetText(markupViewTarget.getTaggedText());
+			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition(), segmentTag));
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			segmentTag.setTargetText(jTextPaneTarget.getText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition(), segmentTag));
+			segmentTag.setTargetText(markupViewTarget.getTaggedText());
+			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition(), segmentTag));
 		}
 	};
 
@@ -70,8 +70,8 @@ public class SegmentView extends javax.swing.JPanel {
 		this.segmentTag = segmentTag;
 		this.item_index = item_index;
 		unregisterListeners();
-		jTextPaneSource.setText(segmentTag.getSourceText());
-		jTextPaneTarget.setText(segmentTag.getTargetText());
+		markupViewSource.setTaggedText(segmentTag.getSourceText());
+		markupViewTarget.setTaggedText(segmentTag.getTargetText());
 		jLabelIndex.setText("" + this.item_index);
 		registerListeners();
 	}
@@ -81,23 +81,23 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	public void registerListeners() {
-		jTextPaneSource.getDocument().addDocumentListener(sourceDocumentListener);
-		jTextPaneTarget.getDocument().addDocumentListener(targetDocumentListener);
+		markupViewSource.getDocument().addDocumentListener(sourceDocumentListener);
+		markupViewTarget.getDocument().addDocumentListener(targetDocumentListener);
 	}
 
 	public void unregisterListeners() {
-		jTextPaneSource.getDocument().removeDocumentListener(sourceDocumentListener);
-		jTextPaneTarget.getDocument().removeDocumentListener(targetDocumentListener);
+		markupViewSource.getDocument().removeDocumentListener(sourceDocumentListener);
+		markupViewTarget.getDocument().removeDocumentListener(targetDocumentListener);
 	}
 
 	public void setTextPosition(CaretPosition.Column column, int position) {
 		if (column == CaretPosition.Column.SOURCE) {
-			jTextPaneSource.setCaretPosition(position);
-			jTextPaneSource.grabFocus();
+			markupViewSource.setCaretPosition(position);
+			markupViewSource.grabFocus();
 		}
 		else {
-			jTextPaneTarget.setCaretPosition(position);
-			jTextPaneTarget.grabFocus();
+			markupViewTarget.setCaretPosition(position);
+			markupViewTarget.grabFocus();
 		}
 	}
 
@@ -113,107 +113,100 @@ public class SegmentView extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPaneSource = new javax.swing.JTextPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPaneTarget = new javax.swing.JTextPane();
         jLabelIndex = new javax.swing.JLabel();
-
-        jTextPaneSource.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                jTextPaneSourceCaretUpdate(evt);
-            }
-        });
-        jTextPaneSource.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextPaneSourceFocusGained(evt);
-            }
-        });
-        jTextPaneSource.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextPaneSourceKeyPressed(evt);
-            }
-        });
-        jScrollPane1.setViewportView(jTextPaneSource);
-        jTextPaneSource.getAccessibleContext().setAccessibleName("");
-
-        jTextPaneTarget.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                jTextPaneTargetCaretUpdate(evt);
-            }
-        });
-        jTextPaneTarget.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextPaneTargetFocusGained(evt);
-            }
-        });
-        jTextPaneTarget.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextPaneTargetKeyPressed(evt);
-            }
-        });
-        jScrollPane2.setViewportView(jTextPaneTarget);
+        jScrollPane3 = new javax.swing.JScrollPane();
+        markupViewSource = new editor.MarkupView();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        markupViewTarget = new editor.MarkupView();
 
         jLabelIndex.setText("jLabel1");
+
+        markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                markupViewSourceCaretUpdate(evt);
+            }
+        });
+        markupViewSource.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                markupViewSourceFocusGained(evt);
+            }
+        });
+        markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                markupViewSourceKeyPressed(evt);
+            }
+        });
+        jScrollPane3.setViewportView(markupViewSource);
+
+        markupViewTarget.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                markupViewTargetCaretUpdate(evt);
+            }
+        });
+        markupViewTarget.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                markupViewTargetFocusGained(evt);
+            }
+        });
+        markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                markupViewTargetKeyPressed(evt);
+            }
+        });
+        jScrollPane4.setViewportView(markupViewTarget);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabelIndex)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelIndex)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jLabelIndex)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextPaneSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneSourceKeyPressed
-		handleKeyPress(evt);
-    }//GEN-LAST:event_jTextPaneSourceKeyPressed
+    private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
+		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition(), segmentTag));
+    }//GEN-LAST:event_markupViewSourceCaretUpdate
 
-    private void jTextPaneSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneSourceFocusGained
+    private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
+		// TODO add your handling code here:
 		undoManager.save();
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition(), segmentTag));
-    }//GEN-LAST:event_jTextPaneSourceFocusGained
+		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition(), segmentTag));
+    }//GEN-LAST:event_markupViewSourceFocusGained
 
-    private void jTextPaneTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextPaneTargetFocusGained
-		undoManager.save();
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition(), segmentTag));
-    }//GEN-LAST:event_jTextPaneTargetFocusGained
-
-    private void jTextPaneTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextPaneTargetKeyPressed
+    private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
 		handleKeyPress(evt);
-    }//GEN-LAST:event_jTextPaneTargetKeyPressed
+    }//GEN-LAST:event_markupViewSourceKeyPressed
 
-    private void jTextPaneSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextPaneSourceCaretUpdate
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, jTextPaneSource.getCaretPosition(), segmentTag));
-    }//GEN-LAST:event_jTextPaneSourceCaretUpdate
+    private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
+		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition(), segmentTag));
+    }//GEN-LAST:event_markupViewTargetCaretUpdate
 
-    private void jTextPaneTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTextPaneTargetCaretUpdate
-        undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, jTextPaneTarget.getCaretPosition(), segmentTag));
-    }//GEN-LAST:event_jTextPaneTargetCaretUpdate
+    private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
+		undoManager.save();
+		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition(), segmentTag));
+    }//GEN-LAST:event_markupViewTargetFocusGained
+
+    private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
+		handleKeyPress(evt);
+    }//GEN-LAST:event_markupViewTargetKeyPressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelIndex;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane jTextPaneSource;
-    private javax.swing.JTextPane jTextPaneTarget;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private editor.MarkupView markupViewSource;
+    private editor.MarkupView markupViewTarget;
     // End of variables declaration//GEN-END:variables
 }

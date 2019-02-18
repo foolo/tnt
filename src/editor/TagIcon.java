@@ -26,11 +26,10 @@ class TagIcon extends ImageIcon {
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		int draw_x = x + c.getX() + 3;
 		int draw_y = y + c.getY() + g.getFontMetrics().getHeight() + 1;
-		g.drawString("" + tag.getIndex(), draw_x, draw_y);
+		g.drawString("" + tag.getShortString(), draw_x, draw_y);
 	}
 
 	public Tag getTag() {
 		return tag;
 	}
-
 }

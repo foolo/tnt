@@ -81,4 +81,9 @@ public class XmlUtil {
 		return node.getTextContent();
 	}
 
+	public static void clearChildren(Node node) {
+		while (node.hasChildNodes()) {
+			node.removeChild(node.getFirstChild());
+		}
+	}
 }

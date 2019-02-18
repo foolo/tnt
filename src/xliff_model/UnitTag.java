@@ -48,7 +48,7 @@ public class UnitTag implements Item {
 		}
 		SegmentTag newSegmentTag = segmentTag.split(pos);
 		segments.add(index + 1, newSegmentTag);
-		return new CaretPosition(pos.getItemIndex(), CaretPosition.Column.SOURCE, newSegmentTag.getSourceText().length(), newSegmentTag);
+		return new CaretPosition(pos.getItemIndex(), CaretPosition.Column.SOURCE, newSegmentTag.getSourceText().getContent().size(), newSegmentTag);
 	}
 
 	@Override
