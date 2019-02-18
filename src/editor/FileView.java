@@ -53,9 +53,9 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
 	public void load_file(FileTag fileTag) throws InvalidXliffFormatException {
 		undoManager = new UndoManager();
-		ArrayList<SegmentTag> segments = fileTag.getSegmentsArray();
-		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0, segments.get(0));
+		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0);
 		undoManager.initialize(new UndoableState(fileTag, pos, pos, undoManager), this);
+		ArrayList<SegmentTag> segments = fileTag.getSegmentsArray();
 		populate_segments(segments);
 		update_model();
 	}
@@ -66,6 +66,12 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		}
 	}
 
+	SegmentTag getSegmentTag(int index) {
+		Component c = jPanelItems.getComponent(index);
+		SegmentView segmentView = (SegmentView) c;
+		return segmentView.getSegmentTag();
+	}
+
 	void split() {
 		CaretPosition p = undoManager.getCaretPosition();
 		if (p.getColumn() != CaretPosition.Column.SOURCE) {
@@ -73,8 +79,9 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 			return;
 		}
 		System.out.println("current pos: " + p);
-		UnitTag unitTag = p.getSegmentTag().getParent();
-		CaretPosition newPosition = unitTag.split(p);
+		SegmentTag segmentTag = getSegmentTag(p.getItemIndex());
+		UnitTag unitTag = segmentTag.getParent();
+		CaretPosition newPosition = unitTag.split(p, segmentTag);
 		if (newPosition == null) {
 			System.err.println("split failed");
 			return;

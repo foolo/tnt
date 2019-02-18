@@ -39,8 +39,7 @@ public class UnitTag implements Item {
 		}
 	}
 
-	public CaretPosition split(CaretPosition pos) {
-		SegmentTag segmentTag = pos.getSegmentTag();
+	public CaretPosition split(CaretPosition pos, SegmentTag segmentTag) {
 		int index = segments.indexOf(segmentTag);
 		if (index < 0) {
 			System.out.println("segment tag not found in unit");
@@ -48,7 +47,7 @@ public class UnitTag implements Item {
 		}
 		SegmentTag newSegmentTag = segmentTag.split(pos);
 		segments.add(index + 1, newSegmentTag);
-		return new CaretPosition(pos.getItemIndex(), CaretPosition.Column.SOURCE, newSegmentTag.getSourceText().getContent().size(), newSegmentTag);
+		return new CaretPosition(pos.getItemIndex(), CaretPosition.Column.SOURCE, newSegmentTag.getSourceText().getContent().size());
 	}
 
 	@Override
