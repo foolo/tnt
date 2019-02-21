@@ -25,6 +25,14 @@ public class Tag implements TaggedTextContent {
 	}
 
 	@Override
+	public TaggedTextContent copy() {
+		if (node == null) {
+			return new Tag(null, type);
+		}
+		return new Tag(node.cloneNode(false), type);
+	}
+
+	@Override
 	public String toString() {
 		switch (type) {
 			case START:

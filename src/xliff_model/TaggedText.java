@@ -59,6 +59,14 @@ public class TaggedText {
 		return content;
 	}
 
+	public TaggedText copy() {
+		ArrayList<TaggedTextContent> newContent = new ArrayList<>();
+		for (TaggedTextContent t : content) {
+			newContent.add(t.copy());
+		}
+		return new TaggedText(newContent);
+	}
+
 	public ArrayList<Node> toNodes(Document document) {
 		ArrayList<TaggedTextContent> tmpContent = new ArrayList<>(content);
 		tmpContent.add(new Tag(null, Tag.Type.END));

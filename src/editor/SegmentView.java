@@ -7,6 +7,7 @@ import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
 import undo_manager.UndoManager;
 import xliff_model.SegmentTag;
+import xliff_model.TaggedText;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -74,6 +75,10 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setTaggedText(segmentTag.getTargetText());
 		jLabelIndex.setText("" + this.item_index);
 		registerListeners();
+	}
+
+	public void setTargetText(TaggedText t) {
+		markupViewTarget.setTaggedText(t);
 	}
 
 	public SegmentTag getSegmentTag() {
@@ -179,7 +184,6 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewSourceCaretUpdate
 
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
-		// TODO add your handling code here:
 		undoManager.save();
 		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
     }//GEN-LAST:event_markupViewSourceFocusGained

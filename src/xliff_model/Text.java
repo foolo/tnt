@@ -16,4 +16,9 @@ public class Text implements TaggedTextContent {
 	public String toString() {
 		return content;
 	}
+
+	@Override
+	public TaggedTextContent copy() {
+		return new Text(content);
+	}
 }

@@ -66,10 +66,9 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		}
 	}
 
-	SegmentTag getSegmentTag(int index) {
+	SegmentView getSegmentView(int index) {
 		Component c = jPanelItems.getComponent(index);
-		SegmentView segmentView = (SegmentView) c;
-		return segmentView.getSegmentTag();
+		return (SegmentView) c;
 	}
 
 	void split() {
@@ -80,7 +79,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 			return;
 		}
 		System.out.println("current pos: " + p);
-		SegmentTag segmentTag = getSegmentTag(p.getItemIndex());
+		SegmentTag segmentTag = getSegmentView(p.getItemIndex()).getSegmentTag();
 		UnitTag unitTag = segmentTag.getParent();
 		CaretPosition newPosition = unitTag.split(p, segmentTag);
 		if (newPosition == null) {
@@ -90,6 +89,15 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		undoManager.getCurrentState().setModified(newPosition);
 		undoManager.save();
 		update_model();
+	}
+
+	void copy_source_to_target() {
+		undoManager.save();
+		CaretPosition p = undoManager.getCaretPosition();
+		System.out.println("current pos: " + p);
+		SegmentView segmentView = getSegmentView(p.getItemIndex());
+		SegmentTag segmentTag = segmentView.getSegmentTag();
+		segmentView.setTargetText(segmentTag.getSourceText().copy());
 	}
 
 	void save() {
