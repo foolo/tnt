@@ -73,6 +73,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 	}
 
 	void split() {
+		undoManager.save();
 		CaretPosition p = undoManager.getCaretPosition();
 		if (p.getColumn() != CaretPosition.Column.SOURCE) {
 			System.err.println("can only split when caret is in source column");
