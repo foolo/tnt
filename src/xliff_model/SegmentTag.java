@@ -8,8 +8,8 @@ import util.XmlUtil;
 
 public class SegmentTag {
 
-	private TaggedText source;
-	private TaggedText target;
+	private TaggedText sourceText;
+	private TaggedText targetText;
 	private final UnitTag parent;
 	private final Element node;
 	private final Node sourceNode;
@@ -30,13 +30,13 @@ public class SegmentTag {
 			tn = node.getOwnerDocument().renameNode(tn, null, "target");
 		}
 		targetNode = tn;
-		source = new TaggedText(sourceNode);
-		target = new TaggedText(targetNode);
+		sourceText = new TaggedText(sourceNode);
+		targetText = new TaggedText(targetNode);
 	}
 
 	public SegmentTag(SegmentTag st, UnitTag parent) {
-		this.source = st.source;
-		this.target = st.target;
+		this.sourceText = st.sourceText;
+		this.targetText = st.targetText;
 		this.parent = parent;
 		this.node = st.node;
 		this.sourceNode = st.sourceNode;
@@ -44,8 +44,8 @@ public class SegmentTag {
 	}
 
 	public SegmentTag(TaggedText source, TaggedText target, Element node, SegmentTag st) {
-		this.source = source;
-		this.target = target;
+		this.sourceText = source;
+		this.targetText = target;
 		this.parent = st.parent;
 		this.node = node;
 		this.sourceNode = st.sourceNode;
@@ -53,12 +53,12 @@ public class SegmentTag {
 	}
 
 	public TaggedText getSourceText() {
-		return source;
+		return sourceText;
 	}
 
 	public TaggedText getTargetText() {
-		if (target != null) {
-			return target;
+		if (targetText != null) {
+			return targetText;
 		}
 		return new TaggedText(new ArrayList<>());
 	}
@@ -71,18 +71,14 @@ public class SegmentTag {
 		return node;
 	}
 
-	public void setSourceText(TaggedText s) {
-		source = s;
-	}
-
 	public void setTargetText(TaggedText s) {
-		target = s;
+		targetText = s;
 	}
 
 	public SegmentTag split(CaretPosition pos) {
-		ArrayList<TaggedTextContent> src0 = new ArrayList<>(source.getContent().subList(0, pos.getTextPosition()));
-		ArrayList<TaggedTextContent> src1 = new ArrayList<>(source.getContent().subList(pos.getTextPosition(), source.getContent().size()));
-		source = new TaggedText(src0);
+		ArrayList<TaggedTextContent> src0 = new ArrayList<>(sourceText.getContent().subList(0, pos.getTextPosition()));
+		ArrayList<TaggedTextContent> src1 = new ArrayList<>(sourceText.getContent().subList(pos.getTextPosition(), sourceText.getContent().size()));
+		sourceText = new TaggedText(src0);
 		return new SegmentTag(new TaggedText(src1), new TaggedText(new ArrayList<>()), (Element) node.cloneNode(true), this);
 	}
 
@@ -96,8 +92,8 @@ public class SegmentTag {
 	public void save(ArrayList<SegmentError> errors) {
 		ArrayList<Node> sourceNodes;
 		try {
-			sourceNodes = source.toNodes(node.getOwnerDocument());
-			System.out.println("set source: " + source);
+			sourceNodes = sourceText.toNodes(node.getOwnerDocument());
+			System.out.println("set source: " + sourceText);
 		}
 		catch (SaveException ex) {
 			System.out.println(ex.getMessage());
@@ -108,8 +104,8 @@ public class SegmentTag {
 
 		ArrayList<Node> targetNodes;
 		try {
-			targetNodes = target.toNodes(node.getOwnerDocument());
-			System.out.println("set target: " + target);
+			targetNodes = targetText.toNodes(node.getOwnerDocument());
+			System.out.println("set target: " + targetText);
 		}
 		catch (SaveException ex) {
 			System.out.println(ex.getMessage());

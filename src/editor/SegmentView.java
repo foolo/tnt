@@ -11,27 +11,6 @@ import xliff_model.TaggedText;
 
 public class SegmentView extends javax.swing.JPanel {
 
-	DocumentListener sourceDocumentListener = new DocumentListener() {
-
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			segmentTag.setSourceText(markupViewSource.getTaggedText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
-		}
-
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			segmentTag.setSourceText(markupViewSource.getTaggedText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
-		}
-
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			segmentTag.setSourceText(markupViewSource.getTaggedText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
-		}
-	};
-
 	DocumentListener targetDocumentListener = new DocumentListener() {
 
 		@Override
@@ -86,12 +65,10 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	public void registerListeners() {
-		markupViewSource.getDocument().addDocumentListener(sourceDocumentListener);
 		markupViewTarget.getDocument().addDocumentListener(targetDocumentListener);
 	}
 
 	public void unregisterListeners() {
-		markupViewSource.getDocument().removeDocumentListener(sourceDocumentListener);
 		markupViewTarget.getDocument().removeDocumentListener(targetDocumentListener);
 	}
 
@@ -126,6 +103,7 @@ public class SegmentView extends javax.swing.JPanel {
 
         jLabelIndex.setText("jLabel1");
 
+        markupViewSource.setEditable(false);
         markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 markupViewSourceCaretUpdate(evt);
@@ -186,6 +164,7 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
 		undoManager.save();
 		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
+		markupViewSource.getCaret().setVisible(true);
     }//GEN-LAST:event_markupViewSourceFocusGained
 
     private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
