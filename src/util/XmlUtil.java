@@ -16,6 +16,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XmlUtil {
@@ -38,8 +39,7 @@ public class XmlUtil {
 		try {
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
 			tr.setOutputProperty(OutputKeys.METHOD, "xml");
-			tr.setOutputProperty(OutputKeys.INDENT, "yes");
-			tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			tr.setOutputProperty(OutputKeys.INDENT, "no");
 			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			DOMSource domSource = new DOMSource(doc);
 			tr.transform(domSource, result);
@@ -85,5 +85,13 @@ public class XmlUtil {
 		while (node.hasChildNodes()) {
 			node.removeChild(node.getFirstChild());
 		}
+	}
+
+	public static Node getChildByName(Element node, String name) {
+		NodeList nl = node.getElementsByTagName(name);
+		if (nl.getLength() == 0) {
+			return null;
+		}
+		return nl.item(0);
 	}
 }

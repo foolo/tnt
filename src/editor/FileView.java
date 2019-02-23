@@ -100,17 +100,6 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		segmentView.setTargetText(segmentTag.getSourceText().copy());
 	}
 
-	void save() {
-		// TODO add your handling code here:
-		FileTag fileTag = (FileTag) undoManager.getCurrentState().getModel();
-		ArrayList<FileTag> files = new ArrayList<>();
-		files.add(fileTag);
-		xliffFile.setFiles(files);
-		xliffFile.save();
-		//XmlUtil.write_xml(xliffFile.getDocument(), new StreamResult());
-		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
-	}
-
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

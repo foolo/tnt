@@ -1,6 +1,7 @@
 package xliff_model;
 
 import java.util.ArrayList;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import undo_manager.CaretPosition;
@@ -20,7 +21,7 @@ public class UnitTag implements Item {
 				continue;
 			}
 			if (n.getNodeName().equals("segment")) {
-				SegmentTag segmentObj = new SegmentTag(n, this);
+				SegmentTag segmentObj = new SegmentTag((Element) n, this);
 				segments.add(segmentObj);
 			}
 			else {
@@ -73,9 +74,9 @@ public class UnitTag implements Item {
 	}
 
 	@Override
-	public void save() {
+	public void save(ArrayList<SegmentError> errors) {
 		for (SegmentTag st : segments) {
-			st.save();
+			st.save(errors);
 		}
 		Node lastFoundNode = null;
 		for (int i = 0; i < segments.size(); i++) {

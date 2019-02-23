@@ -40,9 +40,9 @@ public class XliffTag {
 		this.files = files;
 	}
 
-	public void save() {
+	public void save(ArrayList<SegmentError> errors) {
 		for (FileTag f : files) {
-			f.save();
+			f.save(errors);
 		}
 	}
 

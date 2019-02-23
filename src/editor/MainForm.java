@@ -1,15 +1,22 @@
 package editor;
 
 import java.io.File;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import util.MessageBox;
 import util.XmlUtil;
 import xliff_model.FileTag;
 import xliff_model.InvalidXliffFormatException;
+import xliff_model.SegmentError;
 import xliff_model.XliffTag;
 
 public class MainForm extends javax.swing.JFrame {
+
+	XliffTag xliffFile;
 
 	public MainForm() {
 		initComponents();
@@ -17,13 +24,40 @@ public class MainForm extends javax.swing.JFrame {
 
 	public void load_file(File f) throws InvalidXliffFormatException {
 		Document doc = XmlUtil.read_xml(f);
-		XliffTag xliffFile = new XliffTag(doc);
+		xliffFile = new XliffTag(doc);
 
 		// test
 		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
 		// todo handle multiple files
 		FileTag fileTag = xliffFile.getFiles().get(0);
 		fileView1.load_file(fileTag);
+	}
+
+	public void save_file() {
+		ArrayList<FileTag> files = new ArrayList<>();
+		// todo handle multiple files
+		FileTag fileTag = (FileTag) fileView1.undoManager.getCurrentState().getModel();
+		files.add(fileTag);
+		xliffFile.setFiles(files);
+
+		ArrayList<SegmentError> errors = new ArrayList<>();
+		xliffFile.save(errors);
+
+		if (errors.size() > 0) {
+			int choice = JOptionPane.showConfirmDialog(this,
+					"Some segments have invalid content. They would be saved as empty. Save anyway?",
+					"Invalid segments found",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (choice == JOptionPane.YES_OPTION) {
+			}
+			else {
+				// todo cancel save
+				return;
+			}
+		}
+		StringWriter writer = new StringWriter();
+		XmlUtil.write_xml(xliffFile.getDocument(), new StreamResult(writer));
+		System.out.println(writer.toString());
 	}
 
 	public void menu_open() {
@@ -128,7 +162,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemSplitActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
-		fileView1.save();
+		save_file();
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed

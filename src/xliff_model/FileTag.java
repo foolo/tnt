@@ -8,7 +8,8 @@ import undo_manager.UndoableModel;
 
 public class FileTag implements UndoableModel {
 
-	private ArrayList<Item> items = new ArrayList<>();
+	private final ArrayList<Item> items = new ArrayList<>();
+	private ArrayList<SegmentTag> segmentArray = null;
 
 	public FileTag(Node node) throws InvalidXliffFormatException {
 		for (Node n : new NodeArray(node.getChildNodes())) {
@@ -37,11 +38,13 @@ public class FileTag implements UndoableModel {
 	}
 
 	public ArrayList<SegmentTag> getSegmentsArray() {
-		ArrayList<SegmentTag> res = new ArrayList<>();
-		for (Item i : items) {
-			res.addAll(i.getSegmentsArray());
+		if (segmentArray == null) {
+			segmentArray = new ArrayList<>();
+			for (Item i : items) {
+				segmentArray.addAll(i.getSegmentsArray());
+			}
 		}
-		return res;
+		return segmentArray;
 	}
 
 	@Override
@@ -49,9 +52,9 @@ public class FileTag implements UndoableModel {
 		return new FileTag(this);
 	}
 
-	void save() {
+	void save(ArrayList<SegmentError> errors) {
 		for (Item i : items) {
-			i.save();
+			i.save(errors);
 		}
 	}
 }

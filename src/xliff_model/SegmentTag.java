@@ -1,62 +1,55 @@
 package xliff_model;
 
 import java.util.ArrayList;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import undo_manager.CaretPosition;
-import util.Log;
-import util.NodeArray;
 import util.XmlUtil;
 
 public class SegmentTag {
 
 	private TaggedText source;
 	private TaggedText target;
-	private UnitTag parent;
-	private Node node;
+	private final UnitTag parent;
+	private final Element node;
+	private final Node sourceNode;
+	private final Node targetNode;
 
-	public SegmentTag(Node node, UnitTag parent) throws InvalidXliffFormatException {
+	public SegmentTag(Element node, UnitTag parent) throws InvalidXliffFormatException {
 		this.parent = parent;
 		this.node = node;
-		for (Node n : new NodeArray(node.getChildNodes())) {
-			if (n.getNodeType() != Node.ELEMENT_NODE) {
-				//System.out.println("Skip non-element child node for <segment>");
-				continue;
-			}
-			if (n.getNodeName().equals("source")) {
-				if (source != null) {
-					throw new InvalidXliffFormatException("Multiple <source> found in <segment>");
-				}
-				source = new TaggedText(n);
-				System.out.println("SOURCE: " + source);
-			}
-			else if (n.getNodeName().equals("target")) {
-				if (target != null) {
-					throw new InvalidXliffFormatException("Multiple <target> found in <segment>");
-				}
-				target = new TaggedText(n);
-				System.out.println("TARGET: " + target);
-			}
-			else {
-				Log.debug("unhandled: " + n.getNodeName(), node);
-			}
-		}
-		if (source == null) {
+		sourceNode = XmlUtil.getChildByName(node, "source");
+		if (sourceNode == null) {
 			throw new InvalidXliffFormatException("Mandatory <source> missing in <segment>");
 		}
+		Node tn = XmlUtil.getChildByName(node, "target");
+		if (tn == null) {
+			tn = sourceNode.cloneNode(false);
+			XmlUtil.clearChildren(tn);
+			node.appendChild(tn);
+			tn = node.getOwnerDocument().renameNode(tn, null, "target");
+		}
+		targetNode = tn;
+		source = new TaggedText(sourceNode);
+		target = new TaggedText(targetNode);
 	}
 
 	public SegmentTag(SegmentTag st, UnitTag parent) {
-		source = st.source;
-		target = st.target;
+		this.source = st.source;
+		this.target = st.target;
 		this.parent = parent;
-		node = st.node;
+		this.node = st.node;
+		this.sourceNode = st.sourceNode;
+		this.targetNode = st.targetNode;
 	}
 
-	public SegmentTag(TaggedText source, TaggedText target, UnitTag parent, Node node) {
+	public SegmentTag(TaggedText source, TaggedText target, Element node, SegmentTag st) {
 		this.source = source;
 		this.target = target;
-		this.parent = parent;
+		this.parent = st.parent;
 		this.node = node;
+		this.sourceNode = st.sourceNode;
+		this.targetNode = st.targetNode;
 	}
 
 	public TaggedText getSourceText() {
@@ -90,7 +83,7 @@ public class SegmentTag {
 		ArrayList<TaggedTextContent> src0 = new ArrayList<>(source.getContent().subList(0, pos.getTextPosition()));
 		ArrayList<TaggedTextContent> src1 = new ArrayList<>(source.getContent().subList(pos.getTextPosition(), source.getContent().size()));
 		source = new TaggedText(src0);
-		return new SegmentTag(new TaggedText(src1), new TaggedText(new ArrayList<>()), this.parent, node.cloneNode(true));
+		return new SegmentTag(new TaggedText(src1), new TaggedText(new ArrayList<>()), (Element) node.cloneNode(true), this);
 	}
 
 	static void replaceChildren(Node node, ArrayList<Node> newNodes) {
@@ -100,19 +93,29 @@ public class SegmentTag {
 		}
 	}
 
-	public void save() {
-		for (Node n : new NodeArray(node.getChildNodes())) {
-			if (n.getNodeName().equals("source")) {
-				System.out.println("set source: " + source);
-				replaceChildren(n, source.toNodes(node.getOwnerDocument()));
-				System.out.println(XmlUtil.getNodeString(n));
-				System.out.println(n.getNodeValue());
-				System.out.println(n.getTextContent());
-			}
-			else if (n.getNodeName().equals("target")) {
-				System.out.println("set target: " + target);
-				replaceChildren(n, target.toNodes(node.getOwnerDocument()));
-			}
+	public void save(ArrayList<SegmentError> errors) {
+		ArrayList<Node> sourceNodes;
+		try {
+			sourceNodes = source.toNodes(node.getOwnerDocument());
+			System.out.println("set source: " + source);
 		}
+		catch (SaveException ex) {
+			System.out.println(ex.getMessage());
+			sourceNodes = new ArrayList<>();
+			errors.add(new SegmentError(this, ex.getMessage()));
+		}
+		replaceChildren(sourceNode, sourceNodes);
+
+		ArrayList<Node> targetNodes;
+		try {
+			targetNodes = target.toNodes(node.getOwnerDocument());
+			System.out.println("set target: " + target);
+		}
+		catch (SaveException ex) {
+			System.out.println(ex.getMessage());
+			targetNodes = new ArrayList<>();
+			errors.add(new SegmentError(this, ex.getMessage()));
+		}
+		replaceChildren(targetNode, targetNodes);
 	}
 }

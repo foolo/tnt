@@ -67,19 +67,17 @@ public class TaggedText {
 		return new TaggedText(newContent);
 	}
 
-	public ArrayList<Node> toNodes(Document document) {
+	public ArrayList<Node> toNodes(Document document) throws SaveException {
 		ArrayList<TaggedTextContent> tmpContent = new ArrayList<>(content);
 		tmpContent.add(new Tag(null, Tag.Type.END));
 		ArrayList<Node> result = getNodeList(tmpContent, document);
 		if (tmpContent.isEmpty() == false) {
-			// todo handle invalid text
-			System.err.println("invalid tagged text");
-			return null;
+			throw new SaveException("Unexpected end tag");
 		}
 		return result;
 	}
 
-	private static ArrayList<Node> getNodeList(ArrayList<TaggedTextContent> content, Document document) {
+	private static ArrayList<Node> getNodeList(ArrayList<TaggedTextContent> content, Document document) throws SaveException {
 		ArrayList<Node> res = new ArrayList<>();
 		while (content.isEmpty() == false) {
 			TaggedTextContent c = content.get(0);
@@ -109,7 +107,7 @@ public class TaggedText {
 				System.err.println("unexpected class: " + c.getClass());
 			}
 		}
-		return res;
+		throw new SaveException("Missing end tag");
 	}
 
 	@Override
