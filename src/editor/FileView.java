@@ -27,6 +27,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		Component c = jPanelItems.getComponent(newEditingPosition.getItemIndex());
 		SegmentView segmentView = (SegmentView) c;
 		segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
+		scroll_to_segment(segmentView);
 	}
 
 	public void update_model() {
@@ -48,6 +49,19 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 				segmentView = (SegmentView) c;
 			}
 			segmentView.setSegmentTag(segments.get(i), i);
+		}
+	}
+
+	void scroll_to_segment(SegmentView segmentView) {
+		int dest_y = segmentView.getBounds().y;
+		int dest_h = segmentView.getBounds().height;
+		int view_y = jScrollPane1.getVerticalScrollBar().getValue();
+		int view_h = jScrollPane1.getVerticalScrollBar().getVisibleAmount();
+		if (dest_y < view_y) {
+			jScrollPane1.getVerticalScrollBar().setValue(dest_y);
+		}
+		else if (dest_y + dest_h > view_y + view_h) {
+			jScrollPane1.getVerticalScrollBar().setValue(dest_y + dest_h - view_h);
 		}
 	}
 
