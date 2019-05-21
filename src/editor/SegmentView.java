@@ -2,6 +2,7 @@ package editor;
 
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
@@ -44,6 +45,8 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentView(UndoManager undoManager) {
 		initComponents();
 		this.undoManager = undoManager;
+		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
+		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag, int item_index) {

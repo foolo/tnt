@@ -19,6 +19,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
 	public FileView() {
 		initComponents();
+		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 	}
 
 	@Override
