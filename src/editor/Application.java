@@ -23,16 +23,17 @@ public class Application {
 			Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				MainForm mainForm = new MainForm();
 				mainForm.setVisible(true);
-				
-				// todo tmp
-				try {
-					mainForm.load_file(new File("/home/olof/Downloads/doctest/test_odt.odt.xlf2"));
-				}
-				catch (InvalidXliffFormatException ex) {
-					MessageBox.error(ex.getMessage());
+				if (args.length > 0) {
+					try {
+						mainForm.load_file(new File(args[0]));
+					}
+					catch (InvalidXliffFormatException ex) {
+						MessageBox.error(ex.getMessage());
+					}
 				}
 			}
 		});
