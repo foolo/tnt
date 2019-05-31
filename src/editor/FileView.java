@@ -7,7 +7,7 @@ import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
 import undo_manager.UndoableState;
 import xliff_model.FileTag;
-import xliff_model.InvalidXliffFormatException;
+import xliff_model.ParseException;
 import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
 import xliff_model.XliffTag;
@@ -66,7 +66,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		}
 	}
 
-	public void load_file(FileTag fileTag) throws InvalidXliffFormatException {
+	public void load_file(FileTag fileTag) throws ParseException {
 		undoManager = new UndoManager();
 		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0);
 		undoManager.initialize(new UndoableState(fileTag, pos, pos, undoManager), this);

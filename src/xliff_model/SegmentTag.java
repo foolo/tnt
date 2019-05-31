@@ -15,12 +15,12 @@ public class SegmentTag {
 	private final Node sourceNode;
 	private final Node targetNode;
 
-	public SegmentTag(Element node, UnitTag parent) throws InvalidXliffFormatException {
+	public SegmentTag(Element node, UnitTag parent) throws ParseException {
 		this.parent = parent;
 		this.node = node;
 		sourceNode = XmlUtil.getChildByName(node, "source");
 		if (sourceNode == null) {
-			throw new InvalidXliffFormatException("Mandatory <source> missing in <segment>");
+			throw new ParseException("Mandatory <source> missing in <segment>");
 		}
 		Node tn = XmlUtil.getChildByName(node, "target");
 		if (tn == null) {

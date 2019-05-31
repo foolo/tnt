@@ -13,7 +13,7 @@ public class UnitTag implements Item {
 	private ArrayList<SegmentTag> segments = new ArrayList<>();
 	private Node node;
 
-	UnitTag(Node node) throws InvalidXliffFormatException {
+	UnitTag(Node node) throws ParseException {
 		this.node = node;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
@@ -29,7 +29,7 @@ public class UnitTag implements Item {
 			}
 		}
 		if (segments.isEmpty()) {
-			throw new InvalidXliffFormatException("No <segment> nodes found in <unit>");
+			throw new ParseException("No <segment> nodes found in <unit>");
 		}
 	}
 

@@ -9,7 +9,7 @@ public class GroupTag implements Item {
 
 	private ArrayList<Item> items = new ArrayList<>();
 
-	GroupTag(Node node) throws InvalidXliffFormatException {
+	GroupTag(Node node) throws ParseException {
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <file>");

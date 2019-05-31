@@ -11,7 +11,7 @@ public class XliffTag {
 	private ArrayList<FileTag> files = new ArrayList<>();
 	private Document document;
 
-	public XliffTag(Document doc) throws InvalidXliffFormatException {
+	public XliffTag(Document doc) throws ParseException {
 		Node node = doc.getDocumentElement();
 		this.document = doc;
 		for (Node n : new NodeArray(node.getChildNodes())) {
@@ -28,7 +28,7 @@ public class XliffTag {
 			}
 		}
 		if (files.isEmpty()) {
-			throw new InvalidXliffFormatException("No <file> tags found under <xliff>");
+			throw new ParseException("No <file> tags found under <xliff>");
 		}
 	}
 

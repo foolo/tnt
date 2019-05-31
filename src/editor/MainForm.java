@@ -3,14 +3,18 @@ package editor;
 import java.io.File;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import util.Log;
 import util.MessageBox;
 import util.XmlUtil;
 import xliff_model.FileTag;
-import xliff_model.InvalidXliffFormatException;
+import xliff_model.LoadException;
+import xliff_model.ParseException;
 import xliff_model.SegmentError;
 import xliff_model.XliffTag;
 
@@ -22,15 +26,22 @@ public class MainForm extends javax.swing.JFrame {
 		initComponents();
 	}
 
-	public void load_file(File f) throws InvalidXliffFormatException {
-		Document doc = XmlUtil.read_xml(f);
-		xliffFile = new XliffTag(doc);
+	public void load_file(File f) {
+		try {
+			Document doc = XmlUtil.read_xml(f);
+			xliffFile = new XliffTag(doc);
 
-		// test
-		//System.out.println(XmlUtil.getNodeString(xliffFile.getNode()));
-		// todo handle multiple files
-		FileTag fileTag = xliffFile.getFiles().get(0);
-		fileView1.load_file(fileTag);
+			// todo handle multiple files
+			FileTag fileTag = xliffFile.getFiles().get(0);
+			fileView1.load_file(fileTag);
+		}
+		catch (LoadException ex) {
+			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (ParseException ex) {
+			Log.err(ex.getMessage());
+			JOptionPane.showMessageDialog(null, "Invalid XLIFF format", "", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void save_file() {
@@ -68,12 +79,7 @@ public class MainForm extends javax.swing.JFrame {
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		try {
-			load_file(fc.getSelectedFile());
-		}
-		catch (InvalidXliffFormatException ex) {
-			MessageBox.error(ex.getMessage());
-		}
+		load_file(fc.getSelectedFile());
 	}
 
 	@SuppressWarnings("unchecked")

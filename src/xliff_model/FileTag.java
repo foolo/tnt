@@ -11,7 +11,7 @@ public class FileTag implements UndoableModel {
 	private final ArrayList<Item> items = new ArrayList<>();
 	private ArrayList<SegmentTag> segmentArray = null;
 
-	public FileTag(Node node) throws InvalidXliffFormatException {
+	public FileTag(Node node) throws ParseException {
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				//System.out.println("Skip non-element child node for <file>");

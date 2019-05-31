@@ -3,7 +3,6 @@ package util;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -18,20 +17,23 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import xliff_model.LoadException;
+import xliff_model.ParseException;
 
 public class XmlUtil {
 
-	public static Document read_xml(File file) {
+	public static Document read_xml(File file) throws LoadException, ParseException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			ArrayList<String> result = new ArrayList<>();
 			Document doc = dbf.newDocumentBuilder().parse(file);
 			doc.getDocumentElement().normalize();
 			return doc;
 		}
-		catch (SAXException | ParserConfigurationException | IOException ex) {
-			Log.err(ex.toString());
-			return null;
+		catch (SAXException | ParserConfigurationException ex) {
+			throw new ParseException(ex.getMessage());
+		}
+		catch (IOException ex) {
+			throw new LoadException(ex.getMessage());
 		}
 	}
 

@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
-import util.MessageBox;
-import xliff_model.InvalidXliffFormatException;
 
 public class Application {
 
@@ -28,12 +26,7 @@ public class Application {
 				MainForm mainForm = new MainForm();
 				mainForm.setVisible(true);
 				if (args.length > 0) {
-					try {
-						mainForm.load_file(new File(args[0]));
-					}
-					catch (InvalidXliffFormatException ex) {
-						MessageBox.error(ex.getMessage());
-					}
+					mainForm.load_file(new File(args[0]));
 				}
 			}
 		});
