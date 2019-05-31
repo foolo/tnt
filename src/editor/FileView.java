@@ -86,26 +86,6 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		return (SegmentView) c;
 	}
 
-	void split() {
-		undoManager.save();
-		CaretPosition p = undoManager.getCaretPosition();
-		if (p.getColumn() != CaretPosition.Column.SOURCE) {
-			System.err.println("can only split when caret is in source column");
-			return;
-		}
-		System.out.println("current pos: " + p);
-		SegmentTag segmentTag = getSegmentView(p.getItemIndex()).getSegmentTag();
-		UnitTag unitTag = segmentTag.getParent();
-		CaretPosition newPosition = unitTag.split(p, segmentTag);
-		if (newPosition == null) {
-			System.err.println("split failed");
-			return;
-		}
-		undoManager.getCurrentState().setModified(newPosition);
-		undoManager.save();
-		update_model();
-	}
-
 	void copy_source_to_target() {
 		undoManager.save();
 		CaretPosition p = undoManager.getCaretPosition();

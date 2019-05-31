@@ -40,17 +40,6 @@ public class UnitTag implements Item {
 		}
 	}
 
-	public CaretPosition split(CaretPosition pos, SegmentTag segmentTag) {
-		int index = segments.indexOf(segmentTag);
-		if (index < 0) {
-			System.out.println("segment tag not found in unit");
-			return null;
-		}
-		SegmentTag newSegmentTag = segmentTag.split(pos);
-		segments.add(index + 1, newSegmentTag);
-		return new CaretPosition(pos.getItemIndex(), CaretPosition.Column.SOURCE, newSegmentTag.getSourceText().getContent().size());
-	}
-
 	@Override
 	public ArrayList<SegmentTag> getSegmentsArray() {
 		return segments;

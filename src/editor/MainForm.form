@@ -32,14 +32,6 @@
             <Property name="text" type="java.lang.String" value="Edit"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemSplit">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Split at current position"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemSplitActionPerformed"/>
-              </Events>
-            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCopySrc">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Copy source to target"/>

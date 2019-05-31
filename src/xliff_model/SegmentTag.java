@@ -3,20 +3,17 @@ package xliff_model;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import undo_manager.CaretPosition;
 import util.XmlUtil;
 
 public class SegmentTag {
 
 	private TaggedText sourceText;
 	private TaggedText targetText;
-	private final UnitTag parent;
 	private final Element node;
 	private final Node sourceNode;
 	private final Node targetNode;
 
 	public SegmentTag(Element node, UnitTag parent) throws ParseException {
-		this.parent = parent;
 		this.node = node;
 		sourceNode = XmlUtil.getChildByName(node, "source");
 		if (sourceNode == null) {
@@ -37,17 +34,7 @@ public class SegmentTag {
 	public SegmentTag(SegmentTag st, UnitTag parent) {
 		this.sourceText = st.sourceText;
 		this.targetText = st.targetText;
-		this.parent = parent;
 		this.node = st.node;
-		this.sourceNode = st.sourceNode;
-		this.targetNode = st.targetNode;
-	}
-
-	public SegmentTag(TaggedText source, TaggedText target, Element node, SegmentTag st) {
-		this.sourceText = source;
-		this.targetText = target;
-		this.parent = st.parent;
-		this.node = node;
 		this.sourceNode = st.sourceNode;
 		this.targetNode = st.targetNode;
 	}
@@ -63,23 +50,12 @@ public class SegmentTag {
 		return new TaggedText(new ArrayList<>());
 	}
 
-	public UnitTag getParent() {
-		return parent;
-	}
-
 	public Node getNode() {
 		return node;
 	}
 
 	public void setTargetText(TaggedText s) {
 		targetText = s;
-	}
-
-	public SegmentTag split(CaretPosition pos) {
-		ArrayList<TaggedTextContent> src0 = new ArrayList<>(sourceText.getContent().subList(0, pos.getTextPosition()));
-		ArrayList<TaggedTextContent> src1 = new ArrayList<>(sourceText.getContent().subList(pos.getTextPosition(), sourceText.getContent().size()));
-		sourceText = new TaggedText(src0);
-		return new SegmentTag(new TaggedText(src1), new TaggedText(new ArrayList<>()), (Element) node.cloneNode(true), this);
 	}
 
 	static void replaceChildren(Node node, ArrayList<Node> newNodes) {

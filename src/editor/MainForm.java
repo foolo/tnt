@@ -92,7 +92,6 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItemOpen = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItemSplit = new javax.swing.JMenuItem();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -118,14 +117,6 @@ public class MainForm extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
-
-        jMenuItemSplit.setText("Split at current position");
-        jMenuItemSplit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemSplitActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItemSplit);
 
         jMenuItemCopySrc.setText("Copy source to target");
         jMenuItemCopySrc.addActionListener(new java.awt.event.ActionListener() {
@@ -163,10 +154,6 @@ public class MainForm extends javax.swing.JFrame {
 		menu_open();
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
-    private void jMenuItemSplitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSplitActionPerformed
-		fileView1.split();
-    }//GEN-LAST:event_jMenuItemSplitActionPerformed
-
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
 		save_file();
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
@@ -183,6 +170,5 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
-    private javax.swing.JMenuItem jMenuItemSplit;
     // End of variables declaration//GEN-END:variables
 }
