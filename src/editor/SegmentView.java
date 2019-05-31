@@ -2,7 +2,6 @@ package editor;
 
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;

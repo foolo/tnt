@@ -9,7 +9,6 @@ import undo_manager.UndoableState;
 import xliff_model.FileTag;
 import xliff_model.ParseException;
 import xliff_model.SegmentTag;
-import xliff_model.UnitTag;
 import xliff_model.XliffTag;
 
 public class FileView extends javax.swing.JPanel implements UndoEventListener {

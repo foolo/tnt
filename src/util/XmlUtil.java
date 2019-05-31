@@ -2,7 +2,6 @@ package util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -64,23 +63,6 @@ public class XmlUtil {
 		}
 		String index = ((Element) node).getAttribute("id");
 		return getPath(parent) + "." + node.getNodeName() + "[" + index + "]";
-	}
-
-	public static String getNodeString(Node node) {
-		try {
-			StringWriter writer = new StringWriter();
-			Transformer tr = TransformerFactory.newInstance().newTransformer();
-			tr.setOutputProperty(OutputKeys.METHOD, "xml");
-			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-			tr.setOutputProperty(OutputKeys.INDENT, "yes");
-			tr.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-			tr.transform(new DOMSource(node), new StreamResult(writer));
-			return writer.toString();
-		}
-		catch (TransformerException e) {
-			e.printStackTrace();
-		}
-		return node.getTextContent();
 	}
 
 	public static void clearChildren(Node node) {
