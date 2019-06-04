@@ -6,18 +6,13 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
 import util.Log;
 import util.XmlUtil;
-import xliff_model.FileTag;
 import xliff_model.LoadException;
 import xliff_model.ParseException;
 import xliff_model.SegmentError;
-import xliff_model.XliffTag;
 
 public class MainForm extends javax.swing.JFrame {
-
-	XliffTag xliffFile;
 
 	public MainForm() {
 		initComponents();
@@ -25,12 +20,7 @@ public class MainForm extends javax.swing.JFrame {
 
 	public void load_file(File f) {
 		try {
-			Document doc = XmlUtil.read_xml(f);
-			xliffFile = new XliffTag(doc);
-
-			// todo handle multiple files
-			FileTag fileTag = xliffFile.getFiles().get(0);
-			fileView1.load_file(fileTag);
+			xliffView1.load_xliff(f);
 		}
 		catch (LoadException ex) {
 			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
@@ -42,14 +32,8 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public void save_file() {
-		ArrayList<FileTag> files = new ArrayList<>();
-		// todo handle multiple files
-		FileTag fileTag = (FileTag) fileView1.undoManager.getCurrentState().getModel();
-		files.add(fileTag);
-		xliffFile.setFiles(files);
-
 		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffFile.save(errors);
+		xliffView1.save(errors);
 
 		if (errors.size() > 0) {
 			int choice = JOptionPane.showConfirmDialog(this,
@@ -64,7 +48,7 @@ public class MainForm extends javax.swing.JFrame {
 			}
 		}
 		StringWriter writer = new StringWriter();
-		XmlUtil.write_xml(xliffFile.getDocument(), new StreamResult(writer));
+		XmlUtil.write_xml(xliffView1.getXliffTag().getDocument(), new StreamResult(writer));
 		System.out.println(writer.toString());
 	}
 
@@ -83,7 +67,7 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fileView1 = new editor.FileView();
+        xliffView1 = new editor.XliffView();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemOpen = new javax.swing.JMenuItem();
@@ -133,14 +117,14 @@ public class MainForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(fileView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(xliffView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(fileView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(xliffView1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -156,16 +140,16 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
-		fileView1.copy_source_to_target();
+		xliffView1.copy_source_to_target();
     }//GEN-LAST:event_jMenuItemCopySrcActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private editor.FileView fileView1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
+    private editor.XliffView xliffView1;
     // End of variables declaration//GEN-END:variables
 }
