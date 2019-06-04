@@ -8,9 +8,10 @@ import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import util.Log;
 import util.XmlUtil;
-import xliff_model.LoadException;
-import xliff_model.ParseException;
+import xliff_model.exceptions.LoadException;
+import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
+import xliff_model.exceptions.XliffVersionException;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -24,6 +25,9 @@ public class MainForm extends javax.swing.JFrame {
 		}
 		catch (LoadException ex) {
 			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (XliffVersionException ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (ParseException ex) {
 			Log.err(ex.getMessage());

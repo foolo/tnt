@@ -16,8 +16,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import xliff_model.LoadException;
-import xliff_model.ParseException;
+import xliff_model.exceptions.LoadException;
+import xliff_model.exceptions.ParseException;
 
 public class XmlUtil {
 

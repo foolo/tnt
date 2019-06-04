@@ -1,4 +1,4 @@
-package xliff_model;
+package xliff_model.exceptions;
 
 public class LoadException extends Exception {
 

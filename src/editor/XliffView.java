@@ -7,8 +7,8 @@ import org.w3c.dom.Document;
 import util.Log;
 import util.XmlUtil;
 import xliff_model.FileTag;
-import xliff_model.LoadException;
-import xliff_model.ParseException;
+import xliff_model.exceptions.LoadException;
+import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
 import xliff_model.XliffTag;
 
