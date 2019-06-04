@@ -11,6 +11,7 @@ import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
+import util.Log;
 import xliff_model.TaggedTextContent;
 import xliff_model.Text;
 
@@ -113,7 +114,7 @@ public class MarkupView extends JTextPane {
 				insertTag((Tag) c);
 			}
 			else {
-				System.out.println("unexpected tagged text content: " + c);
+				Log.err("unexpected instance: " + c.getClass().getName());
 			}
 		}
 	}

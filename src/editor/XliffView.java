@@ -46,7 +46,6 @@ public class XliffView extends javax.swing.JPanel {
 				name = fileTag.getId();
 			}
 			fv.setName(truncate(name));
-			System.out.println(fileTag.getOriginalFilePath());
 			fv.load_file(fileTag);
 			jTabbedPane1.add(fv);
 		}

@@ -16,7 +16,6 @@ public class UnitTag implements Item {
 		this.node = node;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
-				//System.out.println("Skip non-element child node for <unit>");
 				continue;
 			}
 			if (n.getNodeName().equals("segment")) {

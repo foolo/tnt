@@ -86,7 +86,6 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 	void copy_source_to_target() {
 		undoManager.save();
 		CaretPosition p = undoManager.getCaretPosition();
-		System.out.println("current pos: " + p);
 		SegmentView segmentView = getSegmentView(p.getItemIndex());
 		SegmentTag segmentTag = segmentView.getSegmentTag();
 		segmentView.setTargetText(segmentTag.getSourceText().copy());

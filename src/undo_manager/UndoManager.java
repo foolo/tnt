@@ -20,11 +20,8 @@ public class UndoManager {
 	}
 
 	final void push_snapshot() {
-		System.out.println("PUSH");
 		undoBuffer.push(currentState.copy());
 		currentState.clearModified();
-		System.out.println("is mod: " + currentState.isModified());
-		print_buffer();
 	}
 
 	public final void save() {
@@ -33,34 +30,22 @@ public class UndoManager {
 		}
 	}
 
-	void print_buffer() {
-		for (UndoableState s : undoBuffer) {
-			System.out.println("> start " + s.getStartPosition() + ", end: " + s.getEndPosition());
-		}
-	}
-
 	public void undo() {
-		System.out.println("UNDO");
-		print_buffer();
 		if (undoBuffer.empty()) {
-			System.out.println("undo buffer empty");
 			return;
 		}
 
 		CaretPosition newEditingPosition = null;
 
 		if (currentState.isModified() == false) {
-			System.out.println("nothing is modified, jump to previous index");
 			newEditingPosition = undoBuffer.peek().getStartPosition();
 			if (undoBuffer.size() >= 2) {
 				undoBuffer.pop();
 			}
 		}
 		else {
-			System.out.println("undoing current state");
 			newEditingPosition = currentState.getStartPosition();
 		}
-		System.out.println("new item index: " + newEditingPosition);
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
 		listener.notify_undo(newEditingPosition);
 	}

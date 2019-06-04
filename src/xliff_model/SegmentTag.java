@@ -3,6 +3,7 @@ package xliff_model;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import util.Log;
 import util.XmlUtil;
 
 public class SegmentTag {
@@ -69,7 +70,6 @@ public class SegmentTag {
 		ArrayList<Node> sourceNodes;
 		try {
 			sourceNodes = sourceText.toNodes(node.getOwnerDocument());
-			System.out.println("set source: " + sourceText);
 		}
 		catch (SaveException ex) {
 			System.out.println(ex.getMessage());
@@ -81,10 +81,9 @@ public class SegmentTag {
 		ArrayList<Node> targetNodes;
 		try {
 			targetNodes = targetText.toNodes(node.getOwnerDocument());
-			System.out.println("set target: " + targetText);
 		}
 		catch (SaveException ex) {
-			System.out.println(ex.getMessage());
+			Log.err(XmlUtil.getPath(node) + ": " + ex.getMessage());
 			targetNodes = new ArrayList<>();
 			errors.add(new SegmentError(this, ex.getMessage()));
 		}

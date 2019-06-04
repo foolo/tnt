@@ -16,7 +16,6 @@ public class XliffTag {
 		this.document = doc;
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
-				//System.out.println("Skip non-element child node for <xliff>");
 				continue;
 			}
 			if (n.getNodeName().equals("file")) {

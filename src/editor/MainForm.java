@@ -49,6 +49,8 @@ public class MainForm extends javax.swing.JFrame {
 		}
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(xliffView1.getXliffTag().getDocument(), new StreamResult(writer));
+
+		// todo save to file
 		System.out.println(writer.toString());
 	}
 

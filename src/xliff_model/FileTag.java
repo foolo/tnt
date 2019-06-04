@@ -22,7 +22,6 @@ public class FileTag implements UndoableModel {
 		}
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
-				//System.out.println("Skip non-element child node for <file>");
 				continue;
 			}
 			if (n.getNodeName().equals("unit")) {
