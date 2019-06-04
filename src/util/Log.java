@@ -9,6 +9,6 @@ public class Log {
 	}
 
 	public static void debug(String msg, Node location) {
-		System.out.println(msg + " (at " + XmlUtil.getPath(location) + ")");
+		System.out.println("DEBUG: " + msg + " (at " + XmlUtil.getPath(location) + ")");
 	}
 }
