@@ -7,6 +7,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import util.Log;
+import util.Settings;
 import util.XmlUtil;
 import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
@@ -61,12 +62,13 @@ public class MainForm extends javax.swing.JFrame {
 	public void menu_open() {
 		// todo close current file
 		JFileChooser fc = new JFileChooser();
-		fc.setCurrentDirectory(new File(System.getProperty("user.home"))); // todo store last dir in preferences
+		fc.setCurrentDirectory(Settings.getOpenDirectory());
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
 		load_file(fc.getSelectedFile());
+		Settings.setOpenDirectory(fc.getCurrentDirectory());
 	}
 
 	@SuppressWarnings("unchecked")
