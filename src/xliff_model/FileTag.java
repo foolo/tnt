@@ -43,6 +43,8 @@ public class FileTag implements UndoableModel {
 		for (Item i : ft.items) {
 			items.add(i.copy());
 		}
+		originalFilePath = ft.originalFilePath;
+		id = ft.id;
 	}
 
 	public String getId() {
@@ -50,6 +52,13 @@ public class FileTag implements UndoableModel {
 	}
 
 	public String getOriginalFilePath() {
+		return originalFilePath;
+	}
+
+	public String getAlias() {
+		if (originalFilePath.isEmpty()) {
+			return id;
+		}
 		return originalFilePath;
 	}
 

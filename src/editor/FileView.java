@@ -13,10 +13,12 @@ import xliff_model.SegmentTag;
 public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
 	UndoManager undoManager;
+	private final XliffView xliffView;
 
-	public FileView() {
+	public FileView(XliffView xliffView) {
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+		this.xliffView = xliffView;
 	}
 
 	@Override
@@ -26,6 +28,17 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		SegmentView segmentView = (SegmentView) c;
 		segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
 		scroll_to_segment(segmentView);
+	}
+
+	@Override
+	public void modifiedStatusChanged(boolean modified) {
+		updateName();
+		xliffView.updateTabTitle(this);
+	}
+
+	void updateName() {
+		String alias = ((FileTag) undoManager.getCurrentState().getModel()).getAlias();
+		setName((undoManager.isModified() ? "* " : "") + alias);
 	}
 
 	public void update_model() {
@@ -70,6 +83,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		ArrayList<SegmentTag> segments = fileTag.getSegmentsArray();
 		populate_segments(segments);
 		update_model();
+		updateName();
 	}
 
 	void populate_segments(ArrayList<SegmentTag> segments) {
@@ -84,7 +98,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 	}
 
 	void copy_source_to_target() {
-		undoManager.save();
+		undoManager.markSnapshot();
 		CaretPosition p = undoManager.getCaretPosition();
 		SegmentView segmentView = getSegmentView(p.getItemIndex());
 		SegmentTag segmentTag = segmentView.getSegmentTag();

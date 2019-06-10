@@ -164,7 +164,7 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewSourceCaretUpdate
 
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
-		undoManager.save();
+		undoManager.markSnapshot();
 		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
 		markupViewSource.getCaret().setVisible(true);
     }//GEN-LAST:event_markupViewSourceFocusGained
@@ -178,7 +178,7 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
-		undoManager.save();
+		undoManager.markSnapshot();
 		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
     }//GEN-LAST:event_markupViewTargetFocusGained
 

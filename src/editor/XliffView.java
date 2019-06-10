@@ -40,14 +40,10 @@ public class XliffView extends javax.swing.JPanel {
 		xliffTag = new XliffTag(doc);
 		jTabbedPane1.removeAll();
 		for (FileTag fileTag : xliffTag.getFiles()) {
-			FileView fv = new FileView();
-			String name = fileTag.getOriginalFilePath();
-			if (name.isEmpty()) {
-				name = fileTag.getId();
-			}
-			fv.setName(truncate(name));
+			FileView fv = new FileView(this);
 			fv.load_file(fileTag);
 			jTabbedPane1.add(fv);
+			updateTabTitle(fv);
 		}
 	}
 
@@ -79,6 +75,11 @@ public class XliffView extends javax.swing.JPanel {
 		xliffTag.save(errors);
 	}
 
+	public void updateTabTitle(FileView fileView) {
+		int index = jTabbedPane1.indexOfComponent(fileView);
+		String name = fileView.getName();
+		jTabbedPane1.setTitleAt(index, truncate(name));
+	}
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
