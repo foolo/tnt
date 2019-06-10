@@ -1,17 +1,12 @@
 package editor;
 
 import java.io.File;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.xml.transform.stream.StreamResult;
 import util.Log;
 import util.Settings;
-import util.XmlUtil;
 import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
-import xliff_model.SegmentError;
 import xliff_model.exceptions.XliffVersionException;
 
 public class MainForm extends javax.swing.JFrame {
@@ -37,30 +32,13 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public void save_file() {
-		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffView1.save(errors);
-
-		if (errors.size() > 0) {
-			int choice = JOptionPane.showConfirmDialog(this,
-					"Some segments have invalid content. They would be saved as empty. Save anyway?",
-					"Invalid segments found",
-					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-			if (choice == JOptionPane.YES_OPTION) {
-			}
-			else {
-				// todo cancel save
-				return;
-			}
-		}
-		StringWriter writer = new StringWriter();
-		XmlUtil.write_xml(xliffView1.getXliffTag().getDocument(), new StreamResult(writer));
-
-		// todo save to file
-		System.out.println(writer.toString());
+		xliffView1.save();
 	}
 
 	public void menu_open() {
-		// todo close current file
+		if (xliffView1.okToClose() == false) {
+			return;
+		}
 		JFileChooser fc = new JFileChooser();
 		fc.setCurrentDirectory(Settings.getOpenDirectory());
 		int returnVal = fc.showOpenDialog(this);
@@ -83,7 +61,12 @@ public class MainForm extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jMenu1.setText("File");
 
@@ -150,6 +133,12 @@ public class MainForm extends javax.swing.JFrame {
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
 		xliffView1.copy_source_to_target();
     }//GEN-LAST:event_jMenuItemCopySrcActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+		if (xliffView1.okToClose()) {
+			dispose();
+		}
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;

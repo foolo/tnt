@@ -2,7 +2,10 @@ package editor;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import util.Log;
 import util.XmlUtil;
@@ -55,24 +58,64 @@ public class XliffView extends javax.swing.JPanel {
 		fv.copy_source_to_target();
 	}
 
-	ArrayList<FileTag> getAllFileTags() {
-		ArrayList<FileTag> files = new ArrayList<>();
+	ArrayList<FileView> getAllFileViews() {
+		ArrayList<FileView> fileViews = new ArrayList<>();
 		for (Component c : jTabbedPane1.getComponents()) {
 			if (!(c instanceof FileView)) {
 				Log.err(c.getClass().getName() + "not instance of FileView");
 				continue;
 			}
-			FileView fileView = (FileView) c;
+			fileViews.add((FileView) c);
+		}
+		return fileViews;
+	}
+
+	ArrayList<FileTag> getAllFileTags() {
+		ArrayList<FileTag> files = new ArrayList<>();
+		for (FileView fileView : getAllFileViews()) {
 			FileTag fileTag = (FileTag) fileView.undoManager.getCurrentState().getModel();
 			files.add(fileTag);
 		}
 		return files;
 	}
 
-	void save(ArrayList<SegmentError> errors) {
+	boolean save_to_file() {
+		StringWriter writer = new StringWriter();
+		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
+
+		// todo save to file
+		System.out.println(writer.toString());
+		return true;
+	}
+
+	boolean save() {
 		ArrayList<FileTag> fileTags = getAllFileTags();
 		xliffTag.setFiles(fileTags);
+
+		ArrayList<SegmentError> errors = new ArrayList<>();
 		xliffTag.save(errors);
+
+		if (errors.isEmpty()) {
+			return save_to_file();
+		}
+		else {
+			int choice = JOptionPane.showConfirmDialog(this, "Some segments have invalid content. They would be saved as empty. Save anyway?", "Invalid segments found", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (choice == JOptionPane.YES_OPTION) {
+				return save_to_file();
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+	boolean isModified() {
+		for (FileView fileView : getAllFileViews()) {
+			if (fileView.undoManager.isModified()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void updateTabTitle(FileView fileView) {
@@ -80,6 +123,23 @@ public class XliffView extends javax.swing.JPanel {
 		String name = fileView.getName();
 		jTabbedPane1.setTitleAt(index, truncate(name));
 	}
+
+	boolean okToClose() {
+		if (isModified() == false) {
+			return true;
+		}
+		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		switch (choice) {
+			case JOptionPane.YES_OPTION:
+				return save();
+			case JOptionPane.NO_OPTION:
+				return true;
+			case JOptionPane.CANCEL_OPTION:
+			default:
+				return false;
+		}
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
