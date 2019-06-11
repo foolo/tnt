@@ -114,7 +114,7 @@ public class MarkupView extends JTextPane {
 				insertTag((Tag) c);
 			}
 			else {
-				Log.err("unexpected instance: " + c.getClass().getName());
+				Log.warn("unexpected instance: " + c.getClass().getName());
 			}
 		}
 	}

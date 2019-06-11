@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
+import util.Log;
 
 public class Application {
 
@@ -23,6 +24,7 @@ public class Application {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				Log.initializeLogger();
 				MainForm mainForm = new MainForm();
 				mainForm.setVisible(true);
 				if (args.length > 0) {

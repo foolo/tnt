@@ -40,6 +40,7 @@ public class XmlUtil {
 		try {
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
 			tr.setOutputProperty(OutputKeys.METHOD, "xml");
+			tr.setOutputProperty(OutputKeys.METHOD, "xml");
 			tr.setOutputProperty(OutputKeys.INDENT, "no");
 			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			DOMSource domSource = new DOMSource(doc);
@@ -50,8 +51,7 @@ public class XmlUtil {
 			Log.err(ex.toString());
 		}
 		catch (TransformerException ex) {
-			//Log.err(ex.toString());
-			System.err.println(ex.toString());
+			Log.err(ex.toString());
 		}
 		return null;
 	}

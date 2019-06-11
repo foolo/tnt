@@ -62,7 +62,7 @@ public class XliffView extends javax.swing.JPanel {
 		ArrayList<FileView> fileViews = new ArrayList<>();
 		for (Component c : jTabbedPane1.getComponents()) {
 			if (!(c instanceof FileView)) {
-				Log.err(c.getClass().getName() + "not instance of FileView");
+				Log.warn(c.getClass().getName() + " not instance of FileView");
 				continue;
 			}
 			fileViews.add((FileView) c);
