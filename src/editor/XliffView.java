@@ -79,12 +79,19 @@ public class XliffView extends javax.swing.JPanel {
 		return files;
 	}
 
+	void markAsSaved() {
+		for (FileView fileView : getAllFileViews()) {
+			fileView.undoManager.markSaved();
+		}
+	}
+
 	boolean save_to_file() {
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
 
 		// todo save to file
 		System.out.println(writer.toString());
+		markAsSaved();
 		return true;
 	}
 

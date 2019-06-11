@@ -34,7 +34,9 @@ public class UndoManager {
 	}
 
 	public void markSaved() {
+		markSnapshot();
 		savedState = undoBuffer.peek();
+		updateModifiedStatus();
 	}
 
 	public boolean isModified() {
