@@ -11,8 +11,11 @@ import xliff_model.exceptions.XliffVersionException;
 
 public class MainForm extends javax.swing.JFrame {
 
+	LogWindow logWindow;
+
 	public MainForm() {
 		initComponents();
+		logWindow = new LogWindow();
 	}
 
 	public void load_file(File f) {
@@ -60,6 +63,8 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItemLogs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -100,6 +105,18 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setText("View");
+
+        jMenuItemLogs.setText("Log");
+        jMenuItemLogs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemLogsActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItemLogs);
+
+        jMenuBar1.add(jMenu3);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -136,15 +153,22 @@ public class MainForm extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 		if (xliffView1.okToClose()) {
+			logWindow.dispose();
 			dispose();
 		}
     }//GEN-LAST:event_formWindowClosing
 
+    private void jMenuItemLogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogsActionPerformed
+		logWindow.open();
+    }//GEN-LAST:event_jMenuItemLogsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemCopySrc;
+    private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
     private editor.XliffView xliffView1;
