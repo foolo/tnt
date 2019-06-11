@@ -84,7 +84,7 @@ public class SegmentTag {
 			targetNodes = targetText.toNodes(node.getOwnerDocument());
 		}
 		catch (SaveException ex) {
-			Log.debug(XmlUtil.getPath(node) + ": " + ex.getMessage());
+			Log.debug(XmlUtil.getPath(node) + ": " + ex.toString());
 			targetNodes = new ArrayList<>();
 			errors.add(new SegmentError(this, ex.getMessage()));
 		}

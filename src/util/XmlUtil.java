@@ -29,7 +29,7 @@ public class XmlUtil {
 			return doc;
 		}
 		catch (SAXException | ParserConfigurationException ex) {
-			throw new ParseException(ex.getMessage());
+			throw new ParseException(ex.toString());
 		}
 		catch (IOException ex) {
 			throw new LoadException(ex.getMessage());

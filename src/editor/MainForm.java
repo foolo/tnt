@@ -26,7 +26,7 @@ public class MainForm extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(null, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (ParseException ex) {
-			Log.debug(ex.getMessage());
+			Log.debug(ex.toString());
 			JOptionPane.showMessageDialog(null, "Invalid XLIFF format", "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
