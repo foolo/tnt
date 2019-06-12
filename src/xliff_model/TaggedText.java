@@ -59,6 +59,16 @@ public class TaggedText {
 		return content;
 	}
 
+	public String getTextContent() {
+		StringBuilder sb = new StringBuilder();
+		for (TaggedTextContent c : content) {
+			if (c instanceof Text) {
+				sb.append(c.toString());
+			}
+		}
+		return sb.toString();
+	}
+
 	public TaggedText copy() {
 		ArrayList<TaggedTextContent> newContent = new ArrayList<>();
 		for (TaggedTextContent t : content) {
