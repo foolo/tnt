@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package javax.swing.plaf.basic;
+package editor.javax.swing.plaf.basic;
 
 import java.awt.datatransfer.*;
 import java.awt.im.InputContext;
