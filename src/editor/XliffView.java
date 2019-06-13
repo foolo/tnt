@@ -73,7 +73,7 @@ public class XliffView extends javax.swing.JPanel {
 	ArrayList<FileTag> getAllFileTags() {
 		ArrayList<FileTag> files = new ArrayList<>();
 		for (FileView fileView : getAllFileViews()) {
-			FileTag fileTag = (FileTag) fileView.undoManager.getCurrentState().getModel();
+			FileTag fileTag = (FileTag) fileView.getUndoManager().getCurrentState().getModel();
 			files.add(fileTag);
 		}
 		return files;
@@ -81,7 +81,7 @@ public class XliffView extends javax.swing.JPanel {
 
 	void markAsSaved() {
 		for (FileView fileView : getAllFileViews()) {
-			fileView.undoManager.markSaved();
+			fileView.getUndoManager().markSaved();
 		}
 	}
 
@@ -118,7 +118,7 @@ public class XliffView extends javax.swing.JPanel {
 
 	boolean isModified() {
 		for (FileView fileView : getAllFileViews()) {
-			if (fileView.undoManager.isModified()) {
+			if (fileView.getUndoManager().isModified()) {
 				return true;
 			}
 		}

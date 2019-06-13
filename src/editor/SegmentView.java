@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
-import undo_manager.UndoManager;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
 
@@ -13,37 +12,39 @@ public class SegmentView extends javax.swing.JPanel {
 
 	DocumentListener targetDocumentListener = new DocumentListener() {
 
+		void update() {
+			segmentTag.setTargetText(markupViewTarget.getTaggedText());
+			CaretPosition pos = new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition());
+			fileView.getUndoManager().getCurrentState().setModified(pos);
+		}
+
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
+			update();
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
+			update();
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			undoManager.getCurrentState().setModified(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
+			update();
 		}
 	};
 
 	SegmentTag segmentTag;
+	FileView fileView;
 	int item_index;
-
-	UndoManager undoManager = null;
 
 	public SegmentView() {
 		initComponents();
 	}
 
-	SegmentView(UndoManager undoManager) {
+	SegmentView(FileView fileView) {
 		initComponents();
-		this.undoManager = undoManager;
+		this.fileView = fileView;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 	}
@@ -64,6 +65,10 @@ public class SegmentView extends javax.swing.JPanel {
 
 	public SegmentTag getSegmentTag() {
 		return segmentTag;
+	}
+
+	public FileView getFileView() {
+		return fileView;
 	}
 
 	public void registerListeners() {
@@ -89,7 +94,7 @@ public class SegmentView extends javax.swing.JPanel {
 		boolean ctrl = evt.getModifiers() == CTRL_MASK;
 		boolean z = evt.getKeyCode() == KeyEvent.VK_Z;
 		if (ctrl && z) {
-			undoManager.undo();
+			fileView.getUndoManager().undo();
 		}
 	}
 
@@ -99,9 +104,9 @@ public class SegmentView extends javax.swing.JPanel {
 
         jLabelIndex = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        markupViewSource = new editor.MarkupView();
+        markupViewSource = new editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
-        markupViewTarget = new editor.MarkupView();
+        markupViewTarget = new editor.MarkupView(this);
 
         jLabelIndex.setText("jLabel1");
 
@@ -160,12 +165,12 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
+		fileView.getUndoManager().setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
     }//GEN-LAST:event_markupViewSourceCaretUpdate
 
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
-		undoManager.markSnapshot();
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
+		fileView.getUndoManager().markSnapshot();
+		fileView.getUndoManager().setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
 		markupViewSource.getCaret().setVisible(true);
     }//GEN-LAST:event_markupViewSourceFocusGained
 
@@ -174,12 +179,12 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewSourceKeyPressed
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
+		fileView.getUndoManager().setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
-		undoManager.markSnapshot();
-		undoManager.setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
+		fileView.getUndoManager().markSnapshot();
+		fileView.getUndoManager().setCaretPosition(new CaretPosition(item_index, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed

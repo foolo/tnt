@@ -12,13 +12,17 @@ import xliff_model.SegmentTag;
 
 public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
-	UndoManager undoManager;
+	private UndoManager undoManager;
 	private final XliffView xliffView;
 
 	public FileView(XliffView xliffView) {
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 		this.xliffView = xliffView;
+	}
+
+	public UndoManager getUndoManager() {
+		return undoManager;
 	}
 
 	@Override
@@ -52,7 +56,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		for (int i = 0; i < segments.size(); i++) {
 			SegmentView segmentView;
 			if (i > jPanelItems.getComponentCount() - 1) {
-				segmentView = new SegmentView(undoManager);
+				segmentView = new SegmentView(this);
 				jPanelItems.add(segmentView);
 			}
 			else {
@@ -88,7 +92,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
 	void populate_segments(ArrayList<SegmentTag> segments) {
 		for (SegmentTag s : segments) {
-			jPanelItems.add(new SegmentView(undoManager));
+			jPanelItems.add(new SegmentView(this));
 		}
 	}
 
