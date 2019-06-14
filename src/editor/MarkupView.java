@@ -102,7 +102,7 @@ public class MarkupView extends JTextPane {
 			getDocument().insertString(getDocument().getLength(), s, null);
 		}
 		catch (BadLocationException ex) {
-			Log.err(ex.toString());
+			Log.err(ex);
 		}
 	}
 
@@ -111,7 +111,7 @@ public class MarkupView extends JTextPane {
 			getDocument().insertString(getCaretPosition(), s, null);
 		}
 		catch (BadLocationException ex) {
-			Log.err(ex.toString());
+			Log.err(ex);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class MarkupView extends JTextPane {
 				insertTag((Tag) c);
 			}
 			else {
-				Log.warn("unexpected instance: " + c.getClass().getName());
+				Log.warn("insertTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
 	}
@@ -140,7 +140,7 @@ public class MarkupView extends JTextPane {
 				insertTag((Tag) c);
 			}
 			else {
-				Log.warn("unexpected instance: " + c.getClass().getName());
+				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
 	}

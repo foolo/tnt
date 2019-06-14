@@ -37,11 +37,11 @@ public class TaggedText {
 					res.add(new Tag(createRefNode(n), Tag.Type.EMPTY));
 				}
 				else {
-					Log.debug("unhandled node name: " + n.getNodeName(), node);
+					Log.debug("TaggedText: unhandled node name: " + n.getNodeName(), node);
 				}
 			}
 			else {
-				Log.debug("unhandled node type: " + n.getNodeType(), node);
+				Log.debug("TaggedText: unhandled node type: " + n.getNodeType(), node);
 			}
 		}
 		return res;

@@ -48,10 +48,10 @@ public class XmlUtil {
 			return result;
 		}
 		catch (TransformerConfigurationException ex) {
-			Log.err(ex.toString());
+			Log.err(ex);
 		}
 		catch (TransformerException ex) {
-			Log.err(ex.toString());
+			Log.err(ex);
 		}
 		return null;
 	}

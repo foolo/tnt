@@ -24,7 +24,7 @@ public class GroupTag implements Item {
 				items.add(groupObj);
 			}
 			else {
-				Log.debug("unhandled: " + n.getNodeName(), node);
+				Log.debug("GroupTag: unhandled: " + n.getNodeName(), node);
 			}
 		}
 	}

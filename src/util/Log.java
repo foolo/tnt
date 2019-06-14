@@ -106,8 +106,8 @@ public class Log {
 		}
 	}
 
-	public static void err(String msg) {
-		logger.log(Level.SEVERE, msg);
+	public static void err(Throwable t) {
+		logger.log(Level.SEVERE, null, t);
 	}
 
 	public static void warn(String msg) {

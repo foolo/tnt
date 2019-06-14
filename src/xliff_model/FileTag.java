@@ -34,7 +34,7 @@ public class FileTag implements UndoableModel {
 				items.add(groupObj);
 			}
 			else {
-				Log.debug("unhandled: " + n.getNodeName(), node);
+				Log.debug("FileTag: unhandled: " + n.getNodeName(), node);
 			}
 		}
 	}

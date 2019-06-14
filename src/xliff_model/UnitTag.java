@@ -24,7 +24,7 @@ public class UnitTag implements Item {
 				segments.add(segmentObj);
 			}
 			else {
-				Log.debug("unhandled: " + n.getNodeName(), node);
+				Log.debug("UnitTag: unhandled: " + n.getNodeName(), node);
 			}
 		}
 		if (segments.isEmpty()) {

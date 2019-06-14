@@ -31,7 +31,7 @@ public class XliffTag {
 				files.add(fileObj);
 			}
 			else {
-				Log.debug("unhandled: " + n.getNodeName(), node);
+				Log.debug("XliffTag: unhandled: " + n.getNodeName(), node);
 			}
 		}
 		if (files.isEmpty()) {

@@ -55,7 +55,7 @@ class BasicTransferable implements Transferable, UIResource {
 			return new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=xliff_model.TaggedText");
 		}
 		catch (ClassNotFoundException ex) {
-			Log.err(ex.toString());
+			Log.err(ex);
 		}
 		return null;
 	}
@@ -65,7 +65,7 @@ class BasicTransferable implements Transferable, UIResource {
 			return new DataFlavor("text/plain;class=java.lang.String");
 		}
 		catch (ClassNotFoundException ex) {
-			Log.err(ex.toString());
+			Log.err(ex);
 		}
 		return null;
 	}
@@ -107,7 +107,7 @@ class BasicTransferable implements Transferable, UIResource {
 				doc.remove(p0.getOffset(), p1.getOffset() - p0.getOffset());
 			}
 			catch (BadLocationException ex) {
-				Log.err(ex.toString());
+				Log.err(ex);
 			}
 		}
 	}

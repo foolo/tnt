@@ -13,4 +13,8 @@ public class SegmentError {
 	public SegmentTag getSegmentTag() {
 		return segmentTag;
 	}
+
+	public String getMessage() {
+		return message;
+	}
 }
