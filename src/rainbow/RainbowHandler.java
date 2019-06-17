@@ -54,6 +54,14 @@ public class RainbowHandler {
 		Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
 	}
 
+	InputStream getResource(String path) throws IOException {
+		InputStream is = getClass().getResourceAsStream(path);
+		if (is == null) {
+			throw new IOException("getResource: resource not found: " + path);
+		}
+		return is;
+	}
+
 	public void createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws IOException {
 		Log.debug("input files: " + String.join(", ", inputFiles));
 		Log.debug("common package directory: " + commonDir);
@@ -62,7 +70,7 @@ public class RainbowHandler {
 		// copy srx file from jar to temporary directory
 		File srxTmpFile = File.createTempFile("tnt_defaultSegmentation_", ".srx");
 		srxTmpFile.deleteOnExit();
-		copy(getClass().getResourceAsStream("/res/defaultSegmentation.srx"), srxTmpFile.getPath());
+		copy(getResource("/res/defaultSegmentation.srx"), srxTmpFile.getPath());
 		Log.debug("SRX temporary file: " + srxTmpFile);
 
 		// point the pln file to the srx file
