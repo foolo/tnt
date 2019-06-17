@@ -1,8 +1,13 @@
 package editor;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import rainbow.RainbowHandler;
 import util.Log;
 import util.Settings;
 import xliff_model.exceptions.LoadException;
@@ -42,8 +47,7 @@ public class MainForm extends javax.swing.JFrame {
 		if (xliffView1.okToClose() == false) {
 			return;
 		}
-		JFileChooser fc = new JFileChooser();
-		fc.setCurrentDirectory(Settings.getOpenDirectory());
+		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
@@ -59,6 +63,7 @@ public class MainForm extends javax.swing.JFrame {
         xliffView1 = new editor.XliffView();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItemCreatePackage = new javax.swing.JMenuItem();
         jMenuItemOpen = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -74,6 +79,14 @@ public class MainForm extends javax.swing.JFrame {
         });
 
         jMenu1.setText("File");
+
+        jMenuItemCreatePackage.setText("Create XLIFF package");
+        jMenuItemCreatePackage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCreatePackageActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemCreatePackage);
 
         jMenuItemOpen.setText("Open XLIFF");
         jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
@@ -163,12 +176,30 @@ public class MainForm extends javax.swing.JFrame {
 		logWindow.open();
     }//GEN-LAST:event_jMenuItemLogsActionPerformed
 
+    private void jMenuItemCreatePackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCreatePackageActionPerformed
+		CreatePackageDialog d = new CreatePackageDialog(this, true);
+		d.setVisible(true);
+		ArrayList<String> inputFiles = d.getInputFiles();
+		File commonDir = d.getCommonDirectory();
+		String packageName = d.getPackageName();
+
+		RainbowHandler rainbowHandler = new RainbowHandler();
+		try {
+			rainbowHandler.createPackage(inputFiles, commonDir.getPath(), packageName);
+		}
+		catch (IOException ex) {
+			Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+    }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemCopySrc;
+    private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;

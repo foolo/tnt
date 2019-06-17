@@ -15,7 +15,18 @@ public class Settings {
 		return new File(dir);
 	}
 
-	public static void setOpenDirectory(File openDirectory) {
-		prefs.put("open_directory", openDirectory.toString());
+	public static void setOpenDirectory(File dir) {
+		prefs.put("open_directory", dir.getAbsolutePath());
+	}
+
+	public static File getPackageDirectory() {
+		File defaultPackageDirectory = new File(System.getProperty("user.home"), "RainbowPackages");
+		String dir = prefs.get("package_directory", defaultPackageDirectory.getAbsolutePath());
+		return new File(dir);
+	}
+
+	// todo use
+	public static void setPackageDirectory(File dir) {
+		prefs.put("package_directory", dir.getAbsolutePath());
 	}
 }

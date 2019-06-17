@@ -54,9 +54,9 @@ public class RainbowHandler {
 		Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	public void createPackage(ArrayList<String> inputFiles, String packageDirectory, String packageName) throws IOException {
+	public void createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws IOException {
 		Log.debug("input files: " + String.join(", ", inputFiles));
-		Log.debug("package directory: " + packageDirectory);
+		Log.debug("common package directory: " + commonDir);
 		Log.debug("package name: " + packageName);
 
 		// copy srx file from jar to temporary directory
@@ -66,7 +66,7 @@ public class RainbowHandler {
 		Log.debug("SRX temporary file: " + srxTmpFile);
 
 		// point the pln file to the srx file
-		String plnData = createPlnData(srxTmpFile.getPath(), packageDirectory, packageName);
+		String plnData = createPlnData(srxTmpFile.getPath(), commonDir, packageName);
 
 		// write the pln file
 		File plnTmpFile = File.createTempFile("tnt_pipeline_", ".pln");

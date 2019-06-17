@@ -9,6 +9,14 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCreatePackage">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Create XLIFF package"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCreatePackageActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemOpen">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Open XLIFF"/>
