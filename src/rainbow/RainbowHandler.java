@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import net.sf.okapi.applications.rainbow.CommandLine2;
 import util.Log;
 
 public class RainbowHandler {
@@ -54,6 +55,14 @@ public class RainbowHandler {
 		Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
 	}
 
+	InputStream getResource(String path) throws IOException {
+		InputStream is = getClass().getResourceAsStream(path);
+		if (is == null) {
+			throw new IOException("getResource: resource not found: " + path);
+		}
+		return is;
+	}
+
 	public void createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws IOException {
 		Log.debug("input files: " + String.join(", ", inputFiles));
 		Log.debug("common package directory: " + commonDir);
@@ -62,7 +71,7 @@ public class RainbowHandler {
 		// copy srx file from jar to temporary directory
 		File srxTmpFile = File.createTempFile("tnt_defaultSegmentation_", ".srx");
 		srxTmpFile.deleteOnExit();
-		copy(getClass().getResourceAsStream("/res/defaultSegmentation.srx"), srxTmpFile.getPath());
+		copy(getResource("/res/defaultSegmentation.srx"), srxTmpFile.getPath());
 		Log.debug("SRX temporary file: " + srxTmpFile);
 
 		// point the pln file to the srx file
@@ -79,6 +88,16 @@ public class RainbowHandler {
 		args.add("-pln");
 		args.add(plnTmpFile.getPath());
 		args.addAll(inputFiles);
-		net.sf.okapi.applications.rainbow.Main.main(args.toArray(new String[args.size()]));
+
+		//net.sf.okapi.applications.rainbow.Main.main(args.toArray(new String[args.size()]));
+		String tempDir = Files.createTempDirectory("tnt_tmp_").toString();
+		Log.debug("tempDirWithPrefix: " + tempDir);
+		copy(getResource("/res/encodings.xml"), new File(tempDir, "encodings.xml").getAbsolutePath());
+		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
+		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
+		CommandLine2 cl = new CommandLine2();
+		cl.sharedFolder = tempDir;
+		// todo check return value
+		cl.execute(args.toArray(new String[args.size()]));
 	}
 }

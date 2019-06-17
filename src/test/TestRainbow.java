@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import rainbow.RainbowHandler;
+import util.Log;
 
 public class TestRainbow {
 
 	public static void main(String[] args) {
+		Log.initializeLogger();
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
 			ArrayList<String> inputFiles = new ArrayList<>();

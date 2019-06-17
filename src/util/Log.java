@@ -83,9 +83,8 @@ public class Log {
 		return records;
 	}
 
-	static String tempfilePrefix() {
-		String timestamp = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss"));
-		return "tnt_log_" + timestamp + "_";
+	public static String getTimestamp() {
+		return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss"));
 	}
 
 	public static void initializeLogger() {
@@ -96,7 +95,8 @@ public class Log {
 
 		logger.addHandler(new MemoryLogHandler());
 		try {
-			File tmpfile = File.createTempFile(tempfilePrefix(), ".txt");
+			String prefix = "tnt_log_" + getTimestamp() + "_";
+			File tmpfile = File.createTempFile(prefix, ".txt");
 			FileHandler fileHandler = new FileHandler(tmpfile.getPath());
 			fileHandler.setFormatter(formatter);
 			logger.addHandler(fileHandler);
