@@ -13,7 +13,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 ===========================================================================*/
-
 package rainbow;
 
 import java.io.File;
@@ -50,42 +49,38 @@ public class CommandLine2 {
 	private ExecutionContext context;
 	public File logFile;
 	public ArrayList<String> inputFiles;
-	
-	public int execute ()
-	{
+
+	public int execute() {
 		try {
 			ps = new PrintStream(new FileOutputStream(logFile));
 			System.setOut(ps);
 			System.setErr(ps);
-			
+
 			initialize();
-			if ( !parseArguments() ) {
+			if (!parseArguments()) {
 				return 1;
 			}
-			
+
 			launchPipeline();
 		}
-		catch ( Throwable e ) {
+		catch (Throwable e) {
 			e.printStackTrace();
 			return 1;
 		}
 		finally {
-			if ( ps != null ) ps.close();
+			if (ps != null) {
+				ps.close();
+			}
 		}
-		if (( log != null ) && ( log.getErrorCount() > 0 )) {
+		if ((log != null) && (log.getErrorCount() > 0)) {
 			return 1;
 		}
 		else {
 			return 0;
 		}
 	}
-	
-	/**
-	 * Parse the command line.
-	 * @return True to execute something, false if error or exit immediately.
-	 * @throws Exception 
-	 */
-	private boolean parseArguments () throws Exception {
+
+	private boolean parseArguments() throws Exception {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -93,12 +88,12 @@ public class CommandLine2 {
 		prj.setInputRoot(0, appRootFolder, true);
 		prj.setInputRoot(1, appRootFolder, true);
 		prj.setInputRoot(2, appRootFolder, true);
-		
+
 		if (inputFiles.size() > 3) {
-			throw new OkapiException("Too many input files."); //$NON-NLS-1$
+			throw new OkapiException("Too many input files.");
 		}
 
-		for ( int i = 0; i < inputFiles.size(); i++ ) {
+		for (int i = 0; i < inputFiles.size(); i++) {
 			File f = new File(inputFiles.get(i));
 			String[] res = fm.guessFormat(f.getAbsolutePath());
 			prj.getList(i).clear();
@@ -107,44 +102,45 @@ public class CommandLine2 {
 		}
 		return true;
 	}
-	
-	private void initialize () throws Exception {
-    	// Get the location of the main class source
-    	File file = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
-    	appRootFolder = URLDecoder.decode(file.getAbsolutePath(),"utf-8"); //$NON-NLS-1$
-    	boolean fromJar = appRootFolder.endsWith(".jar");
-    	// Remove the JAR file if running an installed version
-    	if ( fromJar ) appRootFolder = Util.getDirectoryName(appRootFolder); //$NON-NLS-1$
-    	// Remove the application folder in all cases
-    	appRootFolder = Util.getDirectoryName(appRootFolder);
+
+	private void initialize() throws Exception {
+		// Get the location of the main class source
+		File file = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+		appRootFolder = URLDecoder.decode(file.getAbsolutePath(), "utf-8");
+		boolean fromJar = appRootFolder.endsWith(".jar");
+		// Remove the JAR file if running an installed version
+		if (fromJar) {
+			appRootFolder = Util.getDirectoryName(appRootFolder);
+		}    	// Remove the application folder in all cases
+		appRootFolder = Util.getDirectoryName(appRootFolder);
 
 		log = new BatchLog();
 		lm = new LanguageManager();
-		lm.loadList(sharedFolder + File.separator + "languages.xml"); //$NON-NLS-1$
-		
+		lm.loadList(sharedFolder + File.separator + "languages.xml");
+
 		// Set up the filter configuration mapper
 		fcMapper = new FilterConfigurationMapper();
 		// Get pre-defined configurations
 		DefaultFilters.setMappings(fcMapper, false, true);
 		// Discover and add plug-ins
 		pm = new PluginsManager();
-		pm.discover(new File(appRootFolder+File.separator+"dropins"), true);
+		pm.discover(new File(appRootFolder + File.separator + "dropins"), true);
 		fcMapper.addFromPlugins(pm);
 
 		utilitiesAccess = new UtilitiesAccess();
-		utilitiesAccess.loadMenu(sharedFolder+File.separator+"rainbowUtilities.xml");
-		
+		utilitiesAccess.loadMenu(sharedFolder + File.separator + "rainbowUtilities.xml");
+
 		context = new ExecutionContext();
 		context.setApplicationName("Rainbow");
 	}
-	
-	private void launchPipeline () {
+
+	private void launchPipeline() {
 		// Save any pending data
 		fcMapper.setCustomConfigurationsDirectory(prj.getParametersFolder());
 		fcMapper.updateCustomConfigurations();
-		
+
 		PipelineWrapper wrapper = new PipelineWrapper(fcMapper, appRootFolder, pm,
-			prj.getProjectFolder(), prj.getInputRoot(0), null, null, context);
+				prj.getProjectFolder(), prj.getInputRoot(0), null, null, context);
 
 		wrapper.load(pipelineFile);
 		wrapper.execute(prj);
