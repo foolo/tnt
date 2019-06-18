@@ -25,7 +25,6 @@ import net.sf.okapi.applications.rainbow.lib.FormatManager;
 import net.sf.okapi.applications.rainbow.lib.LanguageManager;
 import net.sf.okapi.applications.rainbow.pipeline.PipelineWrapper;
 import net.sf.okapi.common.ExecutionContext;
-import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.Util;
 import net.sf.okapi.common.exceptions.OkapiException;
 import net.sf.okapi.common.filters.DefaultFilters;
@@ -38,7 +37,6 @@ public class CommandLine2 {
 	public String sharedFolder;
 	private LanguageManager lm;
 	private Project prj;
-	private UtilityDriver ud;
 	private FilterConfigurationMapper fcMapper;
 	private UtilitiesAccess utilitiesAccess;
 	private BatchLog log;
@@ -94,7 +92,6 @@ public class CommandLine2 {
 		prj.setInputRoot(0, appRootFolder, true);
 		prj.setInputRoot(1, appRootFolder, true);
 		prj.setInputRoot(2, appRootFolder, true);
-		boolean setOutSearch = false;
 		int inpList = -1;
 		pipelineFile = null;
 		
@@ -103,50 +100,9 @@ public class CommandLine2 {
 			if ( "-p".equals(arg) ) { // Load a project //$NON-NLS-1$
 				prj.load(nextArg(args, ++i));
 			}
-			else if ( "-se".equals(arg) ) { // Source encoding //$NON-NLS-1$
-				prj.setSourceEncoding(nextArg(args, ++i));
-			}
-			else if ( "-te".equals(arg) ) { // Target encoding //$NON-NLS-1$
-				prj.setTargetEncoding(nextArg(args, ++i));
-			}
-			else if ( "-sl".equals(arg) ) { // Source language //$NON-NLS-1$
-				prj.setSourceLanguage(LocaleId.fromString(nextArg(args, ++i)));
-			}
-			else if ( "-tl".equals(arg) ) { // Target language //$NON-NLS-1$
-				prj.setTargetLanguage(LocaleId.fromString(nextArg(args, ++i)));
-			}
-			else if (( "-ir".equals(arg) ) || ( "-ir0".equals(arg) )) { // Input root list 0 //$NON-NLS-1$ //$NON-NLS-2$
-				prj.setInputRoot(0, nextArg(args, ++i), true);
-			}
-			else if ( "-pd".equals(arg) ) { //$NON-NLS-1$
-				prj.setCustomParametersFolder(nextArg(args, ++i));
-				prj.setUseCustomParametersFolder(true);
-			}
-			else if ( "-rd".equals(arg) ) { //$NON-NLS-1$
-				// Use the project file name to set the root directory
-				prj.setPath(Util.ensureSeparator(nextArg(args, ++i), false)+"project.rnb");
-			}
 			else if ( "-pln".equals(arg) ) {
 				pipelineFile = nextArg(args, ++i);
 				continueAfter = true;
-			}
-			else if ( "-fc".equals(arg) ) { //$NON-NLS-1$
-				Input inp = prj.getLastItem(inpList);
-				if ( inp == null ) { 
-					throw new OkapiException(Res.getString("CommandLine.fsBeforeInputError")); //$NON-NLS-1$
-				}
-				else {
-					inp.filterConfigId = nextArg(args, ++i);
-				}
-			}
-			else if ( "-o".equals(arg) ) { // Output file //$NON-NLS-1$
-				File f = new File(nextArg(args, ++i));
-				prj.setOutputRoot(Util.getDirectoryName(f.getAbsolutePath()));
-				prj.setUseOutputRoot(true);
-				prj.pathBuilder.setUseExtension(false);
-				prj.pathBuilder.setUseReplace(true);
-				prj.pathBuilder.setReplace(Util.getFilename(f.getAbsolutePath(), true));
-				setOutSearch = true;
 			}
 			else if ( !arg.startsWith("-") ) { // Input file //$NON-NLS-1$
 				if ( ++inpList > 2 ) {
@@ -161,17 +117,6 @@ public class CommandLine2 {
 			else {
 				log.error(Res.getString("CommandLine.invalidCommand")+args[i]); //$NON-NLS-1$
 				continueAfter = false;
-			}
-			
-			// Sets the search part of the output builder if an output path was specified.
-			if ( setOutSearch ) {
-				Input inp = prj.getLastItem(0);
-				if ( inp == null ) { 
-					throw new OkapiException(Res.getString("CommandLine.noInput")); //$NON-NLS-1$
-				}
-				else {
-					prj.pathBuilder.setSearch(inp.relativePath);
-				}
 			}
 		}
 		return continueAfter;

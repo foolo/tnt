@@ -85,7 +85,6 @@ public class RainbowHandler {
 		Files.write(Paths.get(plnTmpFile.getPath()), plnData.getBytes());
 
 		ArrayList<String> args = new ArrayList<>();
-		args.add("-np"); // no prompt
 		args.add("-pln");
 		args.add(plnTmpFile.getPath());
 		args.addAll(inputFiles);
