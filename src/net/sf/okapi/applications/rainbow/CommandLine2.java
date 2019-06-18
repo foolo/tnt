@@ -40,7 +40,7 @@ public class CommandLine2 {
 	private FilterConfigurationMapper fcMapper;
 	private UtilitiesAccess utilitiesAccess;
 	private BatchLog log;
-	private String pipelineFile;
+	public String pipelineFile;
 	private PluginsManager pm;
 	private PrintStream ps = null;
 	private ExecutionContext context;
@@ -53,7 +53,6 @@ public class CommandLine2 {
 			System.setOut(ps);
 			System.setErr(ps);
 			
-			printBanner();
 			initialize();
 			if ( !parseArguments(args) ) {
 				return 1;
@@ -83,7 +82,6 @@ public class CommandLine2 {
 	 */
 	private boolean parseArguments (String[] args) throws Exception {
 		String arg;
-		boolean continueAfter = false;
 		
 		// Creates default project
 		FormatManager fm = new FormatManager();
@@ -93,18 +91,10 @@ public class CommandLine2 {
 		prj.setInputRoot(1, appRootFolder, true);
 		prj.setInputRoot(2, appRootFolder, true);
 		int inpList = -1;
-		pipelineFile = null;
 		
 		for ( int i=0; i<args.length; i++ ) {
 			arg = args[i];
-			if ( "-p".equals(arg) ) { // Load a project //$NON-NLS-1$
-				prj.load(nextArg(args, ++i));
-			}
-			else if ( "-pln".equals(arg) ) {
-				pipelineFile = nextArg(args, ++i);
-				continueAfter = true;
-			}
-			else if ( !arg.startsWith("-") ) { // Input file //$NON-NLS-1$
+			if ( !arg.startsWith("-") ) { // Input file //$NON-NLS-1$
 				if ( ++inpList > 2 ) {
 					throw new OkapiException(Res.getString("CommandLine.tooManyInput")); //$NON-NLS-1$
 				}
@@ -116,10 +106,9 @@ public class CommandLine2 {
 			}
 			else {
 				log.error(Res.getString("CommandLine.invalidCommand")+args[i]); //$NON-NLS-1$
-				continueAfter = false;
 			}
 		}
-		return continueAfter;
+		return true;
 	}
 	
 	private String nextArg (String[] args, int index) {
@@ -127,13 +116,6 @@ public class CommandLine2 {
 			throw new OkapiException(Res.getString("CommandLine.missingParameter")); //$NON-NLS-1$
 		}
 		return args[index];
-	}
-	
-	private void printBanner () {
-		System.out.println("-------------------------------------------------------------------------------"); //$NON-NLS-1$
-		System.out.println(Res.getString("CommandLine.bannerApplication")); //$NON-NLS-1$
-		System.out.println(Res.getString("CommandLine.bannerVersion")+getClass().getPackage().getImplementationVersion()); //$NON-NLS-1$
-		System.out.println("-------------------------------------------------------------------------------"); //$NON-NLS-1$
 	}
 	
 	private void initialize () throws Exception {

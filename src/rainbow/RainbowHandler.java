@@ -85,8 +85,6 @@ public class RainbowHandler {
 		Files.write(Paths.get(plnTmpFile.getPath()), plnData.getBytes());
 
 		ArrayList<String> args = new ArrayList<>();
-		args.add("-pln");
-		args.add(plnTmpFile.getPath());
 		args.addAll(inputFiles);
 
 		//net.sf.okapi.applications.rainbow.Main.main(args.toArray(new String[args.size()]));
@@ -103,6 +101,7 @@ public class RainbowHandler {
 		// todo move to constructor
 		cl.sharedFolder = tempDir;
 		cl.logFile = tmpLogFile;
+		cl.pipelineFile = plnTmpFile.getPath();
 		// todo check return value
 		cl.execute(args.toArray(new String[args.size()]));
 	}
