@@ -92,24 +92,17 @@ public class CommandLine2 {
 		prj.setInputRoot(2, appRootFolder, true);
 		
 		if (inputFiles.size() > 3) {
-			throw new OkapiException(Res.getString("CommandLine.tooManyInput")); //$NON-NLS-1$
+			throw new OkapiException("Too many input files."); //$NON-NLS-1$
 		}
 
 		for ( int i = 0; i < inputFiles.size(); i++ ) {
 			File f = new File(inputFiles.get(i));
 			String[] res = fm.guessFormat(f.getAbsolutePath());
-			prj.inputLists.get(i).clear();
+			prj.getList(i).clear();
 			prj.setInputRoot(i, Util.getDirectoryName(f.getAbsolutePath()), true);
 			prj.addDocument(i, f.getAbsolutePath(), res[0], null, res[1], false);
 		}
 		return true;
-	}
-	
-	private String nextArg (String[] args, int index) {
-		if ( index >= args.length ) {
-			throw new OkapiException(Res.getString("CommandLine.missingParameter")); //$NON-NLS-1$
-		}
-		return args[index];
 	}
 	
 	private void initialize () throws Exception {
