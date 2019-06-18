@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import net.sf.okapi.applications.rainbow.CommandLine2;
 import util.Log;
+import static util.Log.getTimestamp;
 
 public class RainbowHandler {
 
@@ -95,8 +96,14 @@ public class RainbowHandler {
 		copy(getResource("/res/encodings.xml"), new File(tempDir, "encodings.xml").getAbsolutePath());
 		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
+
+		String prefix = "tnt_rainbow_log_" + getTimestamp() + "_";
+		File tmpLogFile = File.createTempFile(prefix, ".txt");
+
 		CommandLine2 cl = new CommandLine2();
+		// todo move to constructor
 		cl.sharedFolder = tempDir;
+		cl.logFile = tmpLogFile;
 		// todo check return value
 		cl.execute(args.toArray(new String[args.size()]));
 	}

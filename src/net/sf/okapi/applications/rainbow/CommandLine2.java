@@ -46,14 +46,11 @@ public class CommandLine2 {
 	private PluginsManager pm;
 	private PrintStream ps = null;
 	private ExecutionContext context;
-	private File logFile;
+	public File logFile;
 	
 	public int execute (String[] args)
 	{
 		try {
-			if( !setLogFile(args) ) {
-				logFile  = new File(System.getProperty("user.home")+"/rainbowBatchLog.txt");	
-			}			  
 			ps = new PrintStream(new FileOutputStream(logFile));
 			System.setOut(ps);
 			System.setErr(ps);
@@ -82,22 +79,6 @@ public class CommandLine2 {
 	}
 	
 	/**
-	 * Parse the command line and check for the -log argument
-	 * @return True if found and False if not found.
-	 */
-	private boolean setLogFile (String[] args) {
-		String arg;
-		for ( int i=0; i<args.length; i++ ) {
-			arg = args[i];
-			if ( "-log".equals(arg) ) { // log file
-				logFile  = new File(nextArg(args, ++i));
-				return true;
-			}			
-		}
-		return false;
-	}
-	
-	/**
 	 * Parse the command line.
 	 * @return True to execute something, false if error or exit immediately.
 	 * @throws Exception 
@@ -121,10 +102,6 @@ public class CommandLine2 {
 			arg = args[i];
 			if ( "-p".equals(arg) ) { // Load a project //$NON-NLS-1$
 				prj.load(nextArg(args, ++i));
-			}
-			else if ( "-log".equals(arg) ) { // Log file
-				//--just to prevent invalid argument--
-				++i; // Make sure we eat the log file path too
 			}
 			else if ( "-se".equals(arg) ) { // Source encoding //$NON-NLS-1$
 				prj.setSourceEncoding(nextArg(args, ++i));
