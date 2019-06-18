@@ -14,13 +14,16 @@
   limitations under the License.
 ===========================================================================*/
 
-package net.sf.okapi.applications.rainbow;
+package rainbow;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import net.sf.okapi.applications.rainbow.BatchLog;
+import net.sf.okapi.applications.rainbow.Project;
+import net.sf.okapi.applications.rainbow.UtilitiesAccess;
 
 import net.sf.okapi.applications.rainbow.lib.FormatManager;
 import net.sf.okapi.applications.rainbow.lib.LanguageManager;
