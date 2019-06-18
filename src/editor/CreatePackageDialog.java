@@ -86,6 +86,9 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		if (inputFiles.isEmpty()) {
 			return "";
 		}
+		if (inputFiles.size() > 3) {
+			return "Too many input files. Maximum number of files is 3.";
+		}
 		if (jTextFieldCommonDir.getText().isEmpty()) {
 			return "Common package directory must not be empty.";
 		}
