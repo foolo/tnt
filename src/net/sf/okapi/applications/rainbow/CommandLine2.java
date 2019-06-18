@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 
 import net.sf.okapi.applications.rainbow.lib.FormatManager;
 import net.sf.okapi.applications.rainbow.lib.LanguageManager;
@@ -45,8 +46,9 @@ public class CommandLine2 {
 	private PrintStream ps = null;
 	private ExecutionContext context;
 	public File logFile;
+	public ArrayList<String> inputFiles;
 	
-	public int execute (String[] args)
+	public int execute ()
 	{
 		try {
 			ps = new PrintStream(new FileOutputStream(logFile));
@@ -54,7 +56,7 @@ public class CommandLine2 {
 			System.setErr(ps);
 			
 			initialize();
-			if ( !parseArguments(args) ) {
+			if ( !parseArguments() ) {
 				return 1;
 			}
 			
@@ -80,9 +82,7 @@ public class CommandLine2 {
 	 * @return True to execute something, false if error or exit immediately.
 	 * @throws Exception 
 	 */
-	private boolean parseArguments (String[] args) throws Exception {
-		String arg;
-		
+	private boolean parseArguments () throws Exception {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -90,23 +90,17 @@ public class CommandLine2 {
 		prj.setInputRoot(0, appRootFolder, true);
 		prj.setInputRoot(1, appRootFolder, true);
 		prj.setInputRoot(2, appRootFolder, true);
-		int inpList = -1;
 		
-		for ( int i=0; i<args.length; i++ ) {
-			arg = args[i];
-			if ( !arg.startsWith("-") ) { // Input file //$NON-NLS-1$
-				if ( ++inpList > 2 ) {
-					throw new OkapiException(Res.getString("CommandLine.tooManyInput")); //$NON-NLS-1$
-				}
-				File f = new File(arg);
-				String[] res = fm.guessFormat(f.getAbsolutePath());
-				prj.inputLists.get(inpList).clear();
-				prj.setInputRoot(inpList, Util.getDirectoryName(f.getAbsolutePath()), true);
-				prj.addDocument(inpList, f.getAbsolutePath(), res[0], null, res[1], false);
-			}
-			else {
-				log.error(Res.getString("CommandLine.invalidCommand")+args[i]); //$NON-NLS-1$
-			}
+		if (inputFiles.size() > 3) {
+			throw new OkapiException(Res.getString("CommandLine.tooManyInput")); //$NON-NLS-1$
+		}
+
+		for ( int i = 0; i < inputFiles.size(); i++ ) {
+			File f = new File(inputFiles.get(i));
+			String[] res = fm.guessFormat(f.getAbsolutePath());
+			prj.inputLists.get(i).clear();
+			prj.setInputRoot(i, Util.getDirectoryName(f.getAbsolutePath()), true);
+			prj.addDocument(i, f.getAbsolutePath(), res[0], null, res[1], false);
 		}
 		return true;
 	}

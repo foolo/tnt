@@ -84,9 +84,6 @@ public class RainbowHandler {
 		Log.debug("PLN temporary file: " + plnTmpFile);
 		Files.write(Paths.get(plnTmpFile.getPath()), plnData.getBytes());
 
-		ArrayList<String> args = new ArrayList<>();
-		args.addAll(inputFiles);
-
 		//net.sf.okapi.applications.rainbow.Main.main(args.toArray(new String[args.size()]));
 		String tempDir = Files.createTempDirectory("tnt_tmp_").toString();
 		Log.debug("tempDirWithPrefix: " + tempDir);
@@ -102,7 +99,8 @@ public class RainbowHandler {
 		cl.sharedFolder = tempDir;
 		cl.logFile = tmpLogFile;
 		cl.pipelineFile = plnTmpFile.getPath();
+		cl.inputFiles = inputFiles;
 		// todo check return value
-		cl.execute(args.toArray(new String[args.size()]));
+		cl.execute();
 	}
 }
