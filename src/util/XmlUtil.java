@@ -18,6 +18,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
+import xliff_model.exceptions.SaveException;
 
 public class XmlUtil {
 
@@ -36,7 +37,7 @@ public class XmlUtil {
 		}
 	}
 
-	public static StreamResult write_xml(Document doc, StreamResult result) {
+	public static void write_xml(Document doc, StreamResult result) throws SaveException {
 		try {
 			Transformer tr = TransformerFactory.newInstance().newTransformer();
 			tr.setOutputProperty(OutputKeys.METHOD, "xml");
@@ -45,15 +46,15 @@ public class XmlUtil {
 			tr.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			DOMSource domSource = new DOMSource(doc);
 			tr.transform(domSource, result);
-			return result;
 		}
 		catch (TransformerConfigurationException ex) {
 			Log.err(ex);
+			throw new SaveException(ex.getMessage());
 		}
 		catch (TransformerException ex) {
 			Log.err(ex);
+			throw new SaveException(ex.getMessage());
 		}
-		return null;
 	}
 
 	public static String getPath(Node node) {

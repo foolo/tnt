@@ -1,5 +1,6 @@
 package xliff_model;
 
+import java.io.File;
 import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
@@ -14,8 +15,10 @@ public class XliffTag {
 	private ArrayList<FileTag> files = new ArrayList<>();
 	private Document document;
 	String version;
+	File file;
 
-	public XliffTag(Document doc) throws ParseException {
+	public XliffTag(Document doc, File file) throws ParseException {
+		this.file = file;
 		Element node = doc.getDocumentElement();
 		version = node.getAttribute("version");
 		if (version.substring(0, 2).equals("2.") == false) {
@@ -41,6 +44,10 @@ public class XliffTag {
 
 	public ArrayList<FileTag> getFiles() {
 		return files;
+	}
+
+	public File getFile() {
+		return file;
 	}
 
 	public void setFiles(ArrayList<FileTag> files) {

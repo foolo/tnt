@@ -2,7 +2,6 @@ package editor;
 
 import java.awt.Component;
 import java.io.File;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
@@ -14,6 +13,7 @@ import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
 import xliff_model.XliffTag;
+import xliff_model.exceptions.SaveException;
 
 public class XliffView extends javax.swing.JPanel {
 
@@ -27,10 +27,6 @@ public class XliffView extends javax.swing.JPanel {
 		return ((FileView) jTabbedPane1.getSelectedComponent());
 	}
 
-	XliffTag getXliffTag() {
-		return xliffTag;
-	}
-
 	static String truncate(String s) {
 		if (s.length() > 80) {
 			return "..." + s.substring(s.length() - 77, s.length());
@@ -40,7 +36,7 @@ public class XliffView extends javax.swing.JPanel {
 
 	void load_xliff(File f) throws ParseException, LoadException {
 		Document doc = XmlUtil.read_xml(f);
-		xliffTag = new XliffTag(doc);
+		xliffTag = new XliffTag(doc, f);
 		jTabbedPane1.removeAll();
 		for (FileTag fileTag : xliffTag.getFiles()) {
 			FileView fv = new FileView(this);
@@ -86,11 +82,14 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	boolean save_to_file() {
-		StringWriter writer = new StringWriter();
-		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
-
-		// todo save to file
-		System.out.println(writer.toString());
+		try {
+			Log.debug("save_to_file: " + xliffTag.getFile());
+			XmlUtil.write_xml(xliffTag.getDocument(), new StreamResult(xliffTag.getFile()));
+		}
+		catch (SaveException ex) {
+			JOptionPane.showMessageDialog(null, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 		markAsSaved();
 		return true;
 	}
