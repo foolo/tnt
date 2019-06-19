@@ -77,9 +77,9 @@ public class FileTag implements UndoableModel {
 		return new FileTag(this);
 	}
 
-	void save(ArrayList<SegmentError> errors) {
+	void encode(ArrayList<SegmentError> errors) {
 		for (Item i : items) {
-			i.save(errors);
+			i.encode(errors);
 		}
 	}
 }

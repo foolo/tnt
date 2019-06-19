@@ -1,10 +1,10 @@
 package xliff_model;
 
+import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import util.Log;
 import util.XmlUtil;
 
 public class SegmentTag {
@@ -67,12 +67,12 @@ public class SegmentTag {
 		}
 	}
 
-	public void save(ArrayList<SegmentError> errors) {
+	public void encode(ArrayList<SegmentError> errors) {
 		ArrayList<Node> sourceNodes;
 		try {
 			sourceNodes = sourceText.toNodes(node.getOwnerDocument());
 		}
-		catch (SaveException ex) {
+		catch (EncodeException ex) {
 			System.out.println(ex.getMessage());
 			sourceNodes = new ArrayList<>();
 			errors.add(new SegmentError(this, ex.getMessage()));
@@ -83,7 +83,7 @@ public class SegmentTag {
 		try {
 			targetNodes = targetText.toNodes(node.getOwnerDocument());
 		}
-		catch (SaveException ex) {
+		catch (EncodeException ex) {
 			targetNodes = new ArrayList<>();
 			errors.add(new SegmentError(this, ex.getMessage()));
 		}

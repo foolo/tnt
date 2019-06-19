@@ -8,5 +8,5 @@ public interface Item {
 
 	Item copy();
 
-	void save(ArrayList<SegmentError> errors);
+	void encode(ArrayList<SegmentError> errors);
 }

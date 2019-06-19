@@ -6,13 +6,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import rainbow.RainbowHandler;
-import util.Log;
 import util.Settings;
-import xliff_model.exceptions.LoadException;
-import xliff_model.exceptions.ParseException;
-import xliff_model.exceptions.XliffVersionException;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -24,19 +19,7 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public void load_file(File f) {
-		try {
-			xliffView1.load_xliff(f);
-		}
-		catch (LoadException ex) {
-			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-		}
-		catch (XliffVersionException ex) {
-			JOptionPane.showMessageDialog(null, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-		}
-		catch (ParseException ex) {
-			Log.debug("load_file: " + ex.toString());
-			JOptionPane.showMessageDialog(null, "Invalid XLIFF format", "", JOptionPane.ERROR_MESSAGE);
-		}
+		xliffView1.load_xliff(f);
 	}
 
 	public void save_file() {
