@@ -112,7 +112,7 @@ public class XliffView extends javax.swing.JPanel {
 		xliffTag.setFiles(fileTags);
 
 		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffTag.save(errors);
+		xliffTag.encode(errors);
 
 		if (errors.isEmpty()) {
 			return save_to_file();
