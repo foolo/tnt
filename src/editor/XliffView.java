@@ -14,6 +14,7 @@ import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
 import xliff_model.XliffTag;
 import xliff_model.exceptions.SaveException;
+import xliff_model.exceptions.XliffVersionException;
 
 public class XliffView extends javax.swing.JPanel {
 
@@ -34,15 +35,27 @@ public class XliffView extends javax.swing.JPanel {
 		return s;
 	}
 
-	void load_xliff(File f) throws ParseException, LoadException {
-		Document doc = XmlUtil.read_xml(f);
-		xliffTag = new XliffTag(doc, f);
-		jTabbedPane1.removeAll();
-		for (FileTag fileTag : xliffTag.getFiles()) {
-			FileView fv = new FileView(this);
-			fv.load_file(fileTag);
-			jTabbedPane1.add(fv);
-			updateTabTitle(fv);
+	void load_xliff(File f) {
+		try {
+			Document doc = XmlUtil.read_xml(f);
+			xliffTag = new XliffTag(doc, f);
+			jTabbedPane1.removeAll();
+			for (FileTag fileTag : xliffTag.getFiles()) {
+				FileView fv = new FileView(this);
+				fv.load_file(fileTag);
+				jTabbedPane1.add(fv);
+				updateTabTitle(fv);
+			}
+		}
+		catch (LoadException ex) {
+			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (XliffVersionException ex) {
+			JOptionPane.showMessageDialog(null, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (ParseException ex) {
+			Log.debug("load_file: " + ex.toString());
+			JOptionPane.showMessageDialog(null, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
