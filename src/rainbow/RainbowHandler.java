@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import util.Log;
 
 public class RainbowHandler {
@@ -72,8 +71,8 @@ public class RainbowHandler {
 		});
 	}
 
-	public File createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws RainbowError, IOException {
-		Log.debug("createPackage: input files: " + String.join(", ", inputFiles));
+	public File createPackage(String inputFile, String commonDir, String packageName) throws RainbowError, IOException {
+		Log.debug("createPackage: input file: " + inputFile);
 		Log.debug("createPackage: common package directory: " + commonDir);
 		Log.debug("createPackage: package name: " + packageName);
 
@@ -100,7 +99,7 @@ public class RainbowHandler {
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 
 		CommandLine2 cl = new CommandLine2();
-		cl.execute(tempDir, plnTmpFile.getPath(), inputFiles, false);
+		cl.execute(tempDir, plnTmpFile.getPath(), inputFile, false);
 		File workDir = Paths.get(commonDir, packageName, "work").toFile();
 		File[] xliffFiles = listXliffFiles(workDir);
 		if (xliffFiles.length == 0) {
@@ -120,8 +119,7 @@ public class RainbowHandler {
 		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 		CommandLine2 cl = new CommandLine2();
-		ArrayList<String> inputFiles = new ArrayList<>();
-		inputFiles.add(manifestFile.getAbsolutePath());
-		cl.execute(tempDir, plnTmpFile.getAbsolutePath(), inputFiles, true);
+		String inputFile = manifestFile.getAbsolutePath();
+		cl.execute(tempDir, plnTmpFile.getAbsolutePath(), inputFile, true);
 	}
 }

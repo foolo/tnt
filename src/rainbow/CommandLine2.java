@@ -18,7 +18,6 @@ package rainbow;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import net.sf.okapi.applications.rainbow.Input;
 import net.sf.okapi.applications.rainbow.Project;
 import net.sf.okapi.applications.rainbow.UtilitiesAccess;
@@ -44,13 +43,13 @@ public class CommandLine2 {
 	private PluginsManager pm;
 	private ExecutionContext context;
 
-	public void execute(String sharedFolder, String pipelineFile, ArrayList<String> inputFiles, boolean export) throws RainbowError {
+	public void execute(String sharedFolder, String pipelineFile, String inputFile, boolean export) throws RainbowError {
 		try {
 			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: "));
 			System.setOut(ps);
 			System.setErr(ps);
 			initialize(sharedFolder);
-			parseArguments(inputFiles, export);
+			parseArguments(inputFile, export);
 			launchPipeline(pipelineFile);
 		}
 		catch (Exception e) {
@@ -59,7 +58,7 @@ public class CommandLine2 {
 		}
 	}
 
-	private void parseArguments(ArrayList<String> inputFiles, boolean export) throws OkapiException {
+	private void parseArguments(String inputFile, boolean export) throws OkapiException {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -68,17 +67,11 @@ public class CommandLine2 {
 		prj.setInputRoot(1, appRootFolder, true);
 		prj.setInputRoot(2, appRootFolder, true);
 
-		if (inputFiles.size() > 3) {
-			throw new OkapiException("Too many input files.");
-		}
-
-		for (int i = 0; i < inputFiles.size(); i++) {
-			File f = new File(inputFiles.get(i));
-			String[] res = fm.guessFormat(f.getAbsolutePath());
-			prj.getList(i).clear();
-			prj.setInputRoot(i, Util.getDirectoryName(f.getAbsolutePath()), true);
-			prj.addDocument(i, f.getAbsolutePath(), res[0], null, res[1], false);
-		}
+		File f = new File(inputFile);
+		String[] res = fm.guessFormat(f.getAbsolutePath());
+		prj.getList(0).clear();
+		prj.setInputRoot(0, Util.getDirectoryName(f.getAbsolutePath()), true);
+		prj.addDocument(0, f.getAbsolutePath(), res[0], null, res[1], false);
 
 		if (export) {
 			Input inp = prj.getLastItem(0);

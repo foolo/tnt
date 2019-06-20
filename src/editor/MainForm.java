@@ -2,9 +2,6 @@ package editor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import rainbow.RainbowError;
@@ -179,14 +176,14 @@ public class MainForm extends javax.swing.JFrame {
 		if (d.getResult() == false) {
 			return;
 		}
-		ArrayList<String> inputFiles = d.getInputFiles();
+		String inputFile = d.getInputFile();
 		File commonDir = d.getCommonDirectory();
 		String packageName = d.getPackageName();
 
 		File xliffFile;
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
-			xliffFile = rainbowHandler.createPackage(inputFiles, commonDir.getPath(), packageName);
+			xliffFile = rainbowHandler.createPackage(inputFile, commonDir.getPath(), packageName);
 			load_file(xliffFile);
 		}
 		catch (IOException | RainbowError ex) {

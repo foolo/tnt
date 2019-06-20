@@ -6,8 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
@@ -35,8 +33,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		}
 	}
 
-	DefaultListModel inputFiles = new DefaultListModel();
-
 	private boolean result = false;
 
 	boolean getResult() {
@@ -46,8 +42,8 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 	public CreatePackageDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
-		jList1.setModel(inputFiles);
 
+		jTextFieldInputFile.getDocument().addDocumentListener(new ValueChangedDocumentListener());
 		jTextFieldCommonDir.getDocument().addDocumentListener(new ValueChangedDocumentListener());
 		jTextFieldPackageName.getDocument().addDocumentListener(new ValueChangedDocumentListener());
 
@@ -72,25 +68,13 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		return jTextFieldPackageName.getText();
 	}
 
-	ArrayList<String> getInputFiles() {
-		ArrayList<String> result = new ArrayList<>();
-		for (Object o : inputFiles.toArray()) {
-			if (o instanceof String) {
-				result.add((String) o);
-			}
-			else {
-				Log.warn("getInputFiles: object not instance of String (" + ((o == null) ? "null" : o.getClass().getName()));
-			}
-		}
-		return result;
+	String getInputFile() {
+		return jTextFieldInputFile.getText();
 	}
 
 	String preValidateInput() {
-		if (inputFiles.isEmpty()) {
+		if (jTextFieldInputFile.getText().isEmpty()) {
 			return "";
-		}
-		if (inputFiles.size() > 3) {
-			return "Too many input files. Maximum number of files is 3.";
 		}
 		if (jTextFieldCommonDir.getText().isEmpty()) {
 			return "Common package directory must not be empty.";
@@ -133,13 +117,12 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
         jLabelPackageDir = new javax.swing.JLabel();
         jButtonOk = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
         jLabelError = new javax.swing.JLabel();
+        jTextFieldInputFile = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setText("Input files");
+        jLabel1.setText("Input file");
 
         jButtonChooseInputFiles.setText("Choose...");
         jButtonChooseInputFiles.addActionListener(new java.awt.event.ActionListener() {
@@ -178,13 +161,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
-
         jLabelError.setForeground(new java.awt.Color(255, 0, 0));
         jLabelError.setText("jLabelError");
 
@@ -196,19 +172,18 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabelPackageDir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextFieldCommonDir)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButtonOk, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldInputFile)
+                    .addComponent(jTextFieldCommonDir)
+                    .addComponent(jLabelPackageDir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jTextFieldPackageName, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -216,7 +191,8 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonChoosePackageDirectory)))
+                                .addComponent(jButtonChoosePackageDirectory))
+                            .addComponent(jLabel4))
                         .addGap(0, 172, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -227,9 +203,9 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jButtonChooseInputFiles))
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldInputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jButtonChoosePackageDirectory))
@@ -243,13 +219,13 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelPackageDir)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabelError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonOk)
                     .addComponent(jButtonCancel))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -257,17 +233,11 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 
     private void jButtonChooseInputFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseInputFilesActionPerformed
 		JFileChooser fc = new JFileChooser(Settings.getPackageDirectory());
-		fc.setMultiSelectionEnabled(true);
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-
-		File[] files = fc.getSelectedFiles();
-		inputFiles.removeAllElements();
-		for (File f : files) {
-			inputFiles.addElement(f.getAbsolutePath());
-		}
+		jTextFieldInputFile.setText(fc.getSelectedFile().getAbsolutePath());
 		update();
     }//GEN-LAST:event_jButtonChooseInputFilesActionPerformed
 
@@ -278,8 +248,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-
-		fc.getSelectedFile();
 		jTextFieldCommonDir.setText(fc.getSelectedFile().getAbsolutePath());
 		update();
     }//GEN-LAST:event_jButtonChoosePackageDirectoryActionPerformed
@@ -348,9 +316,8 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelError;
     private javax.swing.JLabel jLabelPackageDir;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextFieldCommonDir;
+    private javax.swing.JTextField jTextFieldInputFile;
     private javax.swing.JTextField jTextFieldPackageName;
     // End of variables declaration//GEN-END:variables
 }
