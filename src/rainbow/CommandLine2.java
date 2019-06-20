@@ -16,7 +16,6 @@
 package rainbow;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class CommandLine2 {
 	private PluginsManager pm;
 	private PrintStream ps = null;
 	private ExecutionContext context;
-	public File logFile;
 	public ArrayList<String> inputFiles;
 
 	public int execute(boolean export) {

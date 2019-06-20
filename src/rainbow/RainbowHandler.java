@@ -90,13 +90,9 @@ public class RainbowHandler {
 		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 
-		String prefix = "tnt_rainbow_log_" + getTimestamp() + "_";
-		File tmpLogFile = File.createTempFile(prefix, ".txt");
-
 		CommandLine2 cl = new CommandLine2();
 		// todo move to constructor
 		cl.sharedFolder = tempDir;
-		cl.logFile = tmpLogFile;
 		cl.pipelineFile = plnTmpFile.getPath();
 		cl.inputFiles = inputFiles;
 		// todo check return value
@@ -110,12 +106,9 @@ public class RainbowHandler {
 		copy(getResource("/res/export.pln"), plnTmpFile.getAbsolutePath());
 		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
-		String prefix = "tnt_rainbow_log_" + getTimestamp() + "_";
-		File tmpLogFile = File.createTempFile(prefix, ".txt");
 		CommandLine2 cl = new CommandLine2();
 		// todo move to constructor
 		cl.sharedFolder = tempDir;
-		cl.logFile = tmpLogFile;
 		cl.pipelineFile = plnTmpFile.getAbsolutePath();
 		cl.inputFiles = new ArrayList<>();
 		cl.inputFiles.add(manifestFile.getAbsolutePath());
