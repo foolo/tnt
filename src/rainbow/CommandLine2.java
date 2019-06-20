@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import net.sf.okapi.applications.rainbow.BatchLog;
 import net.sf.okapi.applications.rainbow.Input;
 import net.sf.okapi.applications.rainbow.Project;
 import net.sf.okapi.applications.rainbow.UtilitiesAccess;
@@ -41,15 +40,12 @@ public class CommandLine2 {
 	private LanguageManager lm;
 	private Project prj;
 	private FilterConfigurationMapper fcMapper;
-	private UtilitiesAccess utilitiesAccess;
-	private BatchLog log;
 	private PluginsManager pm;
-	private PrintStream ps = null;
 	private ExecutionContext context;
 
 	public int execute(String sharedFolder, String pipelineFile, ArrayList<String> inputFiles, boolean export) {
 		try {
-			ps = new PrintStream(new LogOutputStream("RAINBOW: "));
+			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: "));
 			System.setOut(ps);
 			System.setErr(ps);
 
@@ -64,17 +60,7 @@ public class CommandLine2 {
 			e.printStackTrace();
 			return 1;
 		}
-		finally {
-			if (ps != null) {
-				ps.close();
-			}
-		}
-		if ((log != null) && (log.getErrorCount() > 0)) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+		return 0;
 	}
 
 	private boolean parseArguments(ArrayList<String> inputFiles, boolean export) throws Exception {
@@ -116,7 +102,6 @@ public class CommandLine2 {
 		}    	// Remove the application folder in all cases
 		appRootFolder = Util.getDirectoryName(appRootFolder);
 
-		log = new BatchLog();
 		lm = new LanguageManager();
 		lm.loadList(sharedFolder + File.separator + "languages.xml");
 
@@ -129,8 +114,8 @@ public class CommandLine2 {
 		pm.discover(new File(appRootFolder + File.separator + "dropins"), true);
 		fcMapper.addFromPlugins(pm);
 
-		utilitiesAccess = new UtilitiesAccess();
-		utilitiesAccess.loadMenu(sharedFolder + File.separator + "rainbowUtilities.xml");
+		UtilitiesAccess utilitiesAccess = new UtilitiesAccess();
+		new UtilitiesAccess().loadMenu(sharedFolder + File.separator + "rainbowUtilities.xml");
 
 		context = new ExecutionContext();
 		context.setApplicationName("Rainbow");
