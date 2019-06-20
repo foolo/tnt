@@ -7,8 +7,6 @@ import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -38,6 +36,12 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 	}
 
 	DefaultListModel inputFiles = new DefaultListModel();
+
+	private boolean result = false;
+
+	boolean getResult() {
+		return result;
+	}
 
 	public CreatePackageDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
@@ -328,6 +332,7 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 			Log.warn("Could not delete directory: " + packageDirectory + " (" + ex.toString() + ")");
 		}
 
+		result = true;
 		setVisible(false);
     }//GEN-LAST:event_jButtonOkActionPerformed
 

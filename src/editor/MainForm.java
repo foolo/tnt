@@ -171,8 +171,14 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemLogsActionPerformed
 
     private void jMenuItemCreatePackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCreatePackageActionPerformed
+		if (xliffView1.okToClose() == false) {
+			return;
+		}
 		CreatePackageDialog d = new CreatePackageDialog(this, true);
 		d.setVisible(true);
+		if (d.getResult() == false) {
+			return;
+		}
 		ArrayList<String> inputFiles = d.getInputFiles();
 		File commonDir = d.getCommonDirectory();
 		String packageName = d.getPackageName();
