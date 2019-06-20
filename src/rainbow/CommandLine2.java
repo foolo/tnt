@@ -34,6 +34,7 @@ import net.sf.okapi.common.exceptions.OkapiException;
 import net.sf.okapi.common.filters.DefaultFilters;
 import net.sf.okapi.common.filters.FilterConfigurationMapper;
 import net.sf.okapi.common.plugins.PluginsManager;
+import util.LogOutputStream;
 
 public class CommandLine2 {
 
@@ -53,7 +54,7 @@ public class CommandLine2 {
 
 	public int execute(boolean export) {
 		try {
-			ps = new PrintStream(new FileOutputStream(logFile));
+			ps = new PrintStream(new LogOutputStream("RAINBOW: "));
 			System.setOut(ps);
 			System.setErr(ps);
 
