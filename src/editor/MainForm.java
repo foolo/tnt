@@ -21,8 +21,8 @@ public class MainForm extends javax.swing.JFrame {
 		xliffView1.load_xliff(f);
 	}
 
-	public void save_file() {
-		xliffView1.save();
+	public boolean save_file() {
+		return xliffView1.save();
 	}
 
 	public void menu_open() {
@@ -192,7 +192,9 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
-		xliffView1.export();
+		if (save_file()) {
+			xliffView1.export();
+		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
