@@ -71,7 +71,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 	ArrayList<String> getInputFiles() {
 		ArrayList<String> result = new ArrayList<>();
 		for (Object o : inputFiles.toArray()) {
-			o = new File("");
 			if (o instanceof String) {
 				result.add((String) o);
 			}

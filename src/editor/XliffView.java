@@ -2,11 +2,14 @@ package editor;
 
 import java.awt.Component;
 import java.io.File;
-import java.io.StringWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import rainbow.RainbowHandler;
 import util.Log;
 import util.XmlUtil;
 import xliff_model.FileTag;
@@ -14,6 +17,8 @@ import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
 import xliff_model.XliffTag;
+import xliff_model.exceptions.SaveException;
+import xliff_model.exceptions.XliffVersionException;
 
 public class XliffView extends javax.swing.JPanel {
 
@@ -27,10 +32,6 @@ public class XliffView extends javax.swing.JPanel {
 		return ((FileView) jTabbedPane1.getSelectedComponent());
 	}
 
-	XliffTag getXliffTag() {
-		return xliffTag;
-	}
-
 	static String truncate(String s) {
 		if (s.length() > 80) {
 			return "..." + s.substring(s.length() - 77, s.length());
@@ -38,15 +39,27 @@ public class XliffView extends javax.swing.JPanel {
 		return s;
 	}
 
-	void load_xliff(File f) throws ParseException, LoadException {
-		Document doc = XmlUtil.read_xml(f);
-		xliffTag = new XliffTag(doc);
-		jTabbedPane1.removeAll();
-		for (FileTag fileTag : xliffTag.getFiles()) {
-			FileView fv = new FileView(this);
-			fv.load_file(fileTag);
-			jTabbedPane1.add(fv);
-			updateTabTitle(fv);
+	void load_xliff(File f) {
+		try {
+			Document doc = XmlUtil.read_xml(f);
+			xliffTag = new XliffTag(doc, f);
+			jTabbedPane1.removeAll();
+			for (FileTag fileTag : xliffTag.getFiles()) {
+				FileView fv = new FileView(this);
+				fv.load_file(fileTag);
+				jTabbedPane1.add(fv);
+				updateTabTitle(fv);
+			}
+		}
+		catch (LoadException ex) {
+			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (XliffVersionException ex) {
+			JOptionPane.showMessageDialog(null, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (ParseException ex) {
+			Log.debug("load_file: " + ex.toString());
+			JOptionPane.showMessageDialog(null, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -86,11 +99,14 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	boolean save_to_file() {
-		StringWriter writer = new StringWriter();
-		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
-
-		// todo save to file
-		System.out.println(writer.toString());
+		try {
+			Log.debug("save_to_file: " + xliffTag.getFile());
+			XmlUtil.write_xml(xliffTag.getDocument(), new StreamResult(xliffTag.getFile()));
+		}
+		catch (SaveException ex) {
+			JOptionPane.showMessageDialog(null, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 		markAsSaved();
 		return true;
 	}
@@ -100,7 +116,7 @@ public class XliffView extends javax.swing.JPanel {
 		xliffTag.setFiles(fileTags);
 
 		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffTag.save(errors);
+		xliffTag.encode(errors);
 
 		if (errors.isEmpty()) {
 			return save_to_file();
@@ -116,6 +132,34 @@ public class XliffView extends javax.swing.JPanel {
 			else {
 				return false;
 			}
+		}
+	}
+
+	void export() {
+		File f = xliffTag.getFile().getAbsoluteFile();
+		File workDir = f.getParentFile();
+		if (workDir == null) {
+			Log.err("export: workdir == null, file: " + f);
+			return;
+		}
+		System.out.println("work dir: " + workDir);
+		File manifestDir = workDir.getParentFile();
+		if (manifestDir == null) {
+			Log.err("export: manifestDir == null, workDir: " + workDir);
+			return;
+		}
+		File manifestFile = new File(manifestDir, "manifest.rkm");
+		if (manifestFile.exists() == false) {
+			JOptionPane.showMessageDialog(null, "No manifest.rkm found in parent directory (" + manifestDir + ")\n", "", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		RainbowHandler rainbowHandler = new RainbowHandler();
+		try {
+			rainbowHandler.exportTranslatedFile(manifestFile);
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, "Export failed:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

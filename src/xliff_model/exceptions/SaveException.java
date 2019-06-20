@@ -1,8 +1,8 @@
-package xliff_model;
+package xliff_model.exceptions;
 
 public class SaveException extends Exception {
 
-	SaveException(String msg) {
+	public SaveException(String msg) {
 		super(msg);
 	}
 }

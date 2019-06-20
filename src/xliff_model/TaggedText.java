@@ -1,5 +1,6 @@
 package xliff_model;
 
+import xliff_model.exceptions.EncodeException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.w3c.dom.Document;
@@ -77,17 +78,17 @@ public class TaggedText {
 		return new TaggedText(newContent);
 	}
 
-	public ArrayList<Node> toNodes(Document document) throws SaveException {
+	public ArrayList<Node> toNodes(Document document) throws EncodeException {
 		ArrayList<TaggedTextContent> tmpContent = new ArrayList<>(content);
 		tmpContent.add(new Tag(null, Tag.Type.END));
 		ArrayList<Node> result = getNodeList(tmpContent, document);
 		if (tmpContent.isEmpty() == false) {
-			throw new SaveException("Unexpected end tag");
+			throw new EncodeException("Unexpected end tag");
 		}
 		return result;
 	}
 
-	private static ArrayList<Node> getNodeList(ArrayList<TaggedTextContent> content, Document document) throws SaveException {
+	private static ArrayList<Node> getNodeList(ArrayList<TaggedTextContent> content, Document document) throws EncodeException {
 		ArrayList<Node> res = new ArrayList<>();
 		while (content.isEmpty() == false) {
 			TaggedTextContent c = content.get(0);
@@ -117,7 +118,7 @@ public class TaggedText {
 				System.err.println("unexpected class: " + c.getClass());
 			}
 		}
-		throw new SaveException("Missing end tag");
+		throw new EncodeException("Missing end tag");
 	}
 
 	@Override

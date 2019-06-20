@@ -50,9 +50,9 @@ public class GroupTag implements Item {
 	}
 
 	@Override
-	public void save(ArrayList<SegmentError> errors) {
+	public void encode(ArrayList<SegmentError> errors) {
 		for (Item i : items) {
-			i.save(errors);
+			i.encode(errors);
 		}
 	}
 }
