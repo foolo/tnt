@@ -32,6 +32,7 @@ import net.sf.okapi.common.exceptions.OkapiException;
 import net.sf.okapi.common.filters.DefaultFilters;
 import net.sf.okapi.common.filters.FilterConfigurationMapper;
 import net.sf.okapi.common.plugins.PluginsManager;
+import util.Log;
 import util.LogOutputStream;
 
 public class CommandLine2 {
@@ -43,27 +44,22 @@ public class CommandLine2 {
 	private PluginsManager pm;
 	private ExecutionContext context;
 
-	public int execute(String sharedFolder, String pipelineFile, ArrayList<String> inputFiles, boolean export) {
+	public void execute(String sharedFolder, String pipelineFile, ArrayList<String> inputFiles, boolean export) throws RainbowError {
 		try {
 			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: "));
 			System.setOut(ps);
 			System.setErr(ps);
-
 			initialize(sharedFolder);
-			if (!parseArguments(inputFiles, export)) {
-				return 1;
-			}
-
+			parseArguments(inputFiles, export);
 			launchPipeline(pipelineFile);
 		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return 1;
+		catch (Exception e) {
+			Log.err(e);
+			throw new RainbowError(e.getMessage());
 		}
-		return 0;
 	}
 
-	private boolean parseArguments(ArrayList<String> inputFiles, boolean export) throws Exception {
+	private void parseArguments(ArrayList<String> inputFiles, boolean export) throws OkapiException {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -88,7 +84,6 @@ public class CommandLine2 {
 			Input inp = prj.getLastItem(0);
 			inp.filterConfigId = "okf_rainbowkit-noprompt"; // avoid creating ManifestDialog in RainbowKitFilter
 		}
-		return true;
 	}
 
 	private void initialize(String sharedFolder) throws Exception {

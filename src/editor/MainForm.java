@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import rainbow.RainbowError;
 import rainbow.RainbowHandler;
 import util.Settings;
 
@@ -180,7 +181,7 @@ public class MainForm extends javax.swing.JFrame {
 		try {
 			rainbowHandler.createPackage(inputFiles, commonDir.getPath(), packageName);
 		}
-		catch (IOException ex) {
+		catch (IOException | RainbowError ex) {
 			JOptionPane.showMessageDialog(null, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 

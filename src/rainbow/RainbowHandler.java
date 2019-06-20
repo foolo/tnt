@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import util.Log;
-import static util.Log.getTimestamp;
 
 public class RainbowHandler {
 
@@ -63,7 +62,7 @@ public class RainbowHandler {
 		return is;
 	}
 
-	public void createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws IOException {
+	public void createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws RainbowError, IOException {
 		Log.debug("createPackage: input files: " + String.join(", ", inputFiles));
 		Log.debug("createPackage: common package directory: " + commonDir);
 		Log.debug("createPackage: package name: " + packageName);
@@ -91,11 +90,10 @@ public class RainbowHandler {
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 
 		CommandLine2 cl = new CommandLine2();
-		// todo check return value
 		cl.execute(tempDir, plnTmpFile.getPath(), inputFiles, false);
 	}
 
-	public void exportTranslatedFile(File manifestFile) throws IOException {
+	public void exportTranslatedFile(File manifestFile) throws RainbowError, IOException {
 		String tempDir = Files.createTempDirectory("tnt_tmp_").toString();
 		Log.debug("exportTranslatedFile: temporary directory: " + tempDir);
 		File plnTmpFile = new File(tempDir, "export.pln");
@@ -105,7 +103,6 @@ public class RainbowHandler {
 		CommandLine2 cl = new CommandLine2();
 		ArrayList<String> inputFiles = new ArrayList<>();
 		inputFiles.add(manifestFile.getAbsolutePath());
-		// todo check return value
 		cl.execute(tempDir, plnTmpFile.getAbsolutePath(), inputFiles, true);
 	}
 }

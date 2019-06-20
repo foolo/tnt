@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import rainbow.RainbowError;
 import rainbow.RainbowHandler;
 import util.Log;
 import util.XmlUtil;
@@ -158,7 +159,7 @@ public class XliffView extends javax.swing.JPanel {
 		try {
 			rainbowHandler.exportTranslatedFile(manifestFile);
 		}
-		catch (IOException ex) {
+		catch (IOException | RainbowError ex) {
 			JOptionPane.showMessageDialog(null, "Export failed:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
