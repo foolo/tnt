@@ -21,6 +21,7 @@ import java.io.PrintStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import net.sf.okapi.applications.rainbow.BatchLog;
+import net.sf.okapi.applications.rainbow.Input;
 import net.sf.okapi.applications.rainbow.Project;
 import net.sf.okapi.applications.rainbow.UtilitiesAccess;
 
@@ -50,14 +51,14 @@ public class CommandLine2 {
 	public File logFile;
 	public ArrayList<String> inputFiles;
 
-	public int execute() {
+	public int execute(boolean export) {
 		try {
 			ps = new PrintStream(new FileOutputStream(logFile));
 			System.setOut(ps);
 			System.setErr(ps);
 
 			initialize();
-			if (!parseArguments()) {
+			if (!parseArguments(export)) {
 				return 1;
 			}
 
@@ -80,7 +81,7 @@ public class CommandLine2 {
 		}
 	}
 
-	private boolean parseArguments() throws Exception {
+	private boolean parseArguments(boolean export) throws Exception {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -99,6 +100,11 @@ public class CommandLine2 {
 			prj.getList(i).clear();
 			prj.setInputRoot(i, Util.getDirectoryName(f.getAbsolutePath()), true);
 			prj.addDocument(i, f.getAbsolutePath(), res[0], null, res[1], false);
+		}
+
+		if (export) {
+			Input inp = prj.getLastItem(0);
+			inp.filterConfigId = "okf_rainbowkit-noprompt"; // avoid creating ManifestDialog in RainbowKitFilter
 		}
 		return true;
 	}

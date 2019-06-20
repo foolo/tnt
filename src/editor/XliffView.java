@@ -2,10 +2,14 @@ package editor;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import rainbow.RainbowHandler;
 import util.Log;
 import util.XmlUtil;
 import xliff_model.FileTag;
@@ -128,6 +132,34 @@ public class XliffView extends javax.swing.JPanel {
 			else {
 				return false;
 			}
+		}
+	}
+
+	void export() {
+		File f = xliffTag.getFile().getAbsoluteFile();
+		File workDir = f.getParentFile();
+		if (workDir == null) {
+			Log.err("export: workdir == null, file: " + f);
+			return;
+		}
+		System.out.println("work dir: " + workDir);
+		File manifestDir = workDir.getParentFile();
+		if (manifestDir == null) {
+			Log.err("export: manifestDir == null, workDir: " + workDir);
+			return;
+		}
+		File manifestFile = new File(manifestDir, "manifest.rkm");
+		if (manifestFile.exists() == false) {
+			JOptionPane.showMessageDialog(null, "No manifest.rkm found in parent directory (" + manifestDir + ")\n", "", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		RainbowHandler rainbowHandler = new RainbowHandler();
+		try {
+			rainbowHandler.exportTranslatedFile(manifestFile);
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(null, "Export failed:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

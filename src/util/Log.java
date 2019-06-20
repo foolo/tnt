@@ -110,6 +110,10 @@ public class Log {
 		logger.log(Level.SEVERE, null, t);
 	}
 
+	public static void err(String msg) {
+		logger.log(Level.SEVERE, msg);
+	}
+
 	public static void warn(String msg) {
 		logger.log(Level.WARNING, msg);
 	}

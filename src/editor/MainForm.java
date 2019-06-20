@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import rainbow.RainbowHandler;
 import util.Settings;
 
@@ -48,6 +49,7 @@ public class MainForm extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuItemCreatePackage = new javax.swing.JMenuItem();
         jMenuItemOpen = new javax.swing.JMenuItem();
+        jMenuItemExport = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
@@ -78,6 +80,14 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItemOpen);
+
+        jMenuItemExport.setText("Export translated file(s)");
+        jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExportActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemExport);
 
         jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSave.setText("Save");
@@ -171,10 +181,14 @@ public class MainForm extends javax.swing.JFrame {
 			rainbowHandler.createPackage(inputFiles, commonDir.getPath(), packageName);
 		}
 		catch (IOException ex) {
-			Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+			JOptionPane.showMessageDialog(null, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
+
+    private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
+		xliffView1.export();
+    }//GEN-LAST:event_jMenuItemExportActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
@@ -183,6 +197,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
+    private javax.swing.JMenuItem jMenuItemExport;
     private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
