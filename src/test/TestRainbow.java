@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import rainbow.RainbowError;
 import rainbow.RainbowHandler;
 import util.Log;
 
@@ -23,7 +24,7 @@ public class TestRainbow {
 			String packageName = "tnt_" + timestamp;
 			rainbowHandler.createPackage(inputFiles, packageDirectory.getAbsolutePath(), packageName);
 		}
-		catch (IOException ex) {
+		catch (IOException | RainbowError ex) {
 			Logger.getLogger(TestRainbow.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}

@@ -183,14 +183,15 @@ public class MainForm extends javax.swing.JFrame {
 		File commonDir = d.getCommonDirectory();
 		String packageName = d.getPackageName();
 
+		File xliffFile;
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
-			rainbowHandler.createPackage(inputFiles, commonDir.getPath(), packageName);
+			xliffFile = rainbowHandler.createPackage(inputFiles, commonDir.getPath(), packageName);
+			load_file(xliffFile);
 		}
 		catch (IOException | RainbowError ex) {
 			JOptionPane.showMessageDialog(null, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
-
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed

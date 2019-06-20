@@ -1,6 +1,7 @@
 package rainbow;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -62,7 +63,16 @@ public class RainbowHandler {
 		return is;
 	}
 
-	public void createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws RainbowError, IOException {
+	File[] listXliffFiles(File parent) {
+		return parent.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File f) {
+				return f.isFile() && f.getName().toLowerCase().endsWith(".xlf");
+			}
+		});
+	}
+
+	public File createPackage(ArrayList<String> inputFiles, String commonDir, String packageName) throws RainbowError, IOException {
 		Log.debug("createPackage: input files: " + String.join(", ", inputFiles));
 		Log.debug("createPackage: common package directory: " + commonDir);
 		Log.debug("createPackage: package name: " + packageName);
@@ -91,6 +101,15 @@ public class RainbowHandler {
 
 		CommandLine2 cl = new CommandLine2();
 		cl.execute(tempDir, plnTmpFile.getPath(), inputFiles, false);
+		File workDir = Paths.get(commonDir, packageName, "work").toFile();
+		File[] xliffFiles = listXliffFiles(workDir);
+		if (xliffFiles.length == 0) {
+			throw new RainbowError("No output XLIFF file was found in " + workDir);
+		}
+		if (xliffFiles.length > 1) {
+			Log.err("createPackage: Multiple XLIFF files found in output folder: " + workDir);
+		}
+		return xliffFiles[0];
 	}
 
 	public void exportTranslatedFile(File manifestFile) throws RainbowError, IOException {
