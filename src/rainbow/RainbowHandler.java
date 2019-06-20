@@ -91,12 +91,8 @@ public class RainbowHandler {
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 
 		CommandLine2 cl = new CommandLine2();
-		// todo move to constructor
-		cl.sharedFolder = tempDir;
-		cl.pipelineFile = plnTmpFile.getPath();
-		cl.inputFiles = inputFiles;
 		// todo check return value
-		cl.execute(false);
+		cl.execute(tempDir, plnTmpFile.getPath(), inputFiles, false);
 	}
 
 	public void exportTranslatedFile(File manifestFile) throws IOException {
@@ -107,12 +103,9 @@ public class RainbowHandler {
 		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 		CommandLine2 cl = new CommandLine2();
-		// todo move to constructor
-		cl.sharedFolder = tempDir;
-		cl.pipelineFile = plnTmpFile.getAbsolutePath();
-		cl.inputFiles = new ArrayList<>();
-		cl.inputFiles.add(manifestFile.getAbsolutePath());
+		ArrayList<String> inputFiles = new ArrayList<>();
+		inputFiles.add(manifestFile.getAbsolutePath());
 		// todo check return value
-		cl.execute(true);
+		cl.execute(tempDir, plnTmpFile.getAbsolutePath(), inputFiles, true);
 	}
 }

@@ -38,30 +38,27 @@ import util.LogOutputStream;
 public class CommandLine2 {
 
 	private String appRootFolder;
-	public String sharedFolder;
 	private LanguageManager lm;
 	private Project prj;
 	private FilterConfigurationMapper fcMapper;
 	private UtilitiesAccess utilitiesAccess;
 	private BatchLog log;
-	public String pipelineFile;
 	private PluginsManager pm;
 	private PrintStream ps = null;
 	private ExecutionContext context;
-	public ArrayList<String> inputFiles;
 
-	public int execute(boolean export) {
+	public int execute(String sharedFolder, String pipelineFile, ArrayList<String> inputFiles, boolean export) {
 		try {
 			ps = new PrintStream(new LogOutputStream("RAINBOW: "));
 			System.setOut(ps);
 			System.setErr(ps);
 
-			initialize();
-			if (!parseArguments(export)) {
+			initialize(sharedFolder);
+			if (!parseArguments(inputFiles, export)) {
 				return 1;
 			}
 
-			launchPipeline();
+			launchPipeline(pipelineFile);
 		}
 		catch (Throwable e) {
 			e.printStackTrace();
@@ -80,7 +77,7 @@ public class CommandLine2 {
 		}
 	}
 
-	private boolean parseArguments(boolean export) throws Exception {
+	private boolean parseArguments(ArrayList<String> inputFiles, boolean export) throws Exception {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -108,7 +105,7 @@ public class CommandLine2 {
 		return true;
 	}
 
-	private void initialize() throws Exception {
+	private void initialize(String sharedFolder) throws Exception {
 		// Get the location of the main class source
 		File file = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
 		appRootFolder = URLDecoder.decode(file.getAbsolutePath(), "utf-8");
@@ -139,7 +136,7 @@ public class CommandLine2 {
 		context.setApplicationName("Rainbow");
 	}
 
-	private void launchPipeline() {
+	private void launchPipeline(String pipelineFile) {
 		// Save any pending data
 		fcMapper.setCustomConfigurationsDirectory(prj.getParametersFolder());
 		fcMapper.updateCustomConfigurations();
