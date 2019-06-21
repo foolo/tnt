@@ -1,23 +1,25 @@
 package undo_manager;
 
+import editor.SegmentView;
+
 public class CaretPosition {
 
 	public enum Column {
 		SOURCE, TARGET
 	}
 
-	private final int item_index;
+	private final SegmentView segmentView;
 	private final Column column;
 	private final int text_position;
 
-	public CaretPosition(int item_index, Column column, int text_position) {
-		this.item_index = item_index;
+	public CaretPosition(SegmentView segmentView, Column column, int text_position) {
+		this.segmentView = segmentView;
 		this.text_position = text_position;
 		this.column = column;
 	}
 
-	public int getItemIndex() {
-		return item_index;
+	public SegmentView getSegmentView() {
+		return segmentView;
 	}
 
 	public Column getColumn() {
@@ -26,10 +28,5 @@ public class CaretPosition {
 
 	public int getTextPosition() {
 		return text_position;
-	}
-
-	@Override
-	public String toString() {
-		return "#" + item_index + ", " + column + ", " + text_position;
 	}
 }

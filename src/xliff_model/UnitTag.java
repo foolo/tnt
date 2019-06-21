@@ -12,6 +12,7 @@ public class UnitTag implements Item {
 
 	private ArrayList<SegmentTag> segments = new ArrayList<>();
 	private Node node;
+	private ArrayList<UnitTag> unitTagsArray = new ArrayList<>();
 
 	UnitTag(Node node) throws ParseException {
 		this.node = node;
@@ -40,7 +41,14 @@ public class UnitTag implements Item {
 	}
 
 	@Override
-	public ArrayList<SegmentTag> getSegmentsArray() {
+	public ArrayList<UnitTag> getUnitsArray() {
+		if (unitTagsArray.isEmpty()) {
+			unitTagsArray.add(this);
+		}
+		return unitTagsArray;
+	}
+
+	public ArrayList<SegmentTag> getSegments() {
 		return segments;
 	}
 

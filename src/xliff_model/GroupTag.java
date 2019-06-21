@@ -36,10 +36,10 @@ public class GroupTag implements Item {
 	}
 
 	@Override
-	public ArrayList<SegmentTag> getSegmentsArray() {
-		ArrayList<SegmentTag> res = new ArrayList<>();
+	public ArrayList<UnitTag> getUnitsArray() {
+		ArrayList<UnitTag> res = new ArrayList<>();
 		for (Item i : items) {
-			res.addAll(i.getSegmentsArray());
+			res.addAll(i.getUnitsArray());
 		}
 		return res;
 	}

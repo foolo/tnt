@@ -47,7 +47,7 @@ public class UndoManager {
 		boolean newModifiedStatus = (savedState != undoBuffer.peek()) || currentState.isModified();
 		if (newModifiedStatus != modifiedStatus) {
 			modifiedStatus = newModifiedStatus;
-			listener.modifiedStatusChanged(modifiedStatus);
+			listener.modifiedStatusChanged(currentState.getModel(), modifiedStatus);
 		}
 	}
 
@@ -68,7 +68,7 @@ public class UndoManager {
 			newEditingPosition = currentState.getStartPosition();
 		}
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
-		listener.notify_undo(newEditingPosition);
+		listener.notify_undo(currentState.getModel(), newEditingPosition);
 		updateModifiedStatus();
 	}
 

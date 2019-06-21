@@ -11,7 +11,7 @@ import undo_manager.UndoableModel;
 public class FileTag implements UndoableModel {
 
 	private final ArrayList<Item> items = new ArrayList<>();
-	private ArrayList<SegmentTag> segmentArray = null;
+	private ArrayList<UnitTag> unitsArray = null;
 	private String originalFilePath;
 	private String id;
 
@@ -62,14 +62,18 @@ public class FileTag implements UndoableModel {
 		return originalFilePath;
 	}
 
-	public ArrayList<SegmentTag> getSegmentsArray() {
-		if (segmentArray == null) {
-			segmentArray = new ArrayList<>();
+	public ArrayList<Item> getItems() {
+		return items;
+	}
+
+	public ArrayList<UnitTag> getUnitsArray() {
+		if (unitsArray == null) {
+			unitsArray = new ArrayList<>();
 			for (Item i : items) {
-				segmentArray.addAll(i.getSegmentsArray());
+				unitsArray.addAll(i.getUnitsArray());
 			}
 		}
-		return segmentArray;
+		return unitsArray;
 	}
 
 	@Override

@@ -1,14 +1,15 @@
 package editor;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
+import undo_manager.UndoableModel;
 import undo_manager.UndoableState;
 import xliff_model.FileTag;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentTag;
+import xliff_model.UnitTag;
 
 public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
@@ -26,49 +27,41 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 	}
 
 	@Override
-	public void notify_undo(CaretPosition newEditingPosition) {
-		update_model();
-		Component c = jPanelItems.getComponent(newEditingPosition.getItemIndex());
-		SegmentView segmentView = (SegmentView) c;
-		segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
-		scroll_to_segment(segmentView);
+	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
+		update_model((FileTag) model);
+		SegmentView segmentView = newEditingPosition.getSegmentView();
+		if (segmentView != null) {
+			segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
+			scroll_to_segment(segmentView);
+		}
 	}
 
 	@Override
-	public void modifiedStatusChanged(boolean modified) {
-		updateName();
+	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
+		updateName((FileTag) model);
 		xliffView.updateTabTitle(this);
 	}
 
-	void updateName() {
-		String alias = ((FileTag) undoManager.getCurrentState().getModel()).getAlias();
+	void updateName(FileTag fileTag) {
+		String alias = fileTag.getAlias();
 		setName((undoManager.isModified() ? "* " : "") + alias);
 	}
 
-	public void update_model() {
-		ArrayList<SegmentTag> segments = ((FileTag) undoManager.getCurrentState().getModel()).getSegmentsArray();
-		if (segments.size() < jPanelItems.getComponentCount()) {
-			int remove_count = jPanelItems.getComponentCount() - segments.size();
-			for (int i = 0; i < remove_count; i++) {
-				jPanelItems.remove(jPanelItems.getComponentCount() - 1);
-			}
+	public void update_model(FileTag fileTag) {
+		ArrayList<UnitTag> units = fileTag.getUnitsArray();
+		if (units.size() != jPanelItems.getComponentCount()) {
+			// todo
+			throw new RuntimeException("units.size() != jPanelItems.getComponentCount()");
 		}
-		for (int i = 0; i < segments.size(); i++) {
-			SegmentView segmentView;
-			if (i > jPanelItems.getComponentCount() - 1) {
-				segmentView = new SegmentView(this);
-				jPanelItems.add(segmentView);
-			}
-			else {
-				Component c = jPanelItems.getComponent(i);
-				segmentView = (SegmentView) c;
-			}
-			segmentView.setSegmentTag(segments.get(i), i);
+		for (int i = 0; i < units.size(); i++) {
+			UnitView unitView = (UnitView) jPanelItems.getComponent(i);
+			UnitTag unitTag = units.get(i);
+			unitView.setUnitTag(unitTag);
 		}
 	}
 
 	void scroll_to_segment(SegmentView segmentView) {
-		int dest_y = segmentView.getBounds().y;
+		int dest_y = segmentView.getBounds().y + segmentView.getParent().getBounds().y;
 		int dest_h = segmentView.getBounds().height;
 		int view_y = jScrollPane1.getVerticalScrollBar().getValue();
 		int view_h = jScrollPane1.getVerticalScrollBar().getVisibleAmount();
@@ -82,31 +75,27 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
 	public void load_file(FileTag fileTag) throws ParseException {
 		undoManager = new UndoManager();
-		CaretPosition pos = new CaretPosition(0, CaretPosition.Column.SOURCE, 0);
+		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
 		undoManager.initialize(new UndoableState(fileTag, pos, pos, undoManager), this);
-		ArrayList<SegmentTag> segments = fileTag.getSegmentsArray();
-		populate_segments(segments);
-		update_model();
-		updateName();
+		ArrayList<UnitTag> units = fileTag.getUnitsArray();
+		populate_units(units);
+		update_model(fileTag);
+		updateName(fileTag);
 	}
 
-	void populate_segments(ArrayList<SegmentTag> segments) {
-		for (SegmentTag s : segments) {
-			jPanelItems.add(new SegmentView(this));
+	void populate_units(ArrayList<UnitTag> unitTags) {
+		for (UnitTag u : unitTags) {
+			UnitView unitView = new UnitView(this);
+			unitView.populateSegments(u.getSegments().size());
+			jPanelItems.add(unitView);
 		}
-	}
-
-	SegmentView getSegmentView(int index) {
-		Component c = jPanelItems.getComponent(index);
-		return (SegmentView) c;
 	}
 
 	void copy_source_to_target() {
 		undoManager.markSnapshot();
 		CaretPosition p = undoManager.getCaretPosition();
-		SegmentView segmentView = getSegmentView(p.getItemIndex());
-		SegmentTag segmentTag = segmentView.getSegmentTag();
-		segmentView.setTargetText(segmentTag.getSourceText().copy());
+		SegmentTag segmentTag = p.getSegmentView().getSegmentTag();
+		p.getSegmentView().setTargetText(segmentTag.getSourceText().copy());
 	}
 
 	@SuppressWarnings("unchecked")
