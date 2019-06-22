@@ -51,6 +51,7 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
+        jMenuItemMarkTranslated = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItemLogs = new javax.swing.JMenuItem();
 
@@ -98,7 +99,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("Segment");
 
         jMenuItemCopySrc.setText("Copy source to target");
         jMenuItemCopySrc.addActionListener(new java.awt.event.ActionListener() {
@@ -107,6 +108,15 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItemCopySrc);
+
+        jMenuItemMarkTranslated.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemMarkTranslated.setText("Mark as translated");
+        jMenuItemMarkTranslated.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemMarkTranslatedActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItemMarkTranslated);
 
         jMenuBar1.add(jMenu2);
 
@@ -197,6 +207,10 @@ public class MainForm extends javax.swing.JFrame {
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
+    private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
+		xliffView1.markSegmentAsTranslated();
+    }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -206,6 +220,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
     private javax.swing.JMenuItem jMenuItemLogs;
+    private javax.swing.JMenuItem jMenuItemMarkTranslated;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
     private editor.XliffView xliffView1;

@@ -72,6 +72,14 @@ public class XliffView extends javax.swing.JPanel {
 		fv.copy_source_to_target();
 	}
 
+	void markSegmentAsTranslated() {
+		FileView fv = getActiveFileView();
+		if (fv == null) {
+			return;
+		}
+		fv.markSegmentAsTranslated();
+	}
+
 	ArrayList<FileView> getAllFileViews() {
 		ArrayList<FileView> fileViews = new ArrayList<>();
 		for (Component c : jTabbedPane1.getComponents()) {

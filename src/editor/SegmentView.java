@@ -14,8 +14,8 @@ public class SegmentView extends javax.swing.JPanel {
 
 		void update() {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			CaretPosition pos = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition());
-			fileView.getUndoManager().getCurrentState().setModified(pos);
+			setStateField(SegmentTag.State.INITIAL);
+			notifyUndoManager();
 		}
 
 		@Override
@@ -49,11 +49,22 @@ public class SegmentView extends javax.swing.JPanel {
 		unregisterListeners();
 		markupViewSource.setTaggedText(segmentTag.getSourceText());
 		markupViewTarget.setTaggedText(segmentTag.getTargetText());
+		jLabelState.setText(segmentTag.getState().toString());
 		registerListeners();
 	}
 
 	public void setTargetText(TaggedText t) {
 		markupViewTarget.setTaggedText(t);
+	}
+
+	void setStateField(SegmentTag.State state) {
+		jLabelState.setText(state.toString());
+		segmentTag.setState(state);
+	}
+
+	void setState(SegmentTag.State state) {
+		setStateField(state);
+		notifyUndoManager();
 	}
 
 	public SegmentTag getSegmentTag() {
@@ -83,6 +94,11 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
+	void notifyUndoManager() {
+		CaretPosition pos = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition());
+		fileView.getUndoManager().getCurrentState().setModified(pos);
+	}
+
 	void handleKeyPress(KeyEvent evt) {
 		boolean ctrl = evt.getModifiers() == CTRL_MASK;
 		boolean z = evt.getKeyCode() == KeyEvent.VK_Z;
@@ -99,6 +115,7 @@ public class SegmentView extends javax.swing.JPanel {
         markupViewSource = new editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
         markupViewTarget = new editor.MarkupView(this);
+        jLabelState = new javax.swing.JLabel();
 
         markupViewSource.setEditable(false);
         markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
@@ -135,6 +152,8 @@ public class SegmentView extends javax.swing.JPanel {
         });
         jScrollPane4.setViewportView(markupViewTarget);
 
+        jLabelState.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,12 +162,18 @@ public class SegmentView extends javax.swing.JPanel {
                 .addGap(63, 63, 63)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelState)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelState))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -181,6 +206,7 @@ public class SegmentView extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabelState;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private editor.MarkupView markupViewSource;

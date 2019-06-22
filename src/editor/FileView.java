@@ -98,6 +98,11 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		p.getSegmentView().setTargetText(segmentTag.getSourceText().copy());
 	}
 
+	void markSegmentAsTranslated() {
+		undoManager.markSnapshot();
+		undoManager.getCaretPosition().getSegmentView().setState(SegmentTag.State.TRANSLATED);
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

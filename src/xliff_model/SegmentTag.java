@@ -14,9 +14,31 @@ public class SegmentTag {
 	private final Element node;
 	private final Node sourceNode;
 	private final Node targetNode;
+	private State state;
+
+	public static final String ATTRIBUTE_STATE = "state";
+
+	public enum State {
+		INITIAL, TRANSLATED, REVIEWED, FINAL;
+
+		static State fromString(String s) {
+			try {
+				return State.valueOf(s.toUpperCase());
+			}
+			catch (IllegalArgumentException ex) {
+				return State.INITIAL;
+			}
+		}
+
+		@Override
+		public String toString() {
+			return this.name().toLowerCase();
+		}
+	};
 
 	public SegmentTag(Element node, UnitTag parent) throws ParseException {
 		this.node = node;
+		state = State.fromString(node.getAttribute(ATTRIBUTE_STATE));
 		sourceNode = XmlUtil.getChildByName(node, "source");
 		if (sourceNode == null) {
 			throw new ParseException("Mandatory <source> missing in <segment>");
@@ -39,6 +61,7 @@ public class SegmentTag {
 		this.node = st.node;
 		this.sourceNode = st.sourceNode;
 		this.targetNode = st.targetNode;
+		this.state = st.state;
 	}
 
 	public TaggedText getSourceText() {
@@ -58,6 +81,14 @@ public class SegmentTag {
 
 	public void setTargetText(TaggedText s) {
 		targetText = s;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 
 	static void replaceChildren(Node node, ArrayList<Node> newNodes) {
@@ -88,5 +119,6 @@ public class SegmentTag {
 			errors.add(new SegmentError(this, ex.getMessage()));
 		}
 		replaceChildren(targetNode, targetNodes);
+		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 	}
 }
