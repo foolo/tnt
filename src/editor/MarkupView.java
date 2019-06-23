@@ -1,7 +1,6 @@
 package editor;
 
 import editor.javax.swing.plaf.basic.TextTransferHandler;
-import java.awt.Container;
 import xliff_model.TaggedText;
 import xliff_model.Tag;
 import java.util.ArrayList;
@@ -67,6 +66,9 @@ public class MarkupView extends JTextPane {
 
 	private static TaggedText getTaggedText(int p0, int p1, StyledDocument doc) {
 		String docText = getDocText(doc);
+		if (docText.isEmpty()) {
+			return new TaggedText(new ArrayList<>());
+		}
 		ArrayList<TaggedTextContent> res = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
 		for (int i = p0; i < p1; i++) {
@@ -83,7 +85,6 @@ public class MarkupView extends JTextPane {
 		}
 		res.add(new Text(sb.toString()));
 		return new TaggedText(res);
-
 	}
 
 	public TaggedText getTaggedText() {

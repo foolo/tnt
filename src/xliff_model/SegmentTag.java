@@ -3,6 +3,7 @@ package xliff_model;
 import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import util.XmlUtil;
@@ -98,27 +99,35 @@ public class SegmentTag {
 		}
 	}
 
-	public void encode(ArrayList<SegmentError> errors) {
-		ArrayList<Node> sourceNodes;
+	public void encodeContent(Node node, TaggedText text, ArrayList<SegmentError> errors) {
+		ArrayList<Node> nodes;
 		try {
-			sourceNodes = sourceText.toNodes(node.getOwnerDocument());
+			nodes = text.toNodes(node.getOwnerDocument());
 		}
 		catch (EncodeException ex) {
-			System.out.println(ex.getMessage());
-			sourceNodes = new ArrayList<>();
+			nodes = new ArrayList<>();
 			errors.add(new SegmentError(this, ex.getMessage()));
 		}
-		replaceChildren(sourceNode, sourceNodes);
+		replaceChildren(node, nodes);
+	}
 
-		ArrayList<Node> targetNodes;
-		try {
-			targetNodes = targetText.toNodes(node.getOwnerDocument());
+	public void encode(ArrayList<SegmentError> errors) {
+		encodeContent(sourceNode, sourceText, errors);
+
+		if (targetText.getContent().isEmpty()) {
+			try {
+				node.removeChild(targetNode);
+			}
+			catch (DOMException ex) {
+				if (ex.code != DOMException.NOT_FOUND_ERR) {
+					throw ex;
+				}
+			}
 		}
-		catch (EncodeException ex) {
-			targetNodes = new ArrayList<>();
-			errors.add(new SegmentError(this, ex.getMessage()));
+		else {
+			encodeContent(targetNode, targetText, errors);
+			node.setAttribute(ATTRIBUTE_STATE, state.toString());
+			node.appendChild(targetNode);
 		}
-		replaceChildren(targetNode, targetNodes);
-		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 	}
 }
