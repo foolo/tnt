@@ -197,7 +197,7 @@ public class MainForm extends javax.swing.JFrame {
 			load_file(xliffFile);
 		}
 		catch (IOException | RainbowError ex) {
-			JOptionPane.showMessageDialog(null, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 

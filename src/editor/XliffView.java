@@ -54,14 +54,14 @@ public class XliffView extends javax.swing.JPanel {
 			}
 		}
 		catch (LoadException ex) {
-			JOptionPane.showMessageDialog(null, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (XliffVersionException ex) {
-			JOptionPane.showMessageDialog(null, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 		catch (ParseException ex) {
 			Log.debug("load_file: " + ex.toString());
-			JOptionPane.showMessageDialog(null, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class XliffView extends javax.swing.JPanel {
 			fv.markSegmentAsTranslated();
 		}
 		catch (EncodeException ex) {
-			JOptionPane.showMessageDialog(null, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -119,7 +119,7 @@ public class XliffView extends javax.swing.JPanel {
 			XmlUtil.write_xml(xliffTag.getDocument(), new StreamResult(xliffTag.getFile()));
 		}
 		catch (SaveException ex) {
-			JOptionPane.showMessageDialog(null, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		markAsSaved();
@@ -165,7 +165,7 @@ public class XliffView extends javax.swing.JPanel {
 		}
 		File manifestFile = new File(manifestDir, "manifest.rkm");
 		if (manifestFile.exists() == false) {
-			JOptionPane.showMessageDialog(null, "No manifest.rkm found in parent directory (" + manifestDir + ")\n", "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "No manifest.rkm found in parent directory (" + manifestDir + ")\n", "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -174,7 +174,7 @@ public class XliffView extends javax.swing.JPanel {
 			rainbowHandler.exportTranslatedFile(manifestFile);
 		}
 		catch (IOException | RainbowError ex) {
-			JOptionPane.showMessageDialog(null, "Export failed:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Export failed:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

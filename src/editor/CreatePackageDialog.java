@@ -257,13 +257,13 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
 	void showError(String msg) {
-		JOptionPane.showMessageDialog(null, msg, "", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(this, msg, "", JOptionPane.ERROR_MESSAGE);
 	}
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
 		String preValidateResult = preValidateInput();
 		if (preValidateResult != null) {
-			JOptionPane.showMessageDialog(null, preValidateResult, "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, preValidateResult, "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
