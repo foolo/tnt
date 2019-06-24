@@ -112,7 +112,7 @@ public class SegmentTag {
 			nodes = text.toNodes(node.getOwnerDocument());
 		}
 		catch (EncodeException ex) {
-			nodes = new ArrayList<>();
+			nodes = text.onlyTextToNodes(node.getOwnerDocument());
 			errors.add(new SegmentError(this, ex.getMessage()));
 		}
 		replaceChildren(node, nodes);

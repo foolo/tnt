@@ -78,6 +78,13 @@ public class TaggedText {
 		return new TaggedText(newContent);
 	}
 
+	public ArrayList<Node> onlyTextToNodes(Document document) {
+		String textContent = getTextContent();
+		ArrayList<Node> result = new ArrayList<>();
+		result.add(document.createTextNode(textContent));
+		return result;
+	}
+
 	public ArrayList<Node> toNodes(Document document) throws EncodeException {
 		ArrayList<TaggedTextContent> tmpContent = new ArrayList<>(content);
 		tmpContent.add(new Tag(null, Tag.Type.END));

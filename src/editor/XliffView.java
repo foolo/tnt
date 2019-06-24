@@ -140,7 +140,7 @@ public class XliffView extends javax.swing.JPanel {
 			for (SegmentError e : errors) {
 				Log.debug("SegmentError: " + XmlUtil.getPath(e.getSegmentTag().getNode()) + ": " + e.getMessage());
 			}
-			int choice = JOptionPane.showConfirmDialog(this, "Some segments have invalid content. They would be saved as empty. Save anyway?", "Invalid segments found", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			int choice = JOptionPane.showConfirmDialog(this, "Some segments have invalid tags. They would be saved without tags. Save anyway?", "Invalid segments found", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 			if (choice == JOptionPane.YES_OPTION) {
 				return save_to_file();
 			}
