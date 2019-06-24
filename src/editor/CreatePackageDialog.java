@@ -235,11 +235,12 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonChooseInputFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseInputFilesActionPerformed
-		JFileChooser fc = new JFileChooser(Settings.getPackageDirectory());
+		JFileChooser fc = new JFileChooser(Settings.getInputFileDirectory());
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
+		Settings.setInputFileDirectory(fc.getSelectedFile());
 		jTextFieldInputFile.setText(fc.getSelectedFile().getAbsolutePath());
 		update();
     }//GEN-LAST:event_jButtonChooseInputFilesActionPerformed

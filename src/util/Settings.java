@@ -20,12 +20,22 @@ public class Settings {
 	}
 
 	public static File getPackageDirectory() {
-		File defaultPackageDirectory = new File(System.getProperty("user.home"), "RainbowPackages");
-		String dir = prefs.get("package_directory", defaultPackageDirectory.getAbsolutePath());
+		File defaultDir = new File(System.getProperty("user.home"), "RainbowPackages");
+		String dir = prefs.get("package_directory", defaultDir.getAbsolutePath());
 		return new File(dir);
 	}
 
 	public static void setPackageDirectory(File dir) {
 		prefs.put("package_directory", dir.getAbsolutePath());
+	}
+
+	public static File getInputFileDirectory() {
+		File defaultDir = new File(System.getProperty("user.home"));
+		String dir = prefs.get("input_file_directory", defaultDir.getAbsolutePath());
+		return new File(dir);
+	}
+
+	public static void setInputFileDirectory(File dir) {
+		prefs.put("input_file_directory", dir.getAbsolutePath());
 	}
 }
