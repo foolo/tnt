@@ -12,7 +12,7 @@ import xliff_model.exceptions.EncodeException;
 
 public class SegmentView extends javax.swing.JPanel {
 
-	DocumentListener targetDocumentListener = new DocumentListener() {
+	private final DocumentListener targetDocumentListener = new DocumentListener() {
 
 		void update() {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());

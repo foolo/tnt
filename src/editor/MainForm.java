@@ -10,7 +10,7 @@ import util.Settings;
 
 public class MainForm extends javax.swing.JFrame {
 
-	LogWindow logWindow;
+	private final LogWindow logWindow;
 
 	public MainForm() {
 		initComponents();

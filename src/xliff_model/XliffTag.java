@@ -14,8 +14,8 @@ public class XliffTag {
 
 	private ArrayList<FileTag> files = new ArrayList<>();
 	private Document document;
-	String version;
-	File file;
+	private String version;
+	private File file;
 
 	public XliffTag(Document doc, File file) throws ParseException {
 		this.file = file;

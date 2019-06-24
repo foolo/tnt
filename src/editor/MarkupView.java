@@ -16,7 +16,7 @@ import xliff_model.Text;
 
 public class MarkupView extends JTextPane {
 
-	SegmentView segmentView;
+	private SegmentView segmentView;
 
 	public MarkupView() {
 	}

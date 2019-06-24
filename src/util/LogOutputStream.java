@@ -5,8 +5,8 @@ import java.io.OutputStream;
 public class LogOutputStream extends OutputStream {
 
 	private static final int BUFSIZE = 100;
-	byte buf[] = new byte[BUFSIZE];
-	int count = 0;
+	private byte buf[] = new byte[BUFSIZE];
+	private int count = 0;
 
 	String prefix;
 

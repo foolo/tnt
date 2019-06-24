@@ -11,8 +11,8 @@ import util.XmlUtil;
 
 public class TaggedText {
 
-	static final ArrayList<String> EMPTY_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"cp", "ph", "sc", "ec", "sm", "em"}));
-	static final ArrayList<String> COMPOSITE_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"pc", "mrk"}));
+	private static final ArrayList<String> EMPTY_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"cp", "ph", "sc", "ec", "sm", "em"}));
+	private static final ArrayList<String> COMPOSITE_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"pc", "mrk"}));
 
 	private final ArrayList<TaggedTextContent> content;
 

@@ -23,7 +23,7 @@ public class Log {
 
 	static final Logger logger = Logger.getLogger(Log.class.getName());
 
-	public static Formatter formatter = new Formatter() {
+	public static final Formatter formatter = new Formatter() {
 
 		String getMessage(LogRecord record) {
 			String pattern = record.getMessage();

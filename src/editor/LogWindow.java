@@ -26,7 +26,7 @@ public class LogWindow extends javax.swing.JFrame {
 		}
 	}
 
-	GuiLogHandler guiLogHandler = new GuiLogHandler();
+	private final GuiLogHandler guiLogHandler = new GuiLogHandler();
 
 	void open() {
 		jTextArea1.setText("");

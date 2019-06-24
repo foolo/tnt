@@ -6,9 +6,9 @@ import xliff_model.UnitTag;
 
 public class UnitView extends javax.swing.JPanel {
 
-	FileView fileView;
+	private FileView fileView;
 
-	UnitTag unitTag;
+	private UnitTag unitTag;
 
 	public UnitView() {
 		initComponents();
