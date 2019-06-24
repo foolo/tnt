@@ -18,6 +18,7 @@ import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
 import xliff_model.XliffTag;
+import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.SaveException;
 import xliff_model.exceptions.XliffVersionException;
 
@@ -77,7 +78,12 @@ public class XliffView extends javax.swing.JPanel {
 		if (fv == null) {
 			return;
 		}
-		fv.markSegmentAsTranslated();
+		try {
+			fv.markSegmentAsTranslated();
+		}
+		catch (EncodeException ex) {
+			JOptionPane.showMessageDialog(null, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	ArrayList<FileView> getAllFileViews() {

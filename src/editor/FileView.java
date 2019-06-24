@@ -10,6 +10,7 @@ import xliff_model.FileTag;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
+import xliff_model.exceptions.EncodeException;
 
 public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
@@ -98,7 +99,7 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		p.getSegmentView().setTargetText(segmentTag.getSourceText().copy());
 	}
 
-	void markSegmentAsTranslated() {
+	void markSegmentAsTranslated() throws EncodeException {
 		undoManager.markSnapshot();
 		undoManager.getCaretPosition().getSegmentView().setState(SegmentTag.State.TRANSLATED);
 	}

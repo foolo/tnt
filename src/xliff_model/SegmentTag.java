@@ -88,7 +88,14 @@ public class SegmentTag {
 		return state;
 	}
 
-	public void setState(State state) {
+	public void setState(State state) throws EncodeException {
+		if (state != State.INITIAL) {
+			ArrayList<SegmentError> errors = new ArrayList<>();
+			encodeContent(targetNode, targetText, errors);
+			if (errors.isEmpty() == false) {
+				throw new EncodeException(errors.get(0).getMessage());
+			}
+		}
 		this.state = state;
 	}
 

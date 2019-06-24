@@ -5,8 +5,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
+import util.Log;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
+import xliff_model.exceptions.EncodeException;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -14,7 +16,12 @@ public class SegmentView extends javax.swing.JPanel {
 
 		void update() {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			setStateField(SegmentTag.State.INITIAL);
+			try {
+				setStateField(SegmentTag.State.INITIAL);
+			}
+			catch (EncodeException ex) {
+				Log.err(ex);
+			}
 			notifyUndoManager();
 		}
 
@@ -57,12 +64,12 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setTaggedText(t);
 	}
 
-	void setStateField(SegmentTag.State state) {
-		jLabelState.setText(state.toString());
+	private void setStateField(SegmentTag.State state) throws EncodeException {
 		segmentTag.setState(state);
+		jLabelState.setText(state.toString());
 	}
 
-	void setState(SegmentTag.State state) {
+	void setState(SegmentTag.State state) throws EncodeException {
 		setStateField(state);
 		notifyUndoManager();
 	}
