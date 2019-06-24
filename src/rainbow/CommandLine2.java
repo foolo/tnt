@@ -45,7 +45,7 @@ public class CommandLine2 {
 
 	public void execute(String sharedFolder, String pipelineFile, String inputFile, boolean export) throws RainbowError {
 		try {
-			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: "));
+			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: ", 150));
 			System.setOut(ps);
 			System.setErr(ps);
 			initialize(sharedFolder);
