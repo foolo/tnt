@@ -16,12 +16,7 @@ public class SegmentView extends javax.swing.JPanel {
 
 		void update() {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			try {
-				setStateField(SegmentTag.State.INITIAL);
-			}
-			catch (EncodeException ex) {
-				Log.err(ex);
-			}
+			setStateField(SegmentTag.State.INITIAL);
 			notifyUndoManager();
 		}
 
@@ -64,12 +59,16 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setTaggedText(t);
 	}
 
-	private void setStateField(SegmentTag.State state) throws EncodeException {
+	void testEncode() throws EncodeException {
+		segmentTag.testEncode();
+	}
+
+	private void setStateField(SegmentTag.State state) {
 		segmentTag.setState(state);
 		jLabelState.setText(state.toString());
 	}
 
-	void setState(SegmentTag.State state) throws EncodeException {
+	void setState(SegmentTag.State state) {
 		setStateField(state);
 		notifyUndoManager();
 	}

@@ -79,11 +79,13 @@ public class XliffView extends javax.swing.JPanel {
 			return;
 		}
 		try {
-			fv.markSegmentAsTranslated();
+			fv.testEncodeSegment();
 		}
 		catch (EncodeException ex) {
 			JOptionPane.showMessageDialog(this, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
+		fv.markSegmentAsTranslated();
 	}
 
 	ArrayList<FileView> getAllFileViews() {

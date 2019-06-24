@@ -99,7 +99,11 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 		p.getSegmentView().setTargetText(segmentTag.getSourceText().copy());
 	}
 
-	void markSegmentAsTranslated() throws EncodeException {
+	void testEncodeSegment() throws EncodeException {
+		undoManager.getCaretPosition().getSegmentView().testEncode();
+	}
+
+	void markSegmentAsTranslated() {
 		undoManager.markSnapshot();
 		undoManager.getCaretPosition().getSegmentView().setState(SegmentTag.State.TRANSLATED);
 	}
