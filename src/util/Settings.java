@@ -25,7 +25,6 @@ public class Settings {
 		return new File(dir);
 	}
 
-	// todo use
 	public static void setPackageDirectory(File dir) {
 		prefs.put("package_directory", dir.getAbsolutePath());
 	}

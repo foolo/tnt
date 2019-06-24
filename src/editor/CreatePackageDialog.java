@@ -76,6 +76,9 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		if (jTextFieldInputFile.getText().isEmpty()) {
 			return "";
 		}
+		if (new File(jTextFieldInputFile.getText()).exists() == false) {
+			return "Input file does not exist.";
+		}
 		if (jTextFieldCommonDir.getText().isEmpty()) {
 			return "Common package directory must not be empty.";
 		}
@@ -300,6 +303,7 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 			Log.warn("Could not delete directory: " + packageDirectory + " (" + ex.toString() + ")");
 		}
 
+		Settings.setPackageDirectory(commonDir.toFile());
 		result = true;
 		setVisible(false);
     }//GEN-LAST:event_jButtonOkActionPerformed
