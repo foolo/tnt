@@ -39,7 +39,7 @@ public class XliffView extends javax.swing.JPanel {
 		return s;
 	}
 
-	void load_xliff(File f) {
+	boolean load_xliff(File f) {
 		try {
 			Document doc = XmlUtil.read_xml(f);
 			xliffTag = new XliffTag(doc, f);
@@ -50,6 +50,7 @@ public class XliffView extends javax.swing.JPanel {
 				jTabbedPane1.add(fv);
 				updateTabTitle(fv);
 			}
+			return true;
 		}
 		catch (LoadException ex) {
 			JOptionPane.showMessageDialog(this, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
@@ -61,6 +62,7 @@ public class XliffView extends javax.swing.JPanel {
 			Log.debug("load_file: " + ex.toString());
 			JOptionPane.showMessageDialog(this, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
 		}
+		return false;
 	}
 
 	void copy_source_to_target() {

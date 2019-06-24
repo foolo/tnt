@@ -18,7 +18,9 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public void load_file(File f) {
-		xliffView1.load_xliff(f);
+		if (xliffView1.load_xliff(f)) {
+			setTitle(f.toString());
+		}
 	}
 
 	public boolean save_file() {
