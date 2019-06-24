@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import javax.swing.JOptionPane;
 import util.Log;
 
 public class RainbowHandler {
@@ -118,7 +119,19 @@ public class RainbowHandler {
 		return xliffFiles[0];
 	}
 
-	public void exportTranslatedFile(File manifestFile) throws RainbowError, IOException {
+	public void exportTranslatedFile(File xliffFile) throws RainbowError, IOException {
+		File workDir = xliffFile.getParentFile();
+		if (workDir == null) {
+			throw new RainbowError("exportTranslatedFile: workdir == null, file: " + xliffFile);
+		}
+		File manifestDir = workDir.getParentFile();
+		if (manifestDir == null) {
+			throw new RainbowError("exportTranslatedFile: manifestDir == null, workDir: " + workDir);
+		}
+		File manifestFile = new File(manifestDir, "manifest.rkm");
+		if (manifestFile.exists() == false) {
+			throw new RainbowError("No manifest.rkm found in parent directory (" + manifestDir + ")\n");
+		}
 		String tempDir = Files.createTempDirectory("tnt_tmp_").toString();
 		Log.debug("exportTranslatedFile: temporary directory: " + tempDir);
 		File plnTmpFile = new File(tempDir, "export.pln");

@@ -152,29 +152,12 @@ public class XliffView extends javax.swing.JPanel {
 
 	void export() {
 		File f = xliffTag.getFile().getAbsoluteFile();
-		File workDir = f.getParentFile();
-		if (workDir == null) {
-			Log.err("export: workdir == null, file: " + f);
-			return;
-		}
-		System.out.println("work dir: " + workDir);
-		File manifestDir = workDir.getParentFile();
-		if (manifestDir == null) {
-			Log.err("export: manifestDir == null, workDir: " + workDir);
-			return;
-		}
-		File manifestFile = new File(manifestDir, "manifest.rkm");
-		if (manifestFile.exists() == false) {
-			JOptionPane.showMessageDialog(this, "No manifest.rkm found in parent directory (" + manifestDir + ")\n", "", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
-			rainbowHandler.exportTranslatedFile(manifestFile);
+			rainbowHandler.exportTranslatedFile(f);
 		}
 		catch (IOException | RainbowError ex) {
-			JOptionPane.showMessageDialog(this, "Export failed:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
