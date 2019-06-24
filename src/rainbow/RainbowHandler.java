@@ -63,12 +63,16 @@ public class RainbowHandler {
 	}
 
 	File[] listXliffFiles(File parent) {
-		return parent.listFiles(new FileFilter() {
+		File[] files = parent.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File f) {
 				return f.isFile() && f.getName().toLowerCase().endsWith(".xlf");
 			}
 		});
+		if (files == null) {
+			return new File[0];
+		}
+		return files;
 	}
 
 	public File createPackage(String inputFile, String commonDir, String packageName) throws RainbowError, IOException {
@@ -101,6 +105,9 @@ public class RainbowHandler {
 		CommandLine2 cl = new CommandLine2();
 		cl.execute(tempDir, plnTmpFile.getPath(), inputFile, false);
 		File workDir = Paths.get(commonDir, packageName, "work").toFile();
+		if ((workDir.exists() == false) || (workDir.isDirectory() == false)) {
+			throw new RainbowError("Work directory not created or not a directory: " + workDir);
+		}
 		File[] xliffFiles = listXliffFiles(workDir);
 		if (xliffFiles.length == 0) {
 			throw new RainbowError("No output XLIFF file was found in " + workDir);
