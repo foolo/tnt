@@ -21,7 +21,10 @@ public class XliffTag {
 		this.file = file;
 		Element node = doc.getDocumentElement();
 		version = node.getAttribute("version");
-		if (version.substring(0, 2).equals("2.") == false) {
+		if (version.isEmpty()) {
+			throw new XliffVersionException("Missing XLIFF version attribute");
+		}
+		if (version.startsWith("2.") == false) {
 			throw new XliffVersionException("Unsupported XLIFF version: " + version);
 		}
 		this.document = doc;
