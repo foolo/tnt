@@ -10,7 +10,6 @@ import xliff_model.FileTag;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
-import xliff_model.exceptions.EncodeException;
 
 public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
@@ -94,18 +93,12 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 
 	void copy_source_to_target() {
 		undoManager.markSnapshot();
-		CaretPosition p = undoManager.getCaretPosition();
-		SegmentTag segmentTag = p.getSegmentView().getSegmentTag();
-		p.getSegmentView().setTargetText(segmentTag.getSourceText().copy());
-	}
-
-	void testEncodeSegment() throws EncodeException {
-		undoManager.getCaretPosition().getSegmentView().testEncode();
-	}
-
-	void markSegmentAsTranslated() {
-		undoManager.markSnapshot();
-		undoManager.getCaretPosition().getSegmentView().setState(SegmentTag.State.TRANSLATED);
+		SegmentView segmentView = SegmentView.getActiveSegmentView();
+		if (segmentView == null) {
+			return;
+		}
+		SegmentTag segmentTag = segmentView.getSegmentTag();
+		segmentView.setTargetText(segmentTag.getSourceText().copy());
 	}
 
 	@SuppressWarnings("unchecked")

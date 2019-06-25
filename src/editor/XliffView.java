@@ -15,6 +15,7 @@ import xliff_model.FileTag;
 import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
 import xliff_model.SegmentError;
+import xliff_model.SegmentTag;
 import xliff_model.XliffTag;
 import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.SaveException;
@@ -74,18 +75,18 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	void markSegmentAsTranslated() {
-		FileView fv = getActiveFileView();
-		if (fv == null) {
+		SegmentView segmentView = SegmentView.getActiveSegmentView();
+		if (segmentView == null) {
 			return;
 		}
 		try {
-			fv.testEncodeSegment();
+			segmentView.testEncode();
 		}
 		catch (EncodeException ex) {
 			JOptionPane.showMessageDialog(this, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		fv.markSegmentAsTranslated();
+		segmentView.setState(SegmentTag.State.TRANSLATED);
 	}
 
 	ArrayList<FileView> getAllFileViews() {

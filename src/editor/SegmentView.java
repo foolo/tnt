@@ -1,11 +1,12 @@
 package editor;
 
+import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
-import util.Log;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
 import xliff_model.exceptions.EncodeException;
@@ -113,6 +114,21 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
+	private static SegmentView lastActiveSegmentView = null;
+
+	static void setActiveSegmentView(SegmentView segmentView) {
+		lastActiveSegmentView = segmentView;
+	}
+
+	static SegmentView getActiveSegmentView() {
+		Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+		if (c instanceof MarkupView) {
+			MarkupView mv = (MarkupView) c;
+			return mv.getSegmentView();
+		}
+		return lastActiveSegmentView;
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -191,6 +207,7 @@ public class SegmentView extends javax.swing.JPanel {
 		fileView.getUndoManager().markSnapshot();
 		fileView.getUndoManager().setCaretPosition(new CaretPosition(this, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
 		markupViewSource.getCaret().setVisible(true);
+		lastActiveSegmentView = this;
     }//GEN-LAST:event_markupViewSourceFocusGained
 
     private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
@@ -204,6 +221,8 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		fileView.getUndoManager().markSnapshot();
 		fileView.getUndoManager().setCaretPosition(new CaretPosition(this, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
+		lastActiveSegmentView = this;
+
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
