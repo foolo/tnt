@@ -3,12 +3,14 @@ package editor;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import rainbow.RainbowError;
 import rainbow.RainbowHandler;
+import rainbow.XliffFileValidator;
 import util.Log;
 import util.XmlUtil;
 import xliff_model.FileTag;
@@ -79,6 +81,10 @@ public class XliffView extends javax.swing.JPanel {
 		if (segmentView == null) {
 			return;
 		}
+		if (segmentView.getSegmentTag().getTargetText().getContent().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Can not mark empty segment as translated", "", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		try {
 			segmentView.testEncode();
 		}
@@ -87,6 +93,9 @@ public class XliffView extends javax.swing.JPanel {
 			return;
 		}
 		segmentView.setState(SegmentTag.State.TRANSLATED);
+		if (validateFile() == false) {
+			segmentView.setState(SegmentTag.State.INITIAL);
+		}
 	}
 
 	ArrayList<FileView> getAllFileViews() {
@@ -129,12 +138,18 @@ public class XliffView extends javax.swing.JPanel {
 		return true;
 	}
 
+	String save_to_string() throws SaveException {
+		StringWriter writer = new StringWriter();
+		XmlUtil.write_xml(xliffTag.getDocument(), new StreamResult(writer));
+		return writer.toString();
+	}
+
 	boolean save() {
 		ArrayList<FileTag> fileTags = getAllFileTags();
 		xliffTag.setFiles(fileTags);
 
 		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffTag.encode(errors);
+		xliffTag.encode(errors, false);
 
 		if (errors.isEmpty()) {
 			return save_to_file();
@@ -151,6 +166,37 @@ public class XliffView extends javax.swing.JPanel {
 				return false;
 			}
 		}
+	}
+
+	boolean validateFile() {
+		ArrayList<FileTag> fileTags = getAllFileTags();
+		xliffTag.setFiles(fileTags);
+
+		ArrayList<SegmentError> errors = new ArrayList<>();
+		xliffTag.encode(errors, true);
+
+		for (SegmentError e : errors) {
+			// there should be no invalid non-initial segments, log for debugging only
+			Log.err("validateFile: SegmentError: " + XmlUtil.getPath(e.getSegmentTag().getNode()) + ": " + e.getMessage());
+		}
+
+		String xmlData;
+		try {
+			xmlData = save_to_string();
+		}
+		catch (SaveException ex) {
+			JOptionPane.showMessageDialog(this, "Could not validate file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		ArrayList<XliffFileValidator.ValidationError> validationErrors = XliffFileValidator.validate(xmlData);
+		if (validationErrors.isEmpty() == false) {
+			JOptionPane.showMessageDialog(this, "Unit tag errors found", "", JOptionPane.ERROR_MESSAGE);
+			for (XliffFileValidator.ValidationError e : validationErrors) {
+				Log.debug(e.toString());
+			}
+			return false;
+		}
+		return true;
 	}
 
 	void export() {

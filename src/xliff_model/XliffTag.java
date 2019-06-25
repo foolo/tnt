@@ -57,9 +57,9 @@ public class XliffTag {
 		this.files = files;
 	}
 
-	public void encode(ArrayList<SegmentError> errors) {
+	public void encode(ArrayList<SegmentError> errors, boolean skipInitialSegments) {
 		for (FileTag f : files) {
-			f.encode(errors);
+			f.encode(errors, skipInitialSegments);
 		}
 	}
 

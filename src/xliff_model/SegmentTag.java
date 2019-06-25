@@ -119,22 +119,27 @@ public class SegmentTag {
 		replaceChildren(node, nodes);
 	}
 
-	public void encode(ArrayList<SegmentError> errors) {
+	void removeChild(Node n) {
+		try {
+			node.removeChild(n);
+		}
+		catch (DOMException ex) {
+			if (ex.code != DOMException.NOT_FOUND_ERR) {
+				throw ex;
+			}
+		}
+	}
+
+	public void encode(ArrayList<SegmentError> errors, boolean skipInitialSegments) {
+		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 		encodeContent(sourceNode, sourceText, errors);
 
-		if (targetText.getContent().isEmpty()) {
-			try {
-				node.removeChild(targetNode);
-			}
-			catch (DOMException ex) {
-				if (ex.code != DOMException.NOT_FOUND_ERR) {
-					throw ex;
-				}
-			}
+		boolean skipNode = targetText.getContent().isEmpty() || (skipInitialSegments && (state == State.INITIAL));
+		if (skipNode) {
+			removeChild(targetNode);
 		}
 		else {
 			encodeContent(targetNode, targetText, errors);
-			node.setAttribute(ATTRIBUTE_STATE, state.toString());
 			node.appendChild(targetNode);
 		}
 	}

@@ -205,6 +205,7 @@ public class MainForm extends javax.swing.JFrame {
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
 		if (save_file()) {
+			xliffView1.validateFile();
 			xliffView1.export();
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
