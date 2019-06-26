@@ -1,50 +1,18 @@
 package editor;
 
 import java.util.ArrayList;
-import undo_manager.CaretPosition;
-import undo_manager.UndoEventListener;
-import undo_manager.UndoManager;
-import undo_manager.UndoableModel;
-import undo_manager.UndoableState;
 import xliff_model.FileTag;
 import xliff_model.exceptions.ParseException;
-import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
 
-public class FileView extends javax.swing.JPanel implements UndoEventListener {
+public class FileView extends javax.swing.JPanel {
 
-	private UndoManager undoManager;
-	private final XliffView xliffView;
+	XliffView xliffView;
 
 	public FileView(XliffView xliffView) {
+		this.xliffView = xliffView;
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
-		this.xliffView = xliffView;
-	}
-
-	public UndoManager getUndoManager() {
-		return undoManager;
-	}
-
-	@Override
-	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
-		update_model((FileTag) model);
-		SegmentView segmentView = newEditingPosition.getSegmentView();
-		if (segmentView != null) {
-			segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
-			scroll_to_segment(segmentView);
-		}
-	}
-
-	@Override
-	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
-		updateName((FileTag) model);
-		xliffView.updateTabTitle(this);
-	}
-
-	void updateName(FileTag fileTag) {
-		String alias = fileTag.getAlias();
-		setName((undoManager.isModified() ? "* " : "") + alias);
 	}
 
 	public void update_model(FileTag fileTag) {
@@ -74,31 +42,17 @@ public class FileView extends javax.swing.JPanel implements UndoEventListener {
 	}
 
 	public void load_file(FileTag fileTag) throws ParseException {
-		undoManager = new UndoManager();
-		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
-		undoManager.initialize(new UndoableState(fileTag, pos, pos, undoManager), this);
 		ArrayList<UnitTag> units = fileTag.getUnitsArray();
 		populate_units(units);
 		update_model(fileTag);
-		updateName(fileTag);
 	}
 
 	void populate_units(ArrayList<UnitTag> unitTags) {
 		for (UnitTag u : unitTags) {
-			UnitView unitView = new UnitView(this);
-			unitView.populateSegments(u.getSegments().size());
+			UnitView unitView = new UnitView(xliffView);
+			unitView.populateSegments(u.getSegments().size(), this);
 			jPanelItems.add(unitView);
 		}
-	}
-
-	void copy_source_to_target() {
-		undoManager.markSnapshot();
-		SegmentView segmentView = SegmentView.getActiveSegmentView();
-		if (segmentView == null) {
-			return;
-		}
-		SegmentTag segmentTag = segmentView.getSegmentTag();
-		segmentView.setTargetText(segmentTag.getSourceText().copy());
 	}
 
 	@SuppressWarnings("unchecked")

@@ -6,16 +6,17 @@ import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import undo_manager.UndoableModel;
 import util.Log;
 import util.NodeArray;
 import xliff_model.exceptions.XliffVersionException;
 
-public class XliffTag {
+public class XliffTag implements UndoableModel {
 
 	private ArrayList<FileTag> files = new ArrayList<>();
-	private Document document;
-	private String version;
-	private File file;
+	private final Document document;
+	private final String version;
+	private final File file;
 
 	public XliffTag(Document doc, File file) throws ParseException {
 		this.file = file;
@@ -53,10 +54,6 @@ public class XliffTag {
 		return file;
 	}
 
-	public void setFiles(ArrayList<FileTag> files) {
-		this.files = files;
-	}
-
 	public void encode(ArrayList<SegmentError> errors, boolean skipInitialSegments) {
 		for (FileTag f : files) {
 			f.encode(errors, skipInitialSegments);
@@ -65,5 +62,19 @@ public class XliffTag {
 
 	public Document getDocument() {
 		return document;
+	}
+
+	public XliffTag(XliffTag xt) {
+		for (FileTag f : xt.files) {
+			files.add(f.copy());
+		}
+		document = xt.document;
+		version = xt.version;
+		file = xt.file;
+	}
+
+	@Override
+	public UndoableModel copy() {
+		return new XliffTag(this);
 	}
 }

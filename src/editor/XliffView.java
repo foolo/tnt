@@ -1,16 +1,22 @@
 package editor;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import rainbow.RainbowError;
 import rainbow.RainbowHandler;
 import rainbow.XliffFileValidator;
+import undo_manager.CaretPosition;
+import undo_manager.UndoEventListener;
+import undo_manager.UndoManager;
+import undo_manager.UndoableModel;
+import undo_manager.UndoableState;
 import util.Log;
 import util.XmlUtil;
 import xliff_model.FileTag;
@@ -23,9 +29,10 @@ import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.SaveException;
 import xliff_model.exceptions.XliffVersionException;
 
-public class XliffView extends javax.swing.JPanel {
+public class XliffView extends javax.swing.JPanel implements UndoEventListener {
 
-	private XliffTag xliffTag;
+	private UndoManager undoManager;
+	private final ArrayList<FileView> fileViews = new ArrayList<>();
 
 	public XliffView() {
 		initComponents();
@@ -33,6 +40,14 @@ public class XliffView extends javax.swing.JPanel {
 
 	FileView getActiveFileView() {
 		return ((FileView) jTabbedPane1.getSelectedComponent());
+	}
+
+	public UndoManager getUndoManager() {
+		return undoManager;
+	}
+
+	XliffTag getXliffTag() {
+		return (XliffTag) undoManager.getCurrentState().getModel();
 	}
 
 	static String truncate(String s) {
@@ -45,12 +60,18 @@ public class XliffView extends javax.swing.JPanel {
 	boolean load_xliff(File f) {
 		try {
 			Document doc = XmlUtil.read_xml(f);
-			xliffTag = new XliffTag(doc, f);
+			XliffTag xliffTag = new XliffTag(doc, f);
+			undoManager = new UndoManager();
+			CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
+			undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), this);
 			jTabbedPane1.removeAll();
+			fileViews.clear();
 			for (FileTag fileTag : xliffTag.getFiles()) {
 				FileView fv = new FileView(this);
+				fv.setName(fileTag.getAlias());
 				fv.load_file(fileTag);
 				jTabbedPane1.add(fv);
+				fileViews.add(fv);
 				updateTabTitle(fv);
 			}
 			return true;
@@ -69,11 +90,13 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	void copy_source_to_target() {
-		FileView fv = getActiveFileView();
-		if (fv == null) {
+		undoManager.markSnapshot();
+		SegmentView segmentView = SegmentView.getActiveSegmentView();
+		if (segmentView == null) {
 			return;
 		}
-		fv.copy_source_to_target();
+		SegmentTag segmentTag = segmentView.getSegmentTag();
+		segmentView.setTargetText(segmentTag.getSourceText().copy());
 	}
 
 	void markSegmentAsTranslated() {
@@ -98,58 +121,28 @@ public class XliffView extends javax.swing.JPanel {
 		}
 	}
 
-	ArrayList<FileView> getAllFileViews() {
-		ArrayList<FileView> fileViews = new ArrayList<>();
-		for (Component c : jTabbedPane1.getComponents()) {
-			if (!(c instanceof FileView)) {
-				Log.warn("getAllFileViews: " + c.getClass().getName() + " not instance of FileView");
-				continue;
-			}
-			fileViews.add((FileView) c);
-		}
-		return fileViews;
-	}
-
-	ArrayList<FileTag> getAllFileTags() {
-		ArrayList<FileTag> files = new ArrayList<>();
-		for (FileView fileView : getAllFileViews()) {
-			FileTag fileTag = (FileTag) fileView.getUndoManager().getCurrentState().getModel();
-			files.add(fileTag);
-		}
-		return files;
-	}
-
-	void markAsSaved() {
-		for (FileView fileView : getAllFileViews()) {
-			fileView.getUndoManager().markSaved();
-		}
-	}
-
 	boolean save_to_file() {
 		try {
-			Log.debug("save_to_file: " + xliffTag.getFile());
-			XmlUtil.write_xml(xliffTag.getDocument(), new StreamResult(xliffTag.getFile()));
+			Log.debug("save_to_file: " + getXliffTag().getFile());
+			XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
 		}
 		catch (SaveException ex) {
 			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		markAsSaved();
+		undoManager.markSaved();
 		return true;
 	}
 
 	String save_to_string() throws SaveException {
 		StringWriter writer = new StringWriter();
-		XmlUtil.write_xml(xliffTag.getDocument(), new StreamResult(writer));
+		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
 		return writer.toString();
 	}
 
 	boolean save() {
-		ArrayList<FileTag> fileTags = getAllFileTags();
-		xliffTag.setFiles(fileTags);
-
 		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffTag.encode(errors, false);
+		getXliffTag().encode(errors, false);
 
 		if (errors.isEmpty()) {
 			return save_to_file();
@@ -169,11 +162,8 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	boolean validateFile() {
-		ArrayList<FileTag> fileTags = getAllFileTags();
-		xliffTag.setFiles(fileTags);
-
 		ArrayList<SegmentError> errors = new ArrayList<>();
-		xliffTag.encode(errors, true);
+		getXliffTag().encode(errors, true);
 
 		for (SegmentError e : errors) {
 			// there should be no invalid non-initial segments, log for debugging only
@@ -200,7 +190,7 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	void export() {
-		File f = xliffTag.getFile().getAbsoluteFile();
+		File f = getXliffTag().getFile().getAbsoluteFile();
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
 			rainbowHandler.exportTranslatedFile(f);
@@ -210,15 +200,6 @@ public class XliffView extends javax.swing.JPanel {
 		}
 	}
 
-	boolean isModified() {
-		for (FileView fileView : getAllFileViews()) {
-			if (fileView.getUndoManager().isModified()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public void updateTabTitle(FileView fileView) {
 		int index = jTabbedPane1.indexOfComponent(fileView);
 		String name = fileView.getName();
@@ -226,7 +207,7 @@ public class XliffView extends javax.swing.JPanel {
 	}
 
 	boolean okToClose() {
-		if (isModified() == false) {
+		if (undoManager.isModified() == false) {
 			return true;
 		}
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -239,6 +220,38 @@ public class XliffView extends javax.swing.JPanel {
 			default:
 				return false;
 		}
+	}
+
+	@Override
+	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
+		XliffTag xliffTag = (XliffTag) model;
+		if (fileViews.size() != xliffTag.getFiles().size()) {
+			Log.err("notify_undo: fileViews.size() != xliffTag.getFiles().size() " + fileViews.size() + ", " + xliffTag.getFiles().size());
+			return;
+		}
+		for (int i = 0; i < fileViews.size(); i++) {
+			fileViews.get(i).update_model(xliffTag.getFiles().get(i));
+		}
+
+		SegmentView segmentView = newEditingPosition.getSegmentView();
+		if (segmentView != null) {
+			jTabbedPane1.setSelectedComponent(segmentView.getFileView());
+			segmentView.getFileView().scroll_to_segment(segmentView);
+			// todo why is invokeLater needed?
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
+				}
+			});
+		}
+	}
+
+	@Override
+	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
+		JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+		String title = (undoManager.isModified() ? "* " : "") + getXliffTag().getFile().toString();
+		topFrame.setTitle(title);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -262,4 +275,5 @@ public class XliffView extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
+
 }

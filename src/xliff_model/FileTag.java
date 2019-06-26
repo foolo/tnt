@@ -6,14 +6,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import util.Log;
 import util.NodeArray;
-import undo_manager.UndoableModel;
 
-public class FileTag implements UndoableModel {
+public class FileTag {
 
 	private final ArrayList<Item> items = new ArrayList<>();
 	private ArrayList<UnitTag> unitsArray = null;
-	private String originalFilePath;
-	private String id;
+	private final String originalFilePath;
+	private final String id;
 
 	public FileTag(Node node) throws ParseException {
 		originalFilePath = ((Element) node).getAttribute("original");
@@ -76,8 +75,7 @@ public class FileTag implements UndoableModel {
 		return unitsArray;
 	}
 
-	@Override
-	public UndoableModel copy() {
+	public FileTag copy() {
 		return new FileTag(this);
 	}
 

@@ -217,10 +217,10 @@ public class TextTransferHandler extends TransferHandler implements UIResource {
 		}
 
 		if (data instanceof TaggedText) {
-			c.getSegmentView().getFileView().getUndoManager().markSnapshot();
+			c.getSegmentView().getXliffView().getUndoManager().markSnapshot();
 			TaggedText tt = (TaggedText) data;
 			c.insertTaggedText(tt.copy());
-			c.getSegmentView().getFileView().getUndoManager().markSnapshot();
+			c.getSegmentView().getXliffView().getUndoManager().markSnapshot();
 			return true;
 		}
 
