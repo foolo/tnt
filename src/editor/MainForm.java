@@ -2,33 +2,160 @@ package editor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
 import rainbow.RainbowError;
 import rainbow.RainbowHandler;
+import rainbow.XliffFileValidator;
+import undo_manager.CaretPosition;
+import undo_manager.UndoEventListener;
+import undo_manager.UndoManager;
+import undo_manager.UndoableModel;
+import undo_manager.UndoableState;
+import util.Log;
 import util.Settings;
+import util.XmlUtil;
+import xliff_model.FileTag;
+import xliff_model.SegmentError;
+import xliff_model.SegmentTag;
+import xliff_model.XliffTag;
+import xliff_model.exceptions.EncodeException;
+import xliff_model.exceptions.LoadException;
+import xliff_model.exceptions.ParseException;
+import xliff_model.exceptions.SaveException;
+import xliff_model.exceptions.XliffVersionException;
 
-public class MainForm extends javax.swing.JFrame {
+public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	private final LogWindow logWindow;
+	private UndoManager undoManager;
+	private final ArrayList<FileView> fileViews = new ArrayList<>();
 
 	public MainForm() {
 		initComponents();
 		logWindow = new LogWindow();
 	}
 
+	public UndoManager getUndoManager() {
+		return undoManager;
+	}
+
+	static String truncate(String s) {
+		if (s.length() > 80) {
+			return "..." + s.substring(s.length() - 77, s.length());
+		}
+		return s;
+	}
+
+	public void updateTabTitle(FileView fileView) {
+		int index = jTabbedPane1.indexOfComponent(fileView);
+		String name = fileView.getName();
+		jTabbedPane1.setTitleAt(index, truncate(name));
+	}
+
+	boolean load_xliff(File f) {
+		try {
+			Document doc = XmlUtil.read_xml(f);
+			XliffTag xliffTag = new XliffTag(doc, f);
+			undoManager = new UndoManager();
+			CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
+			undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), this);
+			jTabbedPane1.removeAll();
+			fileViews.clear();
+			for (FileTag fileTag : xliffTag.getFiles()) {
+				FileView fv = new FileView(this);
+				fv.setName(fileTag.getAlias());
+				fv.load_file(fileTag);
+				jTabbedPane1.add(fv);
+				fileViews.add(fv);
+				updateTabTitle(fv);
+			}
+			return true;
+		}
+		catch (LoadException ex) {
+			JOptionPane.showMessageDialog(this, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (XliffVersionException ex) {
+			JOptionPane.showMessageDialog(this, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+		catch (ParseException ex) {
+			Log.debug("load_file: " + ex.toString());
+			JOptionPane.showMessageDialog(this, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
+		}
+		return false;
+	}
+
 	public void load_file(File f) {
-		if (xliffView1.load_xliff(f)) {
+		if (load_xliff(f)) {
 			setTitle(f.toString());
 		}
 	}
 
+	XliffTag getXliffTag() {
+		return (XliffTag) undoManager.getCurrentState().getModel();
+	}
+
+	boolean save_to_file() {
+		try {
+			Log.debug("save_to_file: " + getXliffTag().getFile());
+			XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
+		}
+		catch (SaveException ex) {
+			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		undoManager.markSaved();
+		return true;
+	}
+
 	public boolean save_file() {
-		return xliffView1.save();
+		return save();
+	}
+
+	boolean save() {
+		ArrayList<SegmentError> errors = new ArrayList<>();
+		getXliffTag().encode(errors, false);
+
+		if (errors.isEmpty()) {
+			return save_to_file();
+		}
+		else {
+			for (SegmentError e : errors) {
+				Log.debug("SegmentError: " + XmlUtil.getPath(e.getSegmentTag().getNode()) + ": " + e.getMessage());
+			}
+			int choice = JOptionPane.showConfirmDialog(this, "Some segments have invalid tags. They would be saved without tags. Save anyway?", "Invalid segments found", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (choice == JOptionPane.YES_OPTION) {
+				return save_to_file();
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+	boolean okToClose() {
+		if (undoManager.isModified() == false) {
+			return true;
+		}
+		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+		switch (choice) {
+			case JOptionPane.YES_OPTION:
+				return save();
+			case JOptionPane.NO_OPTION:
+				return true;
+			case JOptionPane.CANCEL_OPTION:
+			default:
+				return false;
+		}
 	}
 
 	public void menu_open() {
-		if (xliffView1.okToClose() == false) {
+		if (okToClose() == false) {
 			return;
 		}
 		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
@@ -40,11 +167,87 @@ public class MainForm extends javax.swing.JFrame {
 		Settings.setOpenDirectory(fc.getCurrentDirectory());
 	}
 
+	String save_to_string() throws SaveException {
+		StringWriter writer = new StringWriter();
+		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
+		return writer.toString();
+	}
+
+	boolean validateFile() {
+		ArrayList<SegmentError> errors = new ArrayList<>();
+		getXliffTag().encode(errors, true);
+
+		for (SegmentError e : errors) {
+			// there should be no invalid non-initial segments, log for debugging only
+			Log.err("validateFile: SegmentError: " + XmlUtil.getPath(e.getSegmentTag().getNode()) + ": " + e.getMessage());
+		}
+
+		String xmlData;
+		try {
+			xmlData = save_to_string();
+		}
+		catch (SaveException ex) {
+			JOptionPane.showMessageDialog(this, "Could not validate file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		ArrayList<XliffFileValidator.ValidationError> validationErrors = XliffFileValidator.validate(xmlData);
+		if (validationErrors.isEmpty() == false) {
+			JOptionPane.showMessageDialog(this, "Unit tag errors found", "", JOptionPane.ERROR_MESSAGE);
+			for (XliffFileValidator.ValidationError e : validationErrors) {
+				Log.debug(e.toString());
+			}
+			return false;
+		}
+		return true;
+	}
+
+	void export() {
+		File f = getXliffTag().getFile().getAbsoluteFile();
+		RainbowHandler rainbowHandler = new RainbowHandler();
+		try {
+			rainbowHandler.exportTranslatedFile(f);
+		}
+		catch (IOException | RainbowError ex) {
+			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	@Override
+	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
+		XliffTag xliffTag = (XliffTag) model;
+		if (fileViews.size() != xliffTag.getFiles().size()) {
+			Log.err("notify_undo: fileViews.size() != xliffTag.getFiles().size() " + fileViews.size() + ", " + xliffTag.getFiles().size());
+			return;
+		}
+		for (int i = 0; i < fileViews.size(); i++) {
+			fileViews.get(i).update_model(xliffTag.getFiles().get(i));
+		}
+
+		SegmentView segmentView = newEditingPosition.getSegmentView();
+		if (segmentView != null) {
+			jTabbedPane1.setSelectedComponent(segmentView.getFileView());
+			segmentView.getFileView().scroll_to_segment(segmentView);
+			// todo why is invokeLater needed?
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
+				}
+			});
+		}
+	}
+
+	@Override
+	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
+		String title = (undoManager.isModified() ? "* " : "") + getXliffTag().getFile().toString();
+		setTitle(title);
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        xliffView1 = new editor.XliffView();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemCreatePackage = new javax.swing.JMenuItem();
@@ -142,14 +345,14 @@ public class MainForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(xliffView1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(xliffView1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -165,11 +368,17 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
-		xliffView1.copy_source_to_target();
+		undoManager.markSnapshot();
+		SegmentView segmentView = SegmentView.getActiveSegmentView();
+		if (segmentView == null) {
+			return;
+		}
+		SegmentTag segmentTag = segmentView.getSegmentTag();
+		segmentView.setTargetText(segmentTag.getSourceText().copy());
     }//GEN-LAST:event_jMenuItemCopySrcActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-		if (xliffView1.okToClose()) {
+		if (okToClose()) {
 			logWindow.dispose();
 			dispose();
 		}
@@ -180,7 +389,7 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemLogsActionPerformed
 
     private void jMenuItemCreatePackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCreatePackageActionPerformed
-		if (xliffView1.okToClose() == false) {
+		if (okToClose() == false) {
 			return;
 		}
 		CreatePackageDialog d = new CreatePackageDialog(this, true);
@@ -205,13 +414,31 @@ public class MainForm extends javax.swing.JFrame {
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
 		if (save_file()) {
-			xliffView1.validateFile();
-			xliffView1.export();
+			validateFile();
+			export();
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
     private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
-		xliffView1.markSegmentAsTranslated();
+		SegmentView segmentView = SegmentView.getActiveSegmentView();
+		if (segmentView == null) {
+			return;
+		}
+		if (segmentView.getSegmentTag().getTargetText().getContent().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Can not mark empty segment as translated", "", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		try {
+			segmentView.testEncode();
+		}
+		catch (EncodeException ex) {
+			JOptionPane.showMessageDialog(this, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		segmentView.setState(SegmentTag.State.TRANSLATED);
+		if (validateFile() == false) {
+			segmentView.setState(SegmentTag.State.INITIAL);
+		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -226,6 +453,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemMarkTranslated;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemSave;
-    private editor.XliffView xliffView1;
+    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

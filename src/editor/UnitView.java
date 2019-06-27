@@ -6,7 +6,7 @@ import xliff_model.UnitTag;
 
 public class UnitView extends javax.swing.JPanel {
 
-	private XliffView xliffView;
+	private MainForm mainForm;
 
 	private UnitTag unitTag;
 
@@ -14,9 +14,9 @@ public class UnitView extends javax.swing.JPanel {
 		initComponents();
 	}
 
-	public UnitView(XliffView xliffView) {
+	public UnitView(MainForm mainForm) {
 		initComponents();
-		this.xliffView = xliffView;
+		this.mainForm = mainForm;
 	}
 
 	public void setUnitTag(UnitTag unitTag) {
@@ -31,7 +31,7 @@ public class UnitView extends javax.swing.JPanel {
 
 	void populateSegments(int count, FileView fileView) {
 		for (int i = 0; i < count; i++) {
-			add(new SegmentView(xliffView, fileView));
+			add(new SegmentView(mainForm, fileView));
 		}
 	}
 

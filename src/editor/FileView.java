@@ -7,10 +7,10 @@ import xliff_model.UnitTag;
 
 public class FileView extends javax.swing.JPanel {
 
-	XliffView xliffView;
+	MainForm mainForm;
 
-	public FileView(XliffView xliffView) {
-		this.xliffView = xliffView;
+	public FileView(MainForm mainForm) {
+		this.mainForm = mainForm;
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 	}
@@ -49,7 +49,7 @@ public class FileView extends javax.swing.JPanel {
 
 	void populate_units(ArrayList<UnitTag> unitTags) {
 		for (UnitTag u : unitTags) {
-			UnitView unitView = new UnitView(xliffView);
+			UnitView unitView = new UnitView(mainForm);
 			unitView.populateSegments(u.getSegments().size(), this);
 			jPanelItems.add(unitView);
 		}

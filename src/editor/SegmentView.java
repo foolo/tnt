@@ -38,12 +38,12 @@ public class SegmentView extends javax.swing.JPanel {
 	};
 
 	SegmentTag segmentTag;
-	private final XliffView xliffView;
+	private final MainForm mainForm;
 	private final FileView fileView;
 
-	SegmentView(XliffView xliffView, FileView fileView) {
+	SegmentView(MainForm mainForm, FileView fileView) {
 		initComponents();
-		this.xliffView = xliffView;
+		this.mainForm = mainForm;
 		this.fileView = fileView;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
@@ -81,8 +81,8 @@ public class SegmentView extends javax.swing.JPanel {
 		return segmentTag;
 	}
 
-	public XliffView getXliffView() {
-		return xliffView;
+	public MainForm getMainForm() {
+		return mainForm;
 	}
 
 	public FileView getFileView() {
@@ -111,23 +111,22 @@ public class SegmentView extends javax.swing.JPanel {
 	void notifyUndoManager(int caretPos1, int caretPos2) {
 		CaretPosition pos1 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos1);
 		CaretPosition pos2 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos2);
-		xliffView.getUndoManager().getCurrentState().setModified(pos1, pos2);
+		mainForm.getUndoManager().getCurrentState().setModified(pos1, pos2);
 	}
 
 	void handleKeyPress(KeyEvent evt) {
 		if (evt.getModifiers() == CTRL_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
-					xliffView.getUndoManager().undo();
+					mainForm.getUndoManager().undo();
 					evt.consume();
 					break;
 				case KeyEvent.VK_Y:
-					xliffView.getUndoManager().redo();
+					mainForm.getUndoManager().redo();
 					evt.consume();
 					break;
 			}
 		}
-
 	}
 
 	private static SegmentView lastActiveSegmentView = null;
@@ -206,7 +205,7 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
-		xliffView.getUndoManager().markSnapshot();
+		mainForm.getUndoManager().markSnapshot();
 		markupViewSource.getCaret().setVisible(true);
 		lastActiveSegmentView = this;
     }//GEN-LAST:event_markupViewSourceFocusGained
@@ -216,7 +215,7 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewSourceKeyPressed
 
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
-		xliffView.getUndoManager().markSnapshot();
+		mainForm.getUndoManager().markSnapshot();
 		lastActiveSegmentView = this;
 
     }//GEN-LAST:event_markupViewTargetFocusGained
