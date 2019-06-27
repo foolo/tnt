@@ -156,11 +156,6 @@ public class SegmentView extends javax.swing.JPanel {
         jLabelState = new javax.swing.JLabel();
 
         markupViewSource.setEditable(false);
-        markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                markupViewSourceCaretUpdate(evt);
-            }
-        });
         markupViewSource.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewSourceFocusGained(evt);
@@ -173,11 +168,6 @@ public class SegmentView extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(markupViewSource);
 
-        markupViewTarget.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                markupViewTargetCaretUpdate(evt);
-            }
-        });
         markupViewTarget.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewTargetFocusGained(evt);
@@ -215,13 +205,8 @@ public class SegmentView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
-		xliffView.getUndoManager().setCaretPosition(new CaretPosition(this, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
-    }//GEN-LAST:event_markupViewSourceCaretUpdate
-
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
 		xliffView.getUndoManager().markSnapshot();
-		xliffView.getUndoManager().setCaretPosition(new CaretPosition(this, CaretPosition.Column.SOURCE, markupViewSource.getCaretPosition()));
 		markupViewSource.getCaret().setVisible(true);
 		lastActiveSegmentView = this;
     }//GEN-LAST:event_markupViewSourceFocusGained
@@ -230,13 +215,8 @@ public class SegmentView extends javax.swing.JPanel {
 		handleKeyPress(evt);
     }//GEN-LAST:event_markupViewSourceKeyPressed
 
-    private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		xliffView.getUndoManager().setCaretPosition(new CaretPosition(this, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
-    }//GEN-LAST:event_markupViewTargetCaretUpdate
-
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		xliffView.getUndoManager().markSnapshot();
-		xliffView.getUndoManager().setCaretPosition(new CaretPosition(this, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition()));
 		lastActiveSegmentView = this;
 
     }//GEN-LAST:event_markupViewTargetFocusGained

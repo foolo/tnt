@@ -9,7 +9,6 @@ public class UndoManager {
 	private UndoableState currentState;
 	private UndoableState savedState;
 	private UndoEventListener listener;
-	private CaretPosition caretPosition;
 	private boolean modifiedStatus = false;
 
 	public UndoManager() {
@@ -97,13 +96,5 @@ public class UndoManager {
 
 	public UndoableState getCurrentState() {
 		return currentState;
-	}
-
-	public void setCaretPosition(CaretPosition position) {
-		caretPosition = position;
-	}
-
-	public CaretPosition getCaretPosition() {
-		return caretPosition;
 	}
 }
