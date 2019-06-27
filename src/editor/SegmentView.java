@@ -15,25 +15,25 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private final DocumentListener targetDocumentListener = new DocumentListener() {
 
-		void update() {
+		void update(int caretPosition1, int caretPosition2) {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
 			setStateField(SegmentTag.State.INITIAL);
-			notifyUndoManager();
+			notifyUndoManager(caretPosition1, caretPosition2);
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			update();
+			update(e.getOffset(), e.getOffset() + e.getLength());
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			update();
+			update(e.getOffset() + e.getLength(), e.getOffset());
 		}
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			update();
+			update(e.getOffset(), e.getOffset());
 		}
 	};
 
@@ -73,7 +73,8 @@ public class SegmentView extends javax.swing.JPanel {
 
 	void setState(SegmentTag.State state) {
 		setStateField(state);
-		notifyUndoManager();
+		int pos = markupViewTarget.getCaretPosition();
+		notifyUndoManager(pos, pos);
 	}
 
 	public SegmentTag getSegmentTag() {
@@ -107,17 +108,26 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
-	void notifyUndoManager() {
-		CaretPosition pos = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, markupViewTarget.getCaretPosition());
-		xliffView.getUndoManager().getCurrentState().setModified(pos);
+	void notifyUndoManager(int caretPos1, int caretPos2) {
+		CaretPosition pos1 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos1);
+		CaretPosition pos2 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos2);
+		xliffView.getUndoManager().getCurrentState().setModified(pos1, pos2);
 	}
 
 	void handleKeyPress(KeyEvent evt) {
-		boolean ctrl = evt.getModifiers() == CTRL_MASK;
-		boolean z = evt.getKeyCode() == KeyEvent.VK_Z;
-		if (ctrl && z) {
-			xliffView.getUndoManager().undo();
+		if (evt.getModifiers() == CTRL_MASK) {
+			switch (evt.getKeyCode()) {
+				case KeyEvent.VK_Z:
+					xliffView.getUndoManager().undo();
+					evt.consume();
+					break;
+				case KeyEvent.VK_Y:
+					xliffView.getUndoManager().redo();
+					evt.consume();
+					break;
+			}
 		}
+
 	}
 
 	private static SegmentView lastActiveSegmentView = null;

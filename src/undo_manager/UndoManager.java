@@ -5,6 +5,7 @@ import java.util.Stack;
 public class UndoManager {
 
 	private final Stack<UndoableState> undoBuffer = new Stack<>();
+	private final Stack<UndoableState> redoBuffer = new Stack<>();
 	private UndoableState currentState;
 	private UndoableState savedState;
 	private UndoEventListener listener;
@@ -25,6 +26,7 @@ public class UndoManager {
 	final void push_snapshot() {
 		undoBuffer.push(currentState.copy());
 		currentState.clearModified();
+		redoBuffer.clear();
 	}
 
 	public final void markSnapshot() {
@@ -51,6 +53,12 @@ public class UndoManager {
 		}
 	}
 
+	private void setNewState(CaretPosition newEditingPosition) {
+		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
+		listener.notify_undo(currentState.getModel(), newEditingPosition);
+		updateModifiedStatus();
+	}
+
 	public void undo() {
 		if (undoBuffer.empty()) {
 			return;
@@ -61,14 +69,29 @@ public class UndoManager {
 		if (currentState.isModified() == false) {
 			newEditingPosition = undoBuffer.peek().getStartPosition();
 			if (undoBuffer.size() >= 2) {
-				undoBuffer.pop();
+				UndoableState st = undoBuffer.pop();
+				redoBuffer.add(st);
 			}
 		}
 		else {
 			newEditingPosition = currentState.getStartPosition();
+			redoBuffer.clear();
+			redoBuffer.add(currentState);
 		}
+		setNewState(newEditingPosition);
+	}
+
+	public void redo() {
+		if (redoBuffer.empty()) {
+			return;
+		}
+		if (currentState.isModified()) {
+			return;
+		}
+		UndoableState st = redoBuffer.pop();
+		undoBuffer.add(st);
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
-		listener.notify_undo(currentState.getModel(), newEditingPosition);
+		listener.notify_undo(currentState.getModel(), st.getEndPosition());
 		updateModifiedStatus();
 	}
 

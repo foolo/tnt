@@ -16,7 +16,7 @@ public class UndoableState {
 	public UndoableState(UndoableModel model, CaretPosition startPosition, CaretPosition endPosition, UndoManager undoManager) {
 		this.model = model;
 		this.startPosition = startPosition;
-		this.endPosition = startPosition;
+		this.endPosition = endPosition;
 		this.undoManager = undoManager;
 	}
 
@@ -28,13 +28,13 @@ public class UndoableState {
 		return new UndoableState(model.copy(), startPosition, endPosition, undoManager);
 	}
 
-	public void setModified(CaretPosition position) {
+	public void setModified(CaretPosition position1, CaretPosition position2) {
 		if (!modified) {
-			startPosition = undoManager.getCaretPosition();
+			startPosition = position1;
 			modified = true;
 			undoManager.updateModifiedStatus();
 		}
-		this.endPosition = position;
+		this.endPosition = position2;
 	}
 
 	public void setEndPosition(CaretPosition position) {
