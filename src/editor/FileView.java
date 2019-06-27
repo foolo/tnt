@@ -2,7 +2,6 @@ package editor;
 
 import java.util.ArrayList;
 import xliff_model.FileTag;
-import xliff_model.exceptions.ParseException;
 import xliff_model.UnitTag;
 
 public class FileView extends javax.swing.JPanel {
@@ -41,7 +40,7 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	public void load_file(FileTag fileTag) throws ParseException {
+	public void load_file(FileTag fileTag) {
 		ArrayList<UnitTag> units = fileTag.getUnitsArray();
 		populate_units(units);
 		update_model(fileTag);

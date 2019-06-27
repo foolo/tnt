@@ -58,36 +58,48 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jTabbedPane1.setTitleAt(index, truncate(name));
 	}
 
+	void updateMenu() {
+		jMenuItemExport.setEnabled(undoManager != null);
+		jMenuItemSave.setEnabled(undoManager != null);
+		jMenuItemCopySrc.setEnabled(undoManager != null);
+		jMenuItemMarkTranslated.setEnabled(undoManager != null);
+	}
+
 	boolean load_xliff(File f) {
+		XliffTag xliffTag = null;
 		try {
 			Document doc = XmlUtil.read_xml(f);
-			XliffTag xliffTag = new XliffTag(doc, f);
-			undoManager = new UndoManager();
-			CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
-			undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), this);
-			jTabbedPane1.removeAll();
-			fileViews.clear();
-			for (FileTag fileTag : xliffTag.getFiles()) {
-				FileView fv = new FileView(this);
-				fv.setName(fileTag.getAlias());
-				fv.load_file(fileTag);
-				jTabbedPane1.add(fv);
-				fileViews.add(fv);
-				updateTabTitle(fv);
-			}
-			return true;
+			xliffTag = new XliffTag(doc, f);
 		}
 		catch (LoadException ex) {
 			JOptionPane.showMessageDialog(this, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 		catch (XliffVersionException ex) {
 			JOptionPane.showMessageDialog(this, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 		catch (ParseException ex) {
 			Log.debug("load_file: " + ex.toString());
 			JOptionPane.showMessageDialog(this, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
-		return false;
+		undoManager = new UndoManager();
+		updateMenu();
+		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
+		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), this);
+		jTabbedPane1.removeAll();
+		fileViews.clear();
+		for (FileTag fileTag : xliffTag.getFiles()) {
+			FileView fv = new FileView(this);
+			fv.setName(fileTag.getAlias());
+			fv.load_file(fileTag);
+			jTabbedPane1.add(fv);
+			fileViews.add(fv);
+			updateTabTitle(fv);
+		}
+		return true;
+
 	}
 
 	public void load_file(File f) {
@@ -114,10 +126,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	public boolean save_file() {
-		return save();
-	}
-
-	boolean save() {
 		ArrayList<SegmentError> errors = new ArrayList<>();
 		getXliffTag().encode(errors, false);
 
@@ -139,13 +147,16 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	boolean okToClose() {
+		if (undoManager == null) {
+			return true;
+		}
 		if (undoManager.isModified() == false) {
 			return true;
 		}
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 		switch (choice) {
 			case JOptionPane.YES_OPTION:
-				return save();
+				return save_file();
 			case JOptionPane.NO_OPTION:
 				return true;
 			case JOptionPane.CANCEL_OPTION:
@@ -286,6 +297,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenu1.add(jMenuItemOpen);
 
         jMenuItemExport.setText("Export translated file(s)");
+        jMenuItemExport.setEnabled(false);
         jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemExportActionPerformed(evt);
@@ -295,6 +307,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSave.setText("Save");
+        jMenuItemSave.setEnabled(false);
         jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemSaveActionPerformed(evt);
@@ -307,6 +320,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenu2.setText("Segment");
 
         jMenuItemCopySrc.setText("Copy source to target");
+        jMenuItemCopySrc.setEnabled(false);
         jMenuItemCopySrc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemCopySrcActionPerformed(evt);
@@ -316,6 +330,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenuItemMarkTranslated.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemMarkTranslated.setText("Mark as translated");
+        jMenuItemMarkTranslated.setEnabled(false);
         jMenuItemMarkTranslated.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemMarkTranslatedActionPerformed(evt);
