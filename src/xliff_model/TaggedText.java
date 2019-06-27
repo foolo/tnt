@@ -122,7 +122,7 @@ public class TaggedText {
 				res.add(document.createTextNode(text.getContent()));
 			}
 			else {
-				System.err.println("unexpected class: " + c.getClass());
+				Log.warn("getNodeList: unexpected instance: " + c.getClass().getName());
 			}
 		}
 		throw new EncodeException("Missing end tag");
