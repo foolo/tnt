@@ -7,8 +7,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import javax.swing.JOptionPane;
+import org.w3c.dom.Document;
 import util.Log;
+import util.XmlUtil;
+import xliff_model.exceptions.LoadException;
+import xliff_model.exceptions.ParseException;
 
 public class RainbowHandler {
 
@@ -119,7 +122,7 @@ public class RainbowHandler {
 		return xliffFiles[0];
 	}
 
-	public void exportTranslatedFile(File xliffFile) throws RainbowError, IOException {
+	public File exportTranslatedFile(File xliffFile) throws RainbowError, IOException {
 		File workDir = xliffFile.getParentFile();
 		if (workDir == null) {
 			throw new RainbowError("exportTranslatedFile: workdir == null, file: " + xliffFile);
@@ -141,5 +144,21 @@ public class RainbowHandler {
 		CommandLine2 cl = new CommandLine2();
 		String inputFile = manifestFile.getAbsolutePath();
 		cl.execute(tempDir, plnTmpFile.getAbsolutePath(), inputFile, true);
+
+		Manifest manifest;
+		try {
+			Document doc = XmlUtil.read_xml(manifestFile);
+			manifest = new Manifest(doc, manifestFile);
+		}
+		catch (LoadException | ParseException ex) {
+			throw new RainbowError(ex.toString());
+		}
+		for (String f : manifest.getTargetFiles()) {
+			File targetFile = new File(new File(manifestDir, manifest.getMergeDir()), f);
+			if (targetFile.getAbsoluteFile().exists() == false) {
+				throw new RainbowError("Expected output file not found: " + targetFile);
+			}
+		}
+		return new File(manifestDir, manifest.getMergeDir());
 	}
 }
