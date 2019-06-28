@@ -217,10 +217,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
 			File outputDir = rainbowHandler.exportTranslatedFile(f);
-			new ExportCompletedDialog(this, outputDir).setVisible(true);
+			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
 		}
 		catch (IOException | RainbowError ex) {
-			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.getMessage(), "Export result", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
