@@ -320,6 +320,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenu2.setText("Segment");
 
+        jMenuItemCopySrc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_INSERT, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemCopySrc.setText("Copy source to target");
         jMenuItemCopySrc.setEnabled(false);
         jMenuItemCopySrc.addActionListener(new java.awt.event.ActionListener() {

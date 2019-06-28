@@ -2,8 +2,10 @@ package editor;
 
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
@@ -47,6 +49,8 @@ public class SegmentView extends javax.swing.JPanel {
 		this.fileView = fileView;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
+		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
+		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
