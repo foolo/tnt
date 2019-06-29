@@ -1,17 +1,35 @@
 package editor;
 
+import java.awt.Component;
 import java.util.ArrayList;
+import rainbow.ValidationError;
 import xliff_model.FileTag;
 import xliff_model.UnitTag;
 
 public class FileView extends javax.swing.JPanel {
 
-	MainForm mainForm;
+	private final MainForm mainForm;
+	private final String fileId;
 
-	public FileView(MainForm mainForm) {
+	public FileView(MainForm mainForm, String fileId) {
 		this.mainForm = mainForm;
+		this.fileId = fileId;
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+	}
+
+	public String getFileId() {
+		return fileId;
+	}
+
+	boolean showValidiationError(ValidationError e) {
+		for (Component c : jPanelItems.getComponents()) {
+			UnitView unitView = (UnitView) c;
+			if (unitView.getUnitId().equals(e.getUnitId())) {
+				return unitView.showValidationError(e);
+			}
+		}
+		return false;
 	}
 
 	public void update_model(FileTag fileTag) {
@@ -40,15 +58,9 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	public void load_file(FileTag fileTag) {
-		ArrayList<UnitTag> units = fileTag.getUnitsArray();
-		populate_units(units);
-		update_model(fileTag);
-	}
-
 	void populate_units(ArrayList<UnitTag> unitTags) {
 		for (UnitTag u : unitTags) {
-			UnitView unitView = new UnitView(mainForm);
+			UnitView unitView = new UnitView(mainForm, u.getId());
 			unitView.populateSegments(u.getSegments().size(), this);
 			jPanelItems.add(unitView);
 		}

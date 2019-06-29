@@ -1,5 +1,6 @@
 package xliff_model;
 
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class Tag implements TaggedTextContent {
@@ -10,10 +11,17 @@ public class Tag implements TaggedTextContent {
 
 	private final Node node;
 	private final Type type;
+	private final String label;
 
 	public Tag(Node node, Type type) {
 		this.node = node;
 		this.type = type;
+		if ((node instanceof Element) && (type == Type.START || type == Type.EMPTY)) {
+			label = ((Element) node).getAttribute("id");
+		}
+		else {
+			label = "";
+		}
 	}
 
 	public Node getNode() {
@@ -45,12 +53,7 @@ public class Tag implements TaggedTextContent {
 		return null;
 	}
 
-	public String getShortString() {
-		if (type == Type.START || type == Type.EMPTY) {
-			return node.getNodeName();
-		}
-		else {
-			return "";
-		}
+	public String getLabel() {
+		return label;
 	}
 }

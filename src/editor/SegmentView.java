@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import rainbow.ValidationError;
 import undo_manager.CaretPosition;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
@@ -51,6 +52,7 @@ public class SegmentView extends javax.swing.JPanel {
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
+		jLabelValidationError.setText("");
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
@@ -73,6 +75,9 @@ public class SegmentView extends javax.swing.JPanel {
 	private boolean setStateField(SegmentTag.State state) {
 		boolean res = segmentTag.setState(state);
 		jLabelState.setText(segmentTag.getState().toString());
+		if (state != SegmentTag.State.INITIAL) {
+			jLabelValidationError.setText("");
+		}
 		return res;
 	}
 
@@ -102,6 +107,11 @@ public class SegmentView extends javax.swing.JPanel {
 
 	public void unregisterListeners() {
 		markupViewTarget.getDocument().removeDocumentListener(targetDocumentListener);
+	}
+
+	void showValidationError(ValidationError e) {
+		jLabelValidationError.setText("Tag errors found");
+		jLabelValidationError.setToolTipText("Tag ID=" + e.getCodeId() + " " + e.getDetails());
 	}
 
 	public void setTextPosition(CaretPosition.Column column, int position) {
@@ -160,6 +170,7 @@ public class SegmentView extends javax.swing.JPanel {
         jScrollPane4 = new javax.swing.JScrollPane();
         markupViewTarget = new editor.MarkupView(this);
         jLabelState = new javax.swing.JLabel();
+        jLabelValidationError = new javax.swing.JLabel();
 
         markupViewSource.setEditable(false);
         markupViewSource.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -188,6 +199,10 @@ public class SegmentView extends javax.swing.JPanel {
 
         jLabelState.setText("jLabel1");
 
+        jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
+        jLabelValidationError.setText("jLabel1");
+        jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -198,7 +213,9 @@ public class SegmentView extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelState)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelState)
+                    .addComponent(jLabelValidationError))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -207,7 +224,9 @@ public class SegmentView extends javax.swing.JPanel {
             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelState))
+                .addComponent(jLabelState)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelValidationError))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -234,6 +253,7 @@ public class SegmentView extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelState;
+    private javax.swing.JLabel jLabelValidationError;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private editor.MarkupView markupViewSource;

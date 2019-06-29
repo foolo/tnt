@@ -44,7 +44,7 @@ class TagIcon implements Icon {
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		int draw_x = x + c.getX() + 1;
 		int draw_y = y + c.getY() + g.getFontMetrics().getHeight() - 1;
-		g.drawString("" + tag.getShortString(), draw_x, draw_y);
+		g.drawString("" + tag.getLabel(), draw_x, draw_y);
 	}
 
 	public Tag getTag() {

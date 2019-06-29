@@ -1,26 +1,49 @@
 package editor;
 
+import java.awt.Component;
 import java.util.ArrayList;
+import rainbow.ValidationError;
 import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
 
 public class UnitView extends javax.swing.JPanel {
 
-	private MainForm mainForm;
+	private final MainForm mainForm;
+	private final String unitId;
 
-	private UnitTag unitTag;
-
-	public UnitView() {
-		initComponents();
-	}
-
-	public UnitView(MainForm mainForm) {
+	public UnitView(MainForm mainForm, String unitId) {
 		initComponents();
 		this.mainForm = mainForm;
+		this.unitId = unitId;
+	}
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	SegmentView getSegmentView(String codeId) {
+		for (Component c : getComponents()) {
+			if (c instanceof SegmentView) {
+				SegmentView segmentView = (SegmentView) c;
+				ArrayList<String> ids = segmentView.getSegmentTag().getSourceText().getIds();
+				if (ids.contains(codeId)) {
+					return segmentView;
+				}
+			}
+		}
+		return null;
+	}
+
+	boolean showValidationError(ValidationError e) {
+		SegmentView segmentView = getSegmentView(e.getCodeId());
+		if (segmentView == null) {
+			return false;
+		}
+		segmentView.showValidationError(e);
+		return true;
 	}
 
 	public void setUnitTag(UnitTag unitTag) {
-		this.unitTag = unitTag;
 		ArrayList<SegmentTag> segments = unitTag.getSegments();
 
 		for (int i = 0; i < segments.size(); i++) {

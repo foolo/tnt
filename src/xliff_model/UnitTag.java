@@ -12,10 +12,15 @@ public class UnitTag implements Item {
 
 	private ArrayList<SegmentTag> segments = new ArrayList<>();
 	private Node node;
+	private final String id;
 	private ArrayList<UnitTag> unitTagsArray = new ArrayList<>();
 
 	UnitTag(Node node) throws ParseException {
 		this.node = node;
+		id = ((Element) node).getAttribute("id");
+		if (id.isEmpty()) {
+			throw new ParseException("Mandatory attribute 'id' missing or empty in <unit>");
+		}
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() != Node.ELEMENT_NODE) {
 				continue;
@@ -35,9 +40,14 @@ public class UnitTag implements Item {
 
 	UnitTag(UnitTag ut) {
 		node = ut.node;
+		id = ut.id;
 		for (SegmentTag s : ut.segments) {
 			segments.add(new SegmentTag(s, this));
 		}
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	@Override

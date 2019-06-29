@@ -11,6 +11,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import rainbow.RainbowError;
 import rainbow.RainbowHandler;
+import rainbow.ValidationError;
 import rainbow.XliffFileValidator;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
@@ -46,16 +47,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	static String truncate(String s) {
-		if (s.length() > 80) {
-			return "..." + s.substring(s.length() - 77, s.length());
+		int max_length = 80;
+		if (s.length() > max_length) {
+			return "..." + s.substring(s.length() - (max_length - 3), s.length());
 		}
 		return s;
-	}
-
-	public void updateTabTitle(FileView fileView) {
-		int index = jTabbedPane1.indexOfComponent(fileView);
-		String name = fileView.getName();
-		jTabbedPane1.setTitleAt(index, truncate(name));
 	}
 
 	void updateMenu() {
@@ -91,15 +87,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jTabbedPane1.removeAll();
 		fileViews.clear();
 		for (FileTag fileTag : xliffTag.getFiles()) {
-			FileView fv = new FileView(this);
-			fv.setName(fileTag.getAlias());
-			fv.load_file(fileTag);
+			FileView fv = new FileView(this, fileTag.getId());
+			fv.setName(truncate(fileTag.getAlias()));
+			fv.populate_units(fileTag.getUnitsArray());
+			fv.update_model(fileTag);
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);
-			updateTabTitle(fv);
 		}
 		return true;
-
 	}
 
 	public void load_file(File f) {
@@ -184,6 +179,16 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return writer.toString();
 	}
 
+	FileView getFileView(String fileId) {
+		for (FileView fileView : fileViews) {
+			if (fileView.getFileId().equals(fileId)) {
+				return fileView;
+			}
+		}
+		Log.err("getFileView: no fileView with id: " + fileId);
+		return null;
+	}
+
 	boolean validateFile() {
 		ArrayList<SegmentError> errors = new ArrayList<>();
 		getXliffTag().encode(errors, true);
@@ -194,18 +199,22 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 
 		String xmlData;
+		ArrayList<ValidationError> validationErrors;
 		try {
 			xmlData = save_to_string();
+			validationErrors = XliffFileValidator.validate(xmlData);
 		}
-		catch (SaveException ex) {
-			JOptionPane.showMessageDialog(this, "Could not validate file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		catch (SaveException | ParseException ex) {
+			JOptionPane.showMessageDialog(this, "Could not validate file\n" + ex.toString(), "Unexpected error", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		ArrayList<XliffFileValidator.ValidationError> validationErrors = XliffFileValidator.validate(xmlData);
 		if (validationErrors.isEmpty() == false) {
-			JOptionPane.showMessageDialog(this, "Unit tag errors found", "", JOptionPane.ERROR_MESSAGE);
-			for (XliffFileValidator.ValidationError e : validationErrors) {
+			for (ValidationError e : validationErrors) {
 				Log.debug(e.toString());
+				FileView fileView = getFileView(e.getFileId());
+				if ((fileView == null) || (fileView.showValidiationError(e) == false)) {
+					JOptionPane.showMessageDialog(this, "Tag errors found:\n" + e.toString(), "", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			return false;
 		}
@@ -451,7 +460,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			segmentView.testEncode();
 		}
 		catch (EncodeException ex) {
-			JOptionPane.showMessageDialog(this, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "The segment contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {

@@ -2,24 +2,12 @@ package rainbow;
 
 import java.util.ArrayList;
 import net.sf.okapi.lib.xliff2.reader.XLIFFReader;
+import net.sf.okapi.lib.xliff2.reader.XLIFFReaderException;
+import xliff_model.exceptions.ParseException;
 
 public class XliffFileValidator {
 
-	public static class ValidationError {
-
-		String message;
-
-		public ValidationError(String message) {
-			this.message = message;
-		}
-
-		@Override
-		public String toString() {
-			return message;
-		}
-	}
-
-	public static ArrayList<ValidationError> validate(String data) {
+	public static ArrayList<ValidationError> validate(String data) throws ParseException {
 		ArrayList<ValidationError> res = new ArrayList<>();
 		XLIFFReader reader = new XLIFFReader();
 		reader.open(data);
@@ -27,8 +15,8 @@ public class XliffFileValidator {
 			try {
 				reader.next();
 			}
-			catch (Throwable t) {
-				res.add(new ValidationError(t.toString()));
+			catch (XLIFFReaderException ex) {
+				res.add(new ValidationError(ex.getMessage()));
 			}
 		}
 		return res;
