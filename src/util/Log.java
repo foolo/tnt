@@ -27,10 +27,19 @@ public class Log {
 
 		String getMessage(LogRecord record) {
 			String pattern = record.getMessage();
-			if (pattern != null) {
-				return MessageFormat.format(pattern, record.getParameters());
+			if (pattern == null) {
+				return "null";
 			}
-			return "null";
+			Object parameters[] = record.getParameters();
+			if (parameters == null || parameters.length == 0) {
+				return pattern;
+			}
+			try {
+				return MessageFormat.format(pattern, parameters);
+			}
+			catch (Exception ex) {
+				return pattern;
+			}
 		}
 
 		String getThrowableMessage(LogRecord record) {
