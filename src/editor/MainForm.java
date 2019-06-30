@@ -392,6 +392,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 		SegmentTag segmentTag = segmentView.getSegmentTag();
 		segmentView.setTargetText(segmentTag.getSourceText().copy());
+		undoManager.markSnapshot();
     }//GEN-LAST:event_jMenuItemCopySrcActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -437,6 +438,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
     private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
+		undoManager.markSnapshot();
 		SegmentView segmentView = SegmentView.getActiveSegmentView();
 		if (segmentView == null) {
 			return;
@@ -456,6 +458,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (validateFile() == false) {
 			segmentView.setState(SegmentTag.State.INITIAL);
 		}
+		undoManager.markSnapshot();
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
