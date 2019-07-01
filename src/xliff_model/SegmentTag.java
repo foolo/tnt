@@ -16,6 +16,7 @@ public class SegmentTag {
 	private final Node sourceNode;
 	private final Node targetNode;
 	private State state;
+	private boolean staged = false;
 
 	public static final String ATTRIBUTE_STATE = "state";
 
@@ -96,8 +97,16 @@ public class SegmentTag {
 		}
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public boolean setState(State state) {
+		if (state != this.state) {
+			this.state = state;
+			return true;
+		}
+		return false;
+	}
+
+	public void stage() {
+		staged = true;
 	}
 
 	static void replaceChildren(Node node, ArrayList<Node> newNodes) {
@@ -134,7 +143,9 @@ public class SegmentTag {
 		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 		encodeContent(sourceNode, sourceText, errors);
 
-		boolean skipNode = targetText.getContent().isEmpty() || (skipInitialSegments && (state == State.INITIAL));
+		boolean skipInitial = skipInitialSegments && !staged;
+		staged = false;
+		boolean skipNode = targetText.getContent().isEmpty() || (skipInitial && (state == State.INITIAL));
 		if (skipNode) {
 			removeChild(targetNode);
 		}

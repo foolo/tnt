@@ -454,11 +454,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			JOptionPane.showMessageDialog(this, "The segemnt contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		segmentView.setState(SegmentTag.State.TRANSLATED);
-		if (validateFile() == false) {
-			segmentView.setState(SegmentTag.State.INITIAL);
+		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {
+			segmentView.getSegmentTag().stage();
+			if (validateFile()) {
+				segmentView.setState(SegmentTag.State.TRANSLATED);
+			}
 		}
-		undoManager.markSnapshot();
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

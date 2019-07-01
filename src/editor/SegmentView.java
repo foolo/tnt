@@ -70,15 +70,18 @@ public class SegmentView extends javax.swing.JPanel {
 		segmentTag.testEncode();
 	}
 
-	private void setStateField(SegmentTag.State state) {
-		segmentTag.setState(state);
-		jLabelState.setText(state.toString());
+	private boolean setStateField(SegmentTag.State state) {
+		boolean res = segmentTag.setState(state);
+		jLabelState.setText(segmentTag.getState().toString());
+		return res;
 	}
 
 	void setState(SegmentTag.State state) {
-		setStateField(state);
-		int pos = markupViewTarget.getCaretPosition();
-		notifyUndoManager(pos, pos);
+		if (setStateField(state)) {
+			int pos = markupViewTarget.getCaretPosition();
+			notifyUndoManager(pos, pos);
+			mainForm.getUndoManager().markSnapshot();
+		}
 	}
 
 	public SegmentTag getSegmentTag() {
