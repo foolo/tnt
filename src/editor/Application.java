@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.UIManager;
 import util.Log;
+import util.Settings;
 
 public class Application {
 
@@ -28,7 +29,11 @@ public class Application {
 				MainForm mainForm = new MainForm();
 				mainForm.setVisible(true);
 				if (args.length > 0) {
-					mainForm.load_file(new File(args[0]));
+					mainForm.load_file(new File(args[0]), true);
+				}
+				else {
+					File lastOpenedFile = Settings.getLastOpenedFile();
+					mainForm.load_file(lastOpenedFile, false);
 				}
 			}
 		});

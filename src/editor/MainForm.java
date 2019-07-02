@@ -61,24 +61,36 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jMenuItemMarkTranslated.setEnabled(undoManager != null);
 	}
 
-	boolean load_xliff(File f) {
+	XliffTag load_xliff(File f) throws LoadException {
 		XliffTag xliffTag = null;
 		try {
 			Document doc = XmlUtil.read_xml(f);
 			xliffTag = new XliffTag(doc, f);
 		}
 		catch (LoadException ex) {
-			JOptionPane.showMessageDialog(this, "Could not open file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			return false;
+			throw new LoadException("Could not open file\n" + ex.getMessage());
 		}
 		catch (XliffVersionException ex) {
-			JOptionPane.showMessageDialog(this, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			return false;
+			throw new LoadException("Could not open " + f + "\n" + ex.getMessage());
 		}
 		catch (ParseException ex) {
 			Log.debug("load_file: " + ex.toString());
-			JOptionPane.showMessageDialog(this, "Could not open " + f + "\nUnrecogized format", "", JOptionPane.ERROR_MESSAGE);
-			return false;
+			throw new LoadException("Could not open " + f + "\nUnrecogized format");
+		}
+		return xliffTag;
+	}
+
+	public void load_file(File f, boolean promptErrors) {
+		XliffTag xliffTag;
+		try {
+			xliffTag = load_xliff(f);
+		}
+		catch (LoadException ex) {
+			Log.debug("load_file: " + ex.toString());
+			if (promptErrors) {
+				JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			}
+			return;
 		}
 		undoManager = new UndoManager();
 		updateMenu();
@@ -94,13 +106,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);
 		}
-		return true;
-	}
-
-	public void load_file(File f) {
-		if (load_xliff(f)) {
-			setTitle(f.toString());
-		}
+		setTitle(f.toString());
+		Settings.setLastOpenedFile(f);
 	}
 
 	XliffTag getXliffTag() {
@@ -364,13 +371,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (okToClose() == false) {
 			return;
 		}
-		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
+		JFileChooser fc = new JFileChooser(Settings.getLastOpenedFile().getParentFile());
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		load_file(fc.getSelectedFile());
-		Settings.setOpenDirectory(fc.getCurrentDirectory());
+		load_file(fc.getSelectedFile(), true);
+		Settings.setLastOpenedFile(fc.getSelectedFile());
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
@@ -416,7 +423,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
 			xliffFile = rainbowHandler.createPackage(inputFile, commonDir.getPath(), packageName);
-			load_file(xliffFile);
+			load_file(xliffFile, true);
 		}
 		catch (IOException | RainbowError ex) {
 			JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
