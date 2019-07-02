@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import rainbow.ValidationError;
 import util.XmlUtil;
 
 public class SegmentTag {
@@ -17,6 +18,7 @@ public class SegmentTag {
 	private final Node targetNode;
 	private State state;
 	private boolean staged = false;
+	private final String id;
 
 	public static final String ATTRIBUTE_STATE = "state";
 
@@ -38,6 +40,12 @@ public class SegmentTag {
 		}
 	};
 
+	static int idCounter = 0;
+
+	static String generateId() {
+		return "st" + idCounter++;
+	}
+
 	public SegmentTag(Element node, UnitTag parent) throws ParseException {
 		this.node = node;
 		state = State.fromString(node.getAttribute(ATTRIBUTE_STATE));
@@ -55,6 +63,7 @@ public class SegmentTag {
 		targetNode = tn;
 		sourceText = new TaggedText(sourceNode);
 		targetText = new TaggedText(targetNode);
+		id = generateId();
 	}
 
 	public SegmentTag(SegmentTag st, UnitTag parent) {
@@ -64,6 +73,7 @@ public class SegmentTag {
 		this.sourceNode = st.sourceNode;
 		this.targetNode = st.targetNode;
 		this.state = st.state;
+		this.id = st.id;
 	}
 
 	public TaggedText getSourceText() {
@@ -77,7 +87,7 @@ public class SegmentTag {
 		return new TaggedText(new ArrayList<>());
 	}
 
-	public Node getNode() {
+	public Element getNode() {
 		return node;
 	}
 
@@ -89,12 +99,17 @@ public class SegmentTag {
 		return state;
 	}
 
-	public void testEncode() throws EncodeException {
-		ArrayList<SegmentError> errors = new ArrayList<>();
+	public String getId() {
+		return id;
+	}
+
+	public ValidationError testEncode() {
+		ArrayList<ValidationError> errors = new ArrayList<>();
 		encodeContent(targetNode, targetText, errors);
 		if (errors.isEmpty() == false) {
-			throw new EncodeException(errors.get(0).getMessage());
+			return errors.get(0);
 		}
+		return null;
 	}
 
 	public boolean setState(State state) {
@@ -116,16 +131,16 @@ public class SegmentTag {
 		}
 	}
 
-	public void encodeContent(Node node, TaggedText text, ArrayList<SegmentError> errors) {
+	public void encodeContent(Node n, TaggedText text, ArrayList<ValidationError> errors) {
 		ArrayList<Node> nodes;
 		try {
-			nodes = text.toNodes(node.getOwnerDocument());
+			nodes = text.toNodes(n.getOwnerDocument());
 		}
 		catch (EncodeException ex) {
-			nodes = text.onlyTextToNodes(node.getOwnerDocument());
-			errors.add(new SegmentError(this, ex.getMessage()));
+			nodes = text.onlyTextToNodes(n.getOwnerDocument());
+			errors.add(new ValidationError(this, ex.getMessage()));
 		}
-		replaceChildren(node, nodes);
+		replaceChildren(n, nodes);
 	}
 
 	void removeChild(Node n) {
@@ -139,7 +154,7 @@ public class SegmentTag {
 		}
 	}
 
-	public void encode(ArrayList<SegmentError> errors, boolean skipInitialSegments) {
+	public void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
 		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 		encodeContent(sourceNode, sourceText, errors);
 

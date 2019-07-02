@@ -22,10 +22,8 @@ import util.Log;
 import util.Settings;
 import util.XmlUtil;
 import xliff_model.FileTag;
-import xliff_model.SegmentError;
 import xliff_model.SegmentTag;
 import xliff_model.XliffTag;
-import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
 import xliff_model.exceptions.SaveException;
@@ -128,10 +126,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	public boolean save_file() {
-		ArrayList<SegmentError> errors = new ArrayList<>();
+		ArrayList<ValidationError> errors = new ArrayList<>();
 		getXliffTag().encode(errors, false);
-		for (SegmentError e : errors) {
-			Log.debug("save_file: SegmentError: " + XmlUtil.getPath(e.getSegmentTag().getNode()) + ": " + e.getMessage());
+		for (ValidationError e : errors) {
+			Log.debug("save_file: SegmentError: " + e.toString());
 		}
 		return save_to_file();
 	}
@@ -172,12 +170,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	boolean validateFile() {
-		ArrayList<SegmentError> errors = new ArrayList<>();
+		ArrayList<ValidationError> errors = new ArrayList<>();
 		getXliffTag().encode(errors, true);
 
-		for (SegmentError e : errors) {
+		for (ValidationError e : errors) {
 			// there should be no invalid non-initial segments, log for debugging only
-			Log.err("validateFile: SegmentError: " + XmlUtil.getPath(e.getSegmentTag().getNode()) + ": " + e.getMessage());
+			Log.err("validateFile: ValidationError: " + e.toString());
 		}
 
 		String xmlData;
@@ -447,11 +445,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			JOptionPane.showMessageDialog(this, "Can not mark empty segment as translated", "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		try {
-			segmentView.testEncode();
-		}
-		catch (EncodeException ex) {
-			JOptionPane.showMessageDialog(this, "The segment contains an error:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+
+		ValidationError validationError = segmentView.getSegmentTag().testEncode();
+		if (validationError != null) {
+			segmentView.showValidationError(validationError);
 			return;
 		}
 		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {

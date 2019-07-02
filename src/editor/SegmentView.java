@@ -12,7 +12,6 @@ import rainbow.ValidationError;
 import undo_manager.CaretPosition;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
-import xliff_model.exceptions.EncodeException;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -43,11 +42,13 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentTag segmentTag;
 	private final MainForm mainForm;
 	private final FileView fileView;
+	private final String segmentId;
 
-	SegmentView(MainForm mainForm, FileView fileView) {
+	SegmentView(MainForm mainForm, FileView fileView, String segmentId) {
 		initComponents();
 		this.mainForm = mainForm;
 		this.fileView = fileView;
+		this.segmentId = segmentId;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
@@ -66,10 +67,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	public void setTargetText(TaggedText t) {
 		markupViewTarget.setTaggedText(t);
-	}
-
-	void testEncode() throws EncodeException {
-		segmentTag.testEncode();
 	}
 
 	private boolean setStateField(SegmentTag.State state) {
@@ -101,6 +98,10 @@ public class SegmentView extends javax.swing.JPanel {
 		return fileView;
 	}
 
+	public String getSegmentId() {
+		return segmentId;
+	}
+
 	public void registerListeners() {
 		markupViewTarget.getDocument().addDocumentListener(targetDocumentListener);
 	}
@@ -111,7 +112,11 @@ public class SegmentView extends javax.swing.JPanel {
 
 	void showValidationError(ValidationError e) {
 		jLabelValidationError.setText("Tag errors found");
-		jLabelValidationError.setToolTipText("Tag ID=" + e.getCodeId() + " " + e.getDetails());
+		String tagIdDetails = "";
+		if (e.getCodeId().isEmpty() == false) {
+			tagIdDetails = "Tag ID=" + e.getCodeId() + ": ";
+		}
+		jLabelValidationError.setToolTipText(tagIdDetails + e.getMessage());
 	}
 
 	public void setTextPosition(CaretPosition.Column column, int position) {

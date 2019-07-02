@@ -61,7 +61,7 @@ public class FileView extends javax.swing.JPanel {
 	void populate_units(ArrayList<UnitTag> unitTags) {
 		for (UnitTag u : unitTags) {
 			UnitView unitView = new UnitView(mainForm, u.getId());
-			unitView.populateSegments(u.getSegments().size(), this);
+			unitView.populateSegments(u.getSegments(), this);
 			jPanelItems.add(unitView);
 		}
 	}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import rainbow.ValidationError;
 import undo_manager.UndoableModel;
 import util.Log;
 import util.NodeArray;
@@ -54,7 +55,7 @@ public class XliffTag implements UndoableModel {
 		return file;
 	}
 
-	public void encode(ArrayList<SegmentError> errors, boolean skipInitialSegments) {
+	public void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
 		for (FileTag f : files) {
 			f.encode(errors, skipInitialSegments);
 		}

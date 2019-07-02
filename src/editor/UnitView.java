@@ -21,13 +21,27 @@ public class UnitView extends javax.swing.JPanel {
 		return unitId;
 	}
 
-	SegmentView getSegmentView(String codeId) {
-		for (Component c : getComponents()) {
-			if (c instanceof SegmentView) {
-				SegmentView segmentView = (SegmentView) c;
-				ArrayList<String> ids = segmentView.getSegmentTag().getSourceText().getIds();
-				if (ids.contains(codeId)) {
-					return segmentView;
+	SegmentView getSegmentView(ValidationError e) {
+		String segmentId = e.getSegmentId();
+		if (segmentId.isEmpty() == false) {
+			for (Component c : getComponents()) {
+				if (c instanceof SegmentView) {
+					SegmentView segmentView = (SegmentView) c;
+					if (segmentView.getSegmentId().equals(segmentId)) {
+						return segmentView;
+					}
+				}
+			}
+		}
+		String codeId = e.getCodeId();
+		if (codeId.isEmpty() == false) {
+			for (Component c : getComponents()) {
+				if (c instanceof SegmentView) {
+					SegmentView segmentView = (SegmentView) c;
+					ArrayList<String> ids = segmentView.getSegmentTag().getSourceText().getIds();
+					if (ids.contains(codeId)) {
+						return segmentView;
+					}
 				}
 			}
 		}
@@ -35,7 +49,7 @@ public class UnitView extends javax.swing.JPanel {
 	}
 
 	boolean showValidationError(ValidationError e) {
-		SegmentView segmentView = getSegmentView(e.getCodeId());
+		SegmentView segmentView = getSegmentView(e);
 		if (segmentView == null) {
 			return false;
 		}
@@ -52,9 +66,9 @@ public class UnitView extends javax.swing.JPanel {
 		}
 	}
 
-	void populateSegments(int count, FileView fileView) {
-		for (int i = 0; i < count; i++) {
-			add(new SegmentView(mainForm, fileView));
+	void populateSegments(ArrayList<SegmentTag> segmentTags, FileView fileView) {
+		for (SegmentTag st : segmentTags) {
+			add(new SegmentView(mainForm, fileView, st.getId()));
 		}
 	}
 

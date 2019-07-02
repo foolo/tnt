@@ -4,6 +4,7 @@ import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import rainbow.ValidationError;
 import util.Log;
 import util.NodeArray;
 
@@ -79,7 +80,7 @@ public class FileTag {
 		return new FileTag(this);
 	}
 
-	void encode(ArrayList<SegmentError> errors, boolean skipInitialSegments) {
+	void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
 		for (Item i : items) {
 			i.encode(errors, skipInitialSegments);
 		}
