@@ -125,11 +125,30 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return true;
 	}
 
-	public boolean save_file() {
+	void showValidationErrors(ArrayList<ValidationError> errors) {
+		StringBuilder undhandledErrors = new StringBuilder();
+		for (ValidationError e : errors) {
+			Log.debug("showValidationErrors: ValidationError: " + e.toString());
+			FileView fileView = getFileView(e.getFileId());
+			if ((fileView == null) || (fileView.showValidiationError(e) == false)) {
+				undhandledErrors.append(e.toString());
+				undhandledErrors.append('\n');
+			}
+		}
+		if (undhandledErrors.length() > 0) {
+			JOptionPane.showMessageDialog(this, "Tag errors found:\n" + undhandledErrors.toString(), "", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public boolean save_file(boolean haltOnEncodeError) {
 		ArrayList<ValidationError> errors = new ArrayList<>();
 		getXliffTag().encode(errors, false);
-		for (ValidationError e : errors) {
-			Log.debug("save_file: SegmentError: " + e.toString());
+		if (errors.isEmpty() == false) {
+			showValidationErrors(errors);
+			if (haltOnEncodeError) {
+				JOptionPane.showMessageDialog(this, "Could not export. Some segments contain invalid tags.", "", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
 		}
 		return save_to_file();
 	}
@@ -144,7 +163,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 		switch (choice) {
 			case JOptionPane.YES_OPTION:
-				return save_file();
+				return save_file(false);
 			case JOptionPane.NO_OPTION:
 				return true;
 			case JOptionPane.CANCEL_OPTION:
@@ -170,10 +189,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	boolean validateFile() {
-		ArrayList<ValidationError> errors = new ArrayList<>();
-		getXliffTag().encode(errors, true);
+		ArrayList<ValidationError> encodeErrors = new ArrayList<>();
+		getXliffTag().encode(encodeErrors, true);
 
-		for (ValidationError e : errors) {
+		for (ValidationError e : encodeErrors) {
 			// there should be no invalid non-initial segments, log for debugging only
 			Log.err("validateFile: ValidationError: " + e.toString());
 		}
@@ -189,13 +208,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return false;
 		}
 		if (validationErrors.isEmpty() == false) {
-			for (ValidationError e : validationErrors) {
-				Log.debug(e.toString());
-				FileView fileView = getFileView(e.getFileId());
-				if ((fileView == null) || (fileView.showValidiationError(e) == false)) {
-					JOptionPane.showMessageDialog(this, "Tag errors found:\n" + e.toString(), "", JOptionPane.ERROR_MESSAGE);
-				}
-			}
+			showValidationErrors(validationErrors);
 			return false;
 		}
 		return true;
@@ -379,7 +392,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
-		save_file();
+		save_file(false);
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
@@ -429,7 +442,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
-		if (save_file()) {
+		if (save_file(true)) {
 			validateFile();
 			export();
 		}
