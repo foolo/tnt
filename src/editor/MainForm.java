@@ -160,19 +160,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 	}
 
-	public void menu_open() {
-		if (okToClose() == false) {
-			return;
-		}
-		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
-		int returnVal = fc.showOpenDialog(this);
-		if (returnVal != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		load_file(fc.getSelectedFile());
-		Settings.setOpenDirectory(fc.getCurrentDirectory());
-	}
-
 	String save_to_string() throws SaveException {
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
@@ -386,7 +373,16 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenActionPerformed
-		menu_open();
+		if (okToClose() == false) {
+			return;
+		}
+		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
+		int returnVal = fc.showOpenDialog(this);
+		if (returnVal != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+		load_file(fc.getSelectedFile());
+		Settings.setOpenDirectory(fc.getCurrentDirectory());
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
