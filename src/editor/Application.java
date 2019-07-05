@@ -3,7 +3,7 @@ package editor;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import util.Log;
 import util.Settings;
 
@@ -11,15 +11,9 @@ public class Application {
 
 	public static void main(String args[]) {
 		try {
-			String osVersion = System.getProperty("os.name");
-			if (osVersion.contains("Linux")) {
-				UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-			}
-			else {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			}
+			javax.swing.UIManager.setLookAndFeel(new MetalLookAndFeel());
 		}
-		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+		catch (javax.swing.UnsupportedLookAndFeelException ex) {
 			Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		java.awt.EventQueue.invokeLater(new Runnable() {
