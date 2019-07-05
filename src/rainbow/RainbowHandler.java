@@ -1,7 +1,10 @@
 package rainbow;
 
+import java.io.BufferedWriter;
+import util.FileUtil;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -122,7 +125,7 @@ public class RainbowHandler {
 		return xliffFiles[0];
 	}
 
-	public File exportTranslatedFile(File xliffFile) throws RainbowError, IOException {
+	public File exportTranslatedFile(File tempDir, File xliffFile, String xliffData) throws RainbowError, IOException {
 		File workDir = xliffFile.getParentFile();
 		if (workDir == null) {
 			throw new RainbowError("exportTranslatedFile: workdir == null, file: " + xliffFile);
@@ -135,15 +138,24 @@ public class RainbowHandler {
 		if (manifestFile.exists() == false) {
 			throw new RainbowError("No manifest.rkm found in parent directory (" + manifestDir + ")\n");
 		}
-		String tempDir = Files.createTempDirectory("tnt_tmp_").toString();
 		Log.debug("exportTranslatedFile: temporary directory: " + tempDir);
 		File plnTmpFile = new File(tempDir, "export.pln");
 		copy(getResource("/res/export.pln"), plnTmpFile.getAbsolutePath());
 		copy(getResource("/res/languages.xml"), new File(tempDir, "languages.xml").getAbsolutePath());
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
+		File tmpManifestDir = new File(tempDir, "package");
+		FileUtil.copyFolder(manifestDir.toPath(), tmpManifestDir.toPath());
+
+		File tmpManifestFile = new File(tmpManifestDir, "manifest.rkm");
+		String inputFile = tmpManifestFile.getAbsolutePath();
+
+		File tmpXliffFile = new File(new File(tmpManifestDir, workDir.getName()), xliffFile.getName());
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(tmpXliffFile))) {
+			writer.write(xliffData);
+		}
+
 		CommandLine2 cl = new CommandLine2();
-		String inputFile = manifestFile.getAbsolutePath();
-		cl.execute(tempDir, plnTmpFile.getAbsolutePath(), inputFile, true);
+		cl.execute(tempDir.toString(), plnTmpFile.getAbsolutePath(), inputFile, true);
 
 		Manifest manifest;
 		try {
@@ -153,8 +165,15 @@ public class RainbowHandler {
 		catch (LoadException | ParseException ex) {
 			throw new RainbowError(ex.toString());
 		}
+
+		File mergeDir = new File(manifestDir, manifest.getMergeDir());
+		mergeDir.mkdirs();
 		for (String f : manifest.getTargetFiles()) {
+			File tmpMergeDir = new File(tmpManifestDir, manifest.getMergeDir());
+			File tmpTargetFile = new File(tmpMergeDir, f);
 			File targetFile = new File(new File(manifestDir, manifest.getMergeDir()), f);
+			targetFile.delete();
+			Files.copy(tmpTargetFile.toPath(), targetFile.toPath());
 			if (targetFile.getAbsoluteFile().exists() == false) {
 				throw new RainbowError("Expected output file not found: " + targetFile);
 			}

@@ -3,6 +3,7 @@ package editor;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -224,18 +225,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return true;
 	}
 
-	void export() {
-		File f = getXliffTag().getFile().getAbsoluteFile();
-		RainbowHandler rainbowHandler = new RainbowHandler();
-		try {
-			File outputDir = rainbowHandler.exportTranslatedFile(f);
-			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (IOException | RainbowError ex) {
-			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.getMessage(), "Export result", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-
 	@Override
 	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
 		XliffTag xliffTag = (XliffTag) model;
@@ -452,9 +441,22 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
-		if (save_file(true)) {
-			validateFile();
-			export();
+		File f = getXliffTag().getFile().getAbsoluteFile();
+		RainbowHandler rainbowHandler = new RainbowHandler();
+		try {
+			File tempDir = Files.createTempDirectory("tnt_tmp_").toFile();
+			ArrayList<ValidationError> encodeErrors = new ArrayList<>();
+			getXliffTag().encode(encodeErrors, true);
+			for (ValidationError e : encodeErrors) {
+				// there should be no invalid non-initial segments, log for debugging only
+				Log.err("validateFile: ValidationError: " + e.toString());
+			}
+			String xliffData = save_to_string();
+			File outputDir = rainbowHandler.exportTranslatedFile(tempDir, f, xliffData);
+			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
+		}
+		catch (IOException | RainbowError | SaveException ex) {
+			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
