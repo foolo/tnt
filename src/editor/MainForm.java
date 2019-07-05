@@ -45,14 +45,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return undoManager;
 	}
 
-	static String truncate(String s) {
-		int max_length = 80;
-		if (s.length() > max_length) {
-			return "..." + s.substring(s.length() - (max_length - 3), s.length());
-		}
-		return s;
-	}
-
 	void updateMenu() {
 		jMenuItemExport.setEnabled(undoManager != null);
 		jMenuItemSave.setEnabled(undoManager != null);
@@ -99,7 +91,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		fileViews.clear();
 		for (FileTag fileTag : xliffTag.getFiles()) {
 			FileView fv = new FileView(this, fileTag.getId());
-			fv.setName(truncate(fileTag.getAlias()));
+			fv.setName(fileTag.getAlias());
 			fv.populate_units(fileTag.getUnitsArray());
 			fv.update_model(fileTag);
 			jTabbedPane1.add(fv);

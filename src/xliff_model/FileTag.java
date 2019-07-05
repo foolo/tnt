@@ -1,11 +1,13 @@
 package xliff_model;
 
+import java.io.File;
 import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import util.Log;
 import util.NodeArray;
+import util.StringUtil;
 
 public class FileTag {
 
@@ -50,15 +52,12 @@ public class FileTag {
 		return id;
 	}
 
-	public String getOriginalFilePath() {
-		return originalFilePath;
-	}
-
 	public String getAlias() {
 		if (originalFilePath.isEmpty()) {
 			return id;
 		}
-		return originalFilePath;
+		String filename = new File(originalFilePath).getName();
+		return StringUtil.truncate(filename, 80) + " (" + id + ")";
 	}
 
 	public ArrayList<Item> getItems() {
