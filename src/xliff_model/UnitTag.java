@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import rainbow.ValidationError;
 import util.Log;
 import util.NodeArray;
 

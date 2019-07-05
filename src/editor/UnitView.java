@@ -2,9 +2,9 @@ package editor;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import rainbow.ValidationError;
 import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
+import xliff_model.ValidationPath;
 
 public class UnitView extends javax.swing.JPanel {
 
@@ -21,25 +21,23 @@ public class UnitView extends javax.swing.JPanel {
 		return unitId;
 	}
 
-	SegmentView getSegmentView(ValidationError e) {
-		String segmentId = e.getSegmentId();
-		if (segmentId.isEmpty() == false) {
+	SegmentView getSegmentView(ValidationPath path) {
+		if (path.segmentId.isEmpty() == false) {
 			for (Component c : getComponents()) {
 				if (c instanceof SegmentView) {
 					SegmentView segmentView = (SegmentView) c;
-					if (segmentView.getSegmentId().equals(segmentId)) {
+					if (segmentView.getSegmentId().equals(path.segmentId)) {
 						return segmentView;
 					}
 				}
 			}
 		}
-		String codeId = e.getCodeId();
-		if (codeId.isEmpty() == false) {
+		if (path.codeId.isEmpty() == false) {
 			for (Component c : getComponents()) {
 				if (c instanceof SegmentView) {
 					SegmentView segmentView = (SegmentView) c;
 					ArrayList<String> ids = segmentView.getSegmentTag().getSourceText().getIds();
-					if (ids.contains(codeId)) {
+					if (ids.contains(path.codeId)) {
 						return segmentView;
 					}
 				}
@@ -48,12 +46,12 @@ public class UnitView extends javax.swing.JPanel {
 		return null;
 	}
 
-	boolean showValidationError(ValidationError e) {
-		SegmentView segmentView = getSegmentView(e);
+	boolean showValidationError(String message, ValidationPath path) {
+		SegmentView segmentView = getSegmentView(path);
 		if (segmentView == null) {
 			return false;
 		}
-		segmentView.showValidationError(e);
+		segmentView.showValidationError(message, path);
 		return true;
 	}
 

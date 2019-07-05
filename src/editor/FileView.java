@@ -2,9 +2,9 @@ package editor;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import rainbow.ValidationError;
 import xliff_model.FileTag;
 import xliff_model.UnitTag;
+import xliff_model.ValidationPath;
 
 public class FileView extends javax.swing.JPanel {
 
@@ -22,11 +22,11 @@ public class FileView extends javax.swing.JPanel {
 		return fileId;
 	}
 
-	boolean showValidiationError(ValidationError e) {
+	boolean showValidiationError(String message, ValidationPath path) {
 		for (Component c : jPanelItems.getComponents()) {
 			UnitView unitView = (UnitView) c;
-			if (unitView.getUnitId().equals(e.getUnitId())) {
-				return unitView.showValidationError(e);
+			if (unitView.getUnitId().equals(path.unitId)) {
+				return unitView.showValidationError(message, path);
 			}
 		}
 		return false;

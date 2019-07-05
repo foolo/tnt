@@ -8,10 +8,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import rainbow.ValidationError;
 import undo_manager.CaretPosition;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
+import xliff_model.ValidationPath;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -110,13 +110,13 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.getDocument().removeDocumentListener(targetDocumentListener);
 	}
 
-	void showValidationError(ValidationError e) {
+	void showValidationError(String message, ValidationPath path) {
 		jLabelValidationError.setText("Tag errors found");
 		String tagIdDetails = "";
-		if (e.getCodeId().isEmpty() == false) {
-			tagIdDetails = "Tag ID=" + e.getCodeId() + ": ";
+		if (path != null && path.codeId.isEmpty() == false) {
+			tagIdDetails = "Tag ID=" + path.codeId + ": ";
 		}
-		jLabelValidationError.setToolTipText(tagIdDetails + e.getMessage());
+		jLabelValidationError.setToolTipText(tagIdDetails + message);
 	}
 
 	public void setTextPosition(CaretPosition.Column column, int position) {

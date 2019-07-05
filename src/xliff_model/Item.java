@@ -1,7 +1,6 @@
 package xliff_model;
 
 import java.util.ArrayList;
-import rainbow.ValidationError;
 
 public interface Item {
 

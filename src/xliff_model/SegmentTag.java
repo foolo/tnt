@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import rainbow.ValidationError;
 import util.XmlUtil;
 
 public class SegmentTag {

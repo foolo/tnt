@@ -4,7 +4,6 @@ import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import rainbow.ValidationError;
 import util.Log;
 import util.NodeArray;
 

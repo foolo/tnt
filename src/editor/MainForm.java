@@ -11,7 +11,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import rainbow.RainbowError;
 import rainbow.RainbowHandler;
-import rainbow.ValidationError;
+import xliff_model.ValidationError;
 import rainbow.XliffFileValidator;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
@@ -125,12 +125,22 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return true;
 	}
 
+	boolean showValidiationError(ValidationError e) {
+		if (e.path == null) {
+			return false;
+		}
+		FileView fileView = getFileView(e.path.fileId);
+		if (fileView == null) {
+			return false;
+		}
+		return fileView.showValidiationError(e.message, e.path);
+	}
+
 	void showValidationErrors(ArrayList<ValidationError> errors) {
 		StringBuilder undhandledErrors = new StringBuilder();
 		for (ValidationError e : errors) {
 			Log.debug("showValidationErrors: ValidationError: " + e.toString());
-			FileView fileView = getFileView(e.getFileId());
-			if ((fileView == null) || (fileView.showValidiationError(e) == false)) {
+			if (showValidiationError(e) == false) {
 				undhandledErrors.append(e.toString());
 				undhandledErrors.append('\n');
 			}
@@ -461,7 +471,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 		ValidationError validationError = segmentView.getSegmentTag().testEncode();
 		if (validationError != null) {
-			segmentView.showValidationError(validationError);
+			segmentView.showValidationError(validationError.message, validationError.path);
 			return;
 		}
 		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {
