@@ -113,19 +113,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return (XliffTag) undoManager.getCurrentState().getModel();
 	}
 
-	boolean save_to_file() {
-		try {
-			Log.debug("save_to_file: " + getXliffTag().getFile());
-			XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
-		}
-		catch (SaveException ex) {
-			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		undoManager.markSaved();
-		return true;
-	}
-
 	boolean showValidiationError(ValidationError e) {
 		if (e.path == null) {
 			return false;
@@ -161,7 +148,16 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 				return false;
 			}
 		}
-		return save_to_file();
+		try {
+			Log.debug("save_to_file: " + getXliffTag().getFile());
+			XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
+		}
+		catch (SaveException ex) {
+			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		undoManager.markSaved();
+		return true;
 	}
 
 	boolean okToClose() {
@@ -184,6 +180,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	String save_to_string() throws SaveException {
+		ArrayList<ValidationError> encodeErrors = new ArrayList<>();
+		getXliffTag().encode(encodeErrors, true);
+		for (ValidationError e : encodeErrors) {
+			// there should be no invalid non-initial segments, log for debugging only
+			Log.err("validateFile: ValidationError: " + e.toString());
+		}
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
 		return writer.toString();
@@ -200,13 +202,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	boolean validateFile() {
-		ArrayList<ValidationError> encodeErrors = new ArrayList<>();
-		getXliffTag().encode(encodeErrors, true);
-
-		for (ValidationError e : encodeErrors) {
-			// there should be no invalid non-initial segments, log for debugging only
-			Log.err("validateFile: ValidationError: " + e.toString());
-		}
 
 		String xmlData;
 		ArrayList<ValidationError> validationErrors;
@@ -445,12 +440,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
 			File tempDir = Files.createTempDirectory("tnt_tmp_").toFile();
-			ArrayList<ValidationError> encodeErrors = new ArrayList<>();
-			getXliffTag().encode(encodeErrors, true);
-			for (ValidationError e : encodeErrors) {
-				// there should be no invalid non-initial segments, log for debugging only
-				Log.err("validateFile: ValidationError: " + e.toString());
-			}
 			String xliffData = save_to_string();
 			File outputDir = rainbowHandler.exportTranslatedFile(tempDir, f, xliffData);
 			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
