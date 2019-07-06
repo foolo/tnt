@@ -1,5 +1,6 @@
-package rainbow;
+package conversion;
 
+import conversion.ConversionError;
 import java.io.BufferedWriter;
 import util.FileUtil;
 import java.io.File;
@@ -82,7 +83,7 @@ public class RainbowHandler {
 		return files;
 	}
 
-	public File createPackage(String inputFile, String commonDir, String packageName, String sourceLanguage, String targetLanguage) throws RainbowError, IOException {
+	public File createPackage(String inputFile, String commonDir, String packageName, String sourceLanguage, String targetLanguage) throws ConversionError, IOException {
 		Log.debug("createPackage: input file: " + inputFile);
 		Log.debug("createPackage: common package directory: " + commonDir);
 		Log.debug("createPackage: package name: " + packageName);
@@ -113,11 +114,11 @@ public class RainbowHandler {
 		cl.execute(tempDir, plnTmpFile.getPath(), inputFile, false, sourceLanguage, targetLanguage);
 		File workDir = Paths.get(commonDir, packageName, "work").toFile();
 		if ((workDir.exists() == false) || (workDir.isDirectory() == false)) {
-			throw new RainbowError("Work directory not created or not a directory: " + workDir);
+			throw new ConversionError("Work directory not created or not a directory: " + workDir);
 		}
 		File[] xliffFiles = listXliffFiles(workDir);
 		if (xliffFiles.length == 0) {
-			throw new RainbowError("No output XLIFF file was found in " + workDir);
+			throw new ConversionError("No output XLIFF file was found in " + workDir);
 		}
 		if (xliffFiles.length > 1) {
 			Log.err("createPackage: Multiple XLIFF files found in output folder: " + workDir);
@@ -125,18 +126,18 @@ public class RainbowHandler {
 		return xliffFiles[0];
 	}
 
-	public File exportTranslatedFile(File tempDir, File xliffFile, String xliffData) throws RainbowError, IOException {
+	public File exportTranslatedFile(File tempDir, File xliffFile, String xliffData) throws ConversionError, IOException {
 		File workDir = xliffFile.getParentFile();
 		if (workDir == null) {
-			throw new RainbowError("exportTranslatedFile: workdir == null, file: " + xliffFile);
+			throw new ConversionError("exportTranslatedFile: workdir == null, file: " + xliffFile);
 		}
 		File manifestDir = workDir.getParentFile();
 		if (manifestDir == null) {
-			throw new RainbowError("exportTranslatedFile: manifestDir == null, workDir: " + workDir);
+			throw new ConversionError("exportTranslatedFile: manifestDir == null, workDir: " + workDir);
 		}
 		File manifestFile = new File(manifestDir, "manifest.rkm");
 		if (manifestFile.exists() == false) {
-			throw new RainbowError("No manifest.rkm found in parent directory (" + manifestDir + ")\n");
+			throw new ConversionError("No manifest.rkm found in parent directory (" + manifestDir + ")\n");
 		}
 		Log.debug("exportTranslatedFile: temporary directory: " + tempDir);
 		File plnTmpFile = new File(tempDir, "export.pln");
@@ -163,7 +164,7 @@ public class RainbowHandler {
 			manifest = new Manifest(doc, manifestFile);
 		}
 		catch (LoadException | ParseException ex) {
-			throw new RainbowError(ex.toString());
+			throw new ConversionError(ex.toString());
 		}
 
 		File mergeDir = new File(manifestDir, manifest.getMergeDir());
@@ -175,7 +176,7 @@ public class RainbowHandler {
 			targetFile.delete();
 			Files.copy(tmpTargetFile.toPath(), targetFile.toPath());
 			if (targetFile.getAbsoluteFile().exists() == false) {
-				throw new RainbowError("Expected output file not found: " + targetFile);
+				throw new ConversionError("Expected output file not found: " + targetFile);
 			}
 		}
 		return new File(manifestDir, manifest.getMergeDir());

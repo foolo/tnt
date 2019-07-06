@@ -6,8 +6,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import rainbow.RainbowError;
-import rainbow.RainbowHandler;
+import conversion.ConversionError;
+import conversion.RainbowHandler;
 import util.Log;
 
 public class TestRainbow {
@@ -22,7 +22,7 @@ public class TestRainbow {
 			String packageName = "tnt_" + timestamp;
 			rainbowHandler.createPackage(inputFile, packageDirectory.getAbsolutePath(), packageName, "en", "sv");
 		}
-		catch (IOException | RainbowError ex) {
+		catch (IOException | ConversionError ex) {
 			Logger.getLogger(TestRainbow.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}

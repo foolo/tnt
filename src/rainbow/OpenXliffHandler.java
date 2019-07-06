@@ -2,6 +2,7 @@ package rainbow;
 
 import com.maxprograms.converters.Convert;
 import com.maxprograms.converters.Merge;
+import conversion.ConversionError;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,7 @@ public class OpenXliffHandler {
 		return new File(System.getProperty("user.dir"));
 	}
 
-	public File createPackage(File inputFile, File xliffFile, File skeletonFile, String sourceLanguage, String targetLanguage) throws RainbowError {
+	public File createPackage(File inputFile, File xliffFile, File skeletonFile, String sourceLanguage, String targetLanguage) throws ConversionError {
 		Log.debug("createPackage: inputFile: " + inputFile);
 		Log.debug("createPackage: xliffFile: " + xliffFile);
 		Log.debug("createPackage: skeletonFile: " + skeletonFile);
@@ -59,10 +60,10 @@ public class OpenXliffHandler {
 		skeletonLocalFile.renameTo(skeletonFile);
 
 		if (xliffFile.exists() == false) {
-			throw new RainbowError("No output XLIFF file was found at: " + xliffFile);
+			throw new ConversionError("No output XLIFF file was found at: " + xliffFile);
 		}
 		if (skeletonFile.exists() == false) {
-			throw new RainbowError("No output skeleton file was found at: " + skeletonFile);
+			throw new ConversionError("No output skeleton file was found at: " + skeletonFile);
 		}
 
 		return xliffFile;
@@ -83,7 +84,7 @@ public class OpenXliffHandler {
 		return baseName + "_" + targetLanguage + ext;
 	}
 
-	public File exportTranslatedFile(File xliffFile) throws RainbowError, IOException {
+	public File exportTranslatedFile(File xliffFile) throws ConversionError, IOException {
 		Log.debug("exportTranslatedFile: xliffFile: " + xliffFile);
 
 		File resourceDir = getResourceDir();
@@ -103,7 +104,7 @@ public class OpenXliffHandler {
 		Merge.main(args);
 
 		if (targetFile.getAbsoluteFile().exists() == false) {
-			throw new RainbowError("Expected output file not found: " + targetFile);
+			throw new ConversionError("Expected output file not found: " + targetFile);
 		}
 		return targetFile;
 	}
