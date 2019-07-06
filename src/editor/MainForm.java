@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import rainbow.OpenXliffHandler;
+import conversion.OpenXliffHandler;
 import conversion.ConversionError;
 import xliff_model.ValidationError;
 import conversion.XliffFileValidator;

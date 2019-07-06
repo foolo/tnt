@@ -1,4 +1,4 @@
-package rainbow;
+package conversion;
 
 import com.maxprograms.converters.Convert;
 import com.maxprograms.converters.Merge;
