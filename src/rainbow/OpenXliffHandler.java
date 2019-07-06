@@ -33,7 +33,7 @@ public class OpenXliffHandler {
 		return new File(System.getProperty("user.dir"));
 	}
 
-	public File createPackage(File inputFile, File xliffFile, File skeletonFile) throws RainbowError {
+	public File createPackage(File inputFile, File xliffFile, File skeletonFile, String sourceLanguage, String targetLanguage) throws RainbowError {
 		Log.debug("createPackage: inputFile: " + inputFile);
 		Log.debug("createPackage: xliffFile: " + xliffFile);
 		Log.debug("createPackage: skeletonFile: " + skeletonFile);
@@ -48,8 +48,8 @@ public class OpenXliffHandler {
 
 		String args[] = new String[]{
 			"-file", inputFile.getAbsolutePath(),
-			"-srcLang", "sv", // todo language
-			"-tgtLang", "de",
+			"-srcLang", sourceLanguage, // todo language
+			"-tgtLang", targetLanguage,
 			"-2.0"
 		};
 		Log.debug("convert args: " + String.join(" ", args));

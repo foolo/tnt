@@ -415,7 +415,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		File xliffFile;
 		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
-			xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSkeletonFile());
+			xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSkeletonFile(), d.getSourceLanguage(), d.getTargetLanguage());
 			load_file(xliffFile, true);
 		}
 		catch (RainbowError ex) {
