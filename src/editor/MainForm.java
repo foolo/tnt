@@ -14,6 +14,7 @@ import conversion.ConversionError;
 import conversion.RainbowHandler;
 import xliff_model.ValidationError;
 import conversion.RainbowXliffValidator;
+import java.awt.Font;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
@@ -254,16 +255,22 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemOpen = new javax.swing.JMenuItem();
         jMenuItemExport = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItemPreferences = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
         jMenuItemMarkTranslated = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItemLogs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
+            }
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
             }
         });
 
@@ -306,6 +313,18 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenuBar1.add(jMenu1);
 
+        jMenu4.setText("Edit");
+
+        jMenuItemPreferences.setText("Preferences");
+        jMenuItemPreferences.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPreferencesActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItemPreferences);
+
+        jMenuBar1.add(jMenu4);
+
         jMenu2.setText("Segment");
 
         jMenuItemCopySrc.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_INSERT, java.awt.event.InputEvent.CTRL_MASK));
@@ -331,6 +350,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("View");
+
+        jMenuItem1.setText("Select font");
+        jMenu3.add(jMenuItem1);
 
         jMenuItemLogs.setText("Log");
         jMenuItemLogs.addActionListener(new java.awt.event.ActionListener() {
@@ -467,17 +489,40 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
+	void applyPreferences() {
+		Font f = new Font(Settings.getEditorFontName(), Settings.getEditorFontStyle(), Settings.getEditorFontSize());
+		for (FileView fileView : fileViews) {
+			fileView.setEditorFont(f);
+		}
+	}
+
+    private void jMenuItemPreferencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreferencesActionPerformed
+		PreferencesForm preferencesForm = new PreferencesForm(this);
+		preferencesForm.setLocationRelativeTo(this);
+		preferencesForm.setVisible(true);
+		if (preferencesForm.getResult()) {
+			applyPreferences();
+		}
+    }//GEN-LAST:event_jMenuItemPreferencesActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+		applyPreferences();
+    }//GEN-LAST:event_formWindowActivated
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
     private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemMarkTranslated;
     private javax.swing.JMenuItem jMenuItemOpen;
+    private javax.swing.JMenuItem jMenuItemPreferences;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables

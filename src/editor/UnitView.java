@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 import xliff_model.SegmentTag;
 import xliff_model.UnitTag;
@@ -67,6 +68,12 @@ public class UnitView extends javax.swing.JPanel {
 	void populateSegments(ArrayList<SegmentTag> segmentTags, FileView fileView) {
 		for (SegmentTag st : segmentTags) {
 			add(new SegmentView(mainForm, fileView, st.getId()));
+		}
+	}
+
+	void setEditorFont(Font f) {
+		for (Component c : getComponents()) {
+			((SegmentView) c).setEditorFont(f);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.Font;
 import java.io.File;
 import java.util.prefs.Preferences;
 
@@ -35,5 +36,23 @@ public class Settings {
 
 	public static void setLastOpenedFile(File f) {
 		prefs.put("last_opened_file", f.getAbsolutePath());
+	}
+
+	public static String getEditorFontName() {
+		return prefs.get("markup_view_font_name", Font.SANS_SERIF);
+	}
+
+	public static int getEditorFontStyle() {
+		return prefs.getInt("markup_view_font_style", Font.PLAIN);
+	}
+
+	public static int getEditorFontSize() {
+		return prefs.getInt("markup_view_font_size", 14);
+	}
+
+	public static void setEditorFont(String name, int style, int size) {
+		prefs.put("markup_view_font_name", name);
+		prefs.putInt("markup_view_font_style", style);
+		prefs.putInt("markup_view_font_size", size);
 	}
 }
