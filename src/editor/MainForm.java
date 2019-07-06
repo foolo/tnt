@@ -12,7 +12,7 @@ import org.w3c.dom.Document;
 import conversion.OpenXliffHandler;
 import conversion.ConversionError;
 import xliff_model.ValidationError;
-import conversion.XliffFileValidator;
+import conversion.RainbowXliffValidator;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
@@ -198,7 +198,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		ArrayList<ValidationError> validationErrors;
 		try {
 			xmlData = save_to_string();
-			validationErrors = XliffFileValidator.validate(xmlData);
+			validationErrors = RainbowXliffValidator.validate(xmlData);
 		}
 		catch (SaveException | ParseException ex) {
 			JOptionPane.showMessageDialog(this, "Could not validate file\n" + ex.toString(), "Unexpected error", JOptionPane.ERROR_MESSAGE);

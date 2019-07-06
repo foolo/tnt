@@ -10,7 +10,7 @@ import util.Log;
 import xliff_model.ValidationPath;
 import xliff_model.exceptions.ParseException;
 
-public class XliffFileValidator {
+public class RainbowXliffValidator {
 
 	private static final Pattern FILE_UNIT_PATTERN = Pattern.compile(".*Error in <file> id='([^<&']*)', <unit> id='([^<&']*)'.*");
 	private static final Pattern CODE_PATTERN = Pattern.compile(".*Code id='([^<&']*)' (.*)");
