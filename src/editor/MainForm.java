@@ -3,15 +3,14 @@ package editor;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import rainbow.OpenXliffHandler;
 import rainbow.RainbowError;
-import rainbow.RainbowHandler;
 import xliff_model.ValidationError;
 import rainbow.XliffFileValidator;
 import undo_manager.CaretPosition;
@@ -407,37 +406,33 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (okToClose() == false) {
 			return;
 		}
-		CreatePackageDialog d = new CreatePackageDialog(this, true);
+		CreateXliffDialog d = new CreateXliffDialog(this, true);
 		d.setVisible(true);
 		if (d.getResult() == false) {
 			return;
 		}
-		String inputFile = d.getInputFile();
-		File commonDir = d.getCommonDirectory();
-		String packageName = d.getPackageName();
 
 		File xliffFile;
-		RainbowHandler rainbowHandler = new RainbowHandler();
+		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
-			xliffFile = rainbowHandler.createPackage(inputFile, commonDir.getPath(), packageName);
+			xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSkeletonFile());
 			load_file(xliffFile, true);
 		}
-		catch (IOException | RainbowError ex) {
+		catch (RainbowError ex) {
 			JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
+
 		File f = getXliffTag().getFile().getAbsoluteFile();
-		RainbowHandler rainbowHandler = new RainbowHandler();
+		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
-			File tempDir = Files.createTempDirectory("tnt_tmp_").toFile();
-			String xliffData = save_to_string();
-			File outputDir = rainbowHandler.exportTranslatedFile(tempDir, f, xliffData);
+			File outputDir = converter.exportTranslatedFile(f);
 			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
 		}
-		catch (IOException | RainbowError | SaveException ex) {
-			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
+		catch (IOException | RainbowError ex) {
+			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.getMessage(), "Export result", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 

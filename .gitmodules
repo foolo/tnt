@@ -1,0 +1,3 @@
+[submodule "OpenXLIFF"]
+	path = OpenXLIFF
+	url = https://github.com/rmraya/OpenXLIFF.git
