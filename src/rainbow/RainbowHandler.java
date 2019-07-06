@@ -82,7 +82,7 @@ public class RainbowHandler {
 		return files;
 	}
 
-	public File createPackage(String inputFile, String commonDir, String packageName) throws RainbowError, IOException {
+	public File createPackage(String inputFile, String commonDir, String packageName, String sourceLanguage, String targetLanguage) throws RainbowError, IOException {
 		Log.debug("createPackage: input file: " + inputFile);
 		Log.debug("createPackage: common package directory: " + commonDir);
 		Log.debug("createPackage: package name: " + packageName);
@@ -110,7 +110,7 @@ public class RainbowHandler {
 		copy(getResource("/res/rainbowUtilities.xml"), new File(tempDir, "rainbowUtilities.xml").getAbsolutePath());
 
 		CommandLine2 cl = new CommandLine2();
-		cl.execute(tempDir, plnTmpFile.getPath(), inputFile, false);
+		cl.execute(tempDir, plnTmpFile.getPath(), inputFile, false, sourceLanguage, targetLanguage);
 		File workDir = Paths.get(commonDir, packageName, "work").toFile();
 		if ((workDir.exists() == false) || (workDir.isDirectory() == false)) {
 			throw new RainbowError("Work directory not created or not a directory: " + workDir);
@@ -155,7 +155,7 @@ public class RainbowHandler {
 		}
 
 		CommandLine2 cl = new CommandLine2();
-		cl.execute(tempDir.toString(), plnTmpFile.getAbsolutePath(), inputFile, true);
+		cl.execute(tempDir.toString(), plnTmpFile.getAbsolutePath(), inputFile, true, null, null);
 
 		Manifest manifest;
 		try {

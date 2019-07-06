@@ -26,6 +26,7 @@ import net.sf.okapi.applications.rainbow.lib.FormatManager;
 import net.sf.okapi.applications.rainbow.lib.LanguageManager;
 import net.sf.okapi.applications.rainbow.pipeline.PipelineWrapper;
 import net.sf.okapi.common.ExecutionContext;
+import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.Util;
 import net.sf.okapi.common.exceptions.OkapiException;
 import net.sf.okapi.common.filters.DefaultFilters;
@@ -43,13 +44,13 @@ public class CommandLine2 {
 	private PluginsManager pm;
 	private ExecutionContext context;
 
-	public void execute(String sharedFolder, String pipelineFile, String inputFile, boolean export) throws RainbowError {
+	public void execute(String sharedFolder, String pipelineFile, String inputFile, boolean export, String sourceLanguage, String targetLanguage) throws RainbowError {
 		try {
 			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: ", 150));
 			System.setOut(ps);
 			System.setErr(ps);
 			initialize(sharedFolder);
-			parseArguments(inputFile, export);
+			parseArguments(inputFile, export, sourceLanguage, targetLanguage);
 			launchPipeline(pipelineFile);
 		}
 		catch (Exception e) {
@@ -58,7 +59,7 @@ public class CommandLine2 {
 		}
 	}
 
-	private void parseArguments(String inputFile, boolean export) throws OkapiException {
+	private void parseArguments(String inputFile, boolean export, String sourceLanguage, String targetLanguage) throws OkapiException {
 		// Creates default project
 		FormatManager fm = new FormatManager();
 		fm.load(null); // TODO: implement real external file, for now it's hard-coded
@@ -76,6 +77,10 @@ public class CommandLine2 {
 		if (export) {
 			Input inp = prj.getLastItem(0);
 			inp.filterConfigId = "okf_rainbowkit-noprompt"; // avoid creating ManifestDialog in RainbowKitFilter
+		}
+		else {
+			prj.setSourceLanguage(LocaleId.fromString(sourceLanguage));
+			prj.setTargetLanguage(LocaleId.fromString(targetLanguage));
 		}
 	}
 

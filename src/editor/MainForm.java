@@ -415,11 +415,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		String inputFile = d.getInputFile();
 		File commonDir = d.getCommonDirectory();
 		String packageName = d.getPackageName();
+		String sourceLanguage = d.getSourceLanguage();
+		String targetLanguage = d.getTargetLanguage();
 
 		File xliffFile;
 		RainbowHandler rainbowHandler = new RainbowHandler();
 		try {
-			xliffFile = rainbowHandler.createPackage(inputFile, commonDir.getPath(), packageName);
+			xliffFile = rainbowHandler.createPackage(inputFile, commonDir.getPath(), packageName, sourceLanguage, targetLanguage);
 			load_file(xliffFile, true);
 		}
 		catch (IOException | RainbowError ex) {

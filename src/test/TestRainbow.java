@@ -20,7 +20,7 @@ public class TestRainbow {
 			File packageDirectory = new File(System.getProperty("user.home"), "RainbowPackages");
 			String timestamp = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH.mm.ss"));
 			String packageName = "tnt_" + timestamp;
-			rainbowHandler.createPackage(inputFile, packageDirectory.getAbsolutePath(), packageName);
+			rainbowHandler.createPackage(inputFile, packageDirectory.getAbsolutePath(), packageName, "en", "sv");
 		}
 		catch (IOException | RainbowError ex) {
 			Logger.getLogger(TestRainbow.class.getName()).log(Level.SEVERE, null, ex);
