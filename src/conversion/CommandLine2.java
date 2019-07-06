@@ -13,8 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 ===========================================================================*/
-package rainbow;
+package conversion;
 
+import conversion.ConversionError;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URLDecoder;
@@ -44,7 +45,7 @@ public class CommandLine2 {
 	private PluginsManager pm;
 	private ExecutionContext context;
 
-	public void execute(String sharedFolder, String pipelineFile, String inputFile, boolean export, String sourceLanguage, String targetLanguage) throws RainbowError {
+	public void execute(String sharedFolder, String pipelineFile, String inputFile, boolean export, String sourceLanguage, String targetLanguage) throws ConversionError {
 		try {
 			PrintStream ps = new PrintStream(new LogOutputStream("RAINBOW: ", 150));
 			System.setOut(ps);
@@ -55,7 +56,7 @@ public class CommandLine2 {
 		}
 		catch (Exception e) {
 			Log.err(e);
-			throw new RainbowError(e.getMessage());
+			throw new ConversionError(e.getMessage());
 		}
 	}
 

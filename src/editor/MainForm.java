@@ -10,10 +10,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import rainbow.RainbowError;
-import rainbow.RainbowHandler;
+import conversion.ConversionError;
+import conversion.RainbowHandler;
 import xliff_model.ValidationError;
-import rainbow.XliffFileValidator;
+import conversion.XliffFileValidator;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
@@ -424,7 +424,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			xliffFile = rainbowHandler.createPackage(inputFile, commonDir.getPath(), packageName, sourceLanguage, targetLanguage);
 			load_file(xliffFile, true);
 		}
-		catch (IOException | RainbowError ex) {
+		catch (IOException | ConversionError ex) {
 			JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
@@ -438,7 +438,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			File outputDir = rainbowHandler.exportTranslatedFile(tempDir, f, xliffData);
 			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
 		}
-		catch (IOException | RainbowError | SaveException ex) {
+		catch (IOException | ConversionError | SaveException ex) {
 			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
