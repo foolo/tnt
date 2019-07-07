@@ -3,7 +3,14 @@ package editor;
 import java.awt.Font;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import util.Log;
 import util.Settings;
+import xliff_model.Tag;
 
 public class PreferencesForm extends javax.swing.JDialog {
 
@@ -30,6 +37,7 @@ public class PreferencesForm extends javax.swing.JDialog {
 				updateFontPreview();
 			}
 		});
+		addSampleText();
 	}
 
 	boolean getResult() {
@@ -40,11 +48,36 @@ public class PreferencesForm extends javax.swing.JDialog {
 		return (jCheckBoxBold.isSelected() ? Font.BOLD : 0) + (jCheckBoxItalic.isSelected() ? Font.ITALIC : 0);
 	}
 
+	final void addSampleText() {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = null;
+		try {
+			builder = dbf.newDocumentBuilder();
+		}
+		catch (ParserConfigurationException ex) {
+			Log.err(ex);
+			return;
+		}
+		Document doc = builder.newDocument();
+		Element n1 = doc.createElement("n1");
+		Element n2 = doc.createElement("n2");
+		n1.setAttribute("id", "1");
+		n2.setAttribute("id", "2");
+
+		markupView1.insertText("Sample text. ");
+		markupView1.insertTag(new Tag(n1, Tag.Type.START));
+		markupView1.insertText("Sample text.");
+		markupView1.insertTag(new Tag(n1, Tag.Type.END));
+		markupView1.insertText("This font will be used in the segment view");
+		markupView1.insertTag(new Tag(n2, Tag.Type.EMPTY));
+	}
+
 	void updateFontPreview() {
 		String name = jComboBoxFont.getSelectedItem().toString();
 		int style = getFontStyle();
 		Integer size = (Integer) jSpinnerFontSize.getValue();
-		jTextArea1.setFont(new Font(name, style, size));
+		//jTextArea1.setFont(new Font(name, style, size));
+		markupView1.setFont(new Font(name, style, size));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,11 +88,11 @@ public class PreferencesForm extends javax.swing.JDialog {
         jSpinnerFontSize = new javax.swing.JSpinner();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jComboBoxFont = new javax.swing.JComboBox<>();
         jCheckBoxBold = new javax.swing.JCheckBox();
         jCheckBoxItalic = new javax.swing.JCheckBox();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        markupView1 = new editor.MarkupView();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -73,20 +106,11 @@ public class PreferencesForm extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Font settings"));
 
-        jSpinnerFontSize.setModel(new javax.swing.SpinnerNumberModel(14, 6, 24, 1));
+        jSpinnerFontSize.setModel(new javax.swing.SpinnerNumberModel(14, 10, 24, 1));
 
         jLabel2.setText("Font size");
 
         jLabel1.setText("Font style");
-
-        jScrollPane1.setMinimumSize(new java.awt.Dimension(22, 100));
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(4);
-        jTextArea1.setText("Sample text. This font will be used in the segment view.");
-        jScrollPane1.setViewportView(jTextArea1);
 
         jComboBoxFont.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,6 +132,9 @@ public class PreferencesForm extends javax.swing.JDialog {
             }
         });
 
+        markupView1.setEditable(false);
+        jScrollPane2.setViewportView(markupView1);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -115,7 +142,9 @@ public class PreferencesForm extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -127,8 +156,8 @@ public class PreferencesForm extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(jCheckBoxBold)
                         .addGap(18, 18, 18)
-                        .addComponent(jCheckBoxItalic)))
-                .addContainerGap())
+                        .addComponent(jCheckBoxItalic)
+                        .addGap(210, 220, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,9 +172,9 @@ public class PreferencesForm extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinnerFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jButton1.setText("OK");
@@ -230,8 +259,8 @@ public class PreferencesForm extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSpinner jSpinnerFontSize;
-    private javax.swing.JTextArea jTextArea1;
+    private editor.MarkupView markupView1;
     // End of variables declaration//GEN-END:variables
 }
