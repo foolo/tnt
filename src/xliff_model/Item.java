@@ -8,5 +8,5 @@ public interface Item {
 
 	void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments);
 
-	public ArrayList<UnitTag> getUnitsArray();
+	ArrayList<SegmentTag> getSegmentsArray();
 }

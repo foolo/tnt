@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
 import xliff_model.FileTag;
-import xliff_model.UnitTag;
+import xliff_model.SegmentTag;
 import xliff_model.ValidationPath;
 
 public class FileView extends javax.swing.JPanel {
@@ -25,24 +25,20 @@ public class FileView extends javax.swing.JPanel {
 
 	boolean showValidiationError(String message, ValidationPath path) {
 		for (Component c : jPanelItems.getComponents()) {
-			UnitView unitView = (UnitView) c;
-			if (unitView.getUnitId().equals(path.unitId)) {
-				return unitView.showValidationError(message, path);
+			SegmentView segmentView = (SegmentView) c;
+			if (segmentView.getSegmentId().equals(path.segmentId)) {
+				segmentView.showValidationError(message, path);
+				return true;
 			}
 		}
 		return false;
 	}
 
 	public void update_model(FileTag fileTag) {
-		ArrayList<UnitTag> units = fileTag.getUnitsArray();
-		if (units.size() != jPanelItems.getComponentCount()) {
-			// todo
-			throw new RuntimeException("units.size() != jPanelItems.getComponentCount()");
-		}
-		for (int i = 0; i < units.size(); i++) {
-			UnitView unitView = (UnitView) jPanelItems.getComponent(i);
-			UnitTag unitTag = units.get(i);
-			unitView.setUnitTag(unitTag);
+		ArrayList<SegmentTag> segmentTags = fileTag.getSegmentsArray();
+		for (int i = 0; i < segmentTags.size(); i++) {
+			SegmentView segmentView = (SegmentView) jPanelItems.getComponent(i);
+			segmentView.setSegmentTag(segmentTags.get(i));
 		}
 	}
 
@@ -59,17 +55,15 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void populate_units(ArrayList<UnitTag> unitTags) {
-		for (UnitTag u : unitTags) {
-			UnitView unitView = new UnitView(mainForm, u.getId());
-			unitView.populateSegments(u.getSegments(), this);
-			jPanelItems.add(unitView);
+	void populate_segments(ArrayList<SegmentTag> segmentTags) {
+		for (SegmentTag st : segmentTags) {
+			jPanelItems.add(new SegmentView(mainForm, this, st.getId()));
 		}
 	}
 
 	void setEditorFont(Font f) {
 		for (Component c : jPanelItems.getComponents()) {
-			((UnitView) c).setEditorFont(f);
+			((SegmentView) c).setEditorFont(f);
 		}
 	}
 
