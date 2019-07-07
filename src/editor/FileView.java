@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 import xliff_model.FileTag;
 import xliff_model.UnitTag;
@@ -63,6 +64,12 @@ public class FileView extends javax.swing.JPanel {
 			UnitView unitView = new UnitView(mainForm, u.getId());
 			unitView.populateSegments(u.getSegments(), this);
 			jPanelItems.add(unitView);
+		}
+	}
+
+	void setEditorFont(Font f) {
+		for (Component c : jPanelItems.getComponents()) {
+			((UnitView) c).setEditorFont(f);
 		}
 	}
 

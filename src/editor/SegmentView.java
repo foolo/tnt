@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
@@ -35,7 +36,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 		@Override
 		public void changedUpdate(DocumentEvent e) {
-			update(e.getOffset(), e.getOffset());
 		}
 	};
 
@@ -255,6 +255,10 @@ public class SegmentView extends javax.swing.JPanel {
 		handleKeyPress(evt);
     }//GEN-LAST:event_markupViewTargetKeyPressed
 
+	void setEditorFont(Font f) {
+		markupViewSource.setFont(f);
+		markupViewTarget.setFont(f);
+	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelState;

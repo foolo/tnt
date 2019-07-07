@@ -1,6 +1,7 @@
 package editor;
 
 import editor.javax.swing.plaf.basic.TextTransferHandler;
+import java.awt.Font;
 import xliff_model.TaggedText;
 import xliff_model.Tag;
 import java.util.ArrayList;
@@ -35,8 +36,19 @@ public class MarkupView extends JTextPane {
 		super.setTransferHandler(newHandler);
 	}
 
+	@Override
+	public void setFont(Font font) {
+		super.setFont(font);
+		StyledDocument doc = getStyledDocument();
+		if (doc != null) {
+			for (TagIcon tagIcon : getIcons(doc)) {
+				tagIcon.setSize(font.getSize());
+			}
+		}
+	}
+
 	void insertTag(Tag tag) {
-		insertIcon(new TagIcon(tag));
+		insertIcon(new TagIcon(tag, getFont().getSize(), this));
 	}
 
 	static TagIcon getIcon(Element e) {
@@ -51,6 +63,29 @@ public class MarkupView extends JTextPane {
 			}
 		}
 		return null;
+	}
+
+	boolean isSelected(TagIcon icon) {
+		int start = getSelectionStart();
+		int end = getSelectionEnd();
+		StyledDocument doc = getStyledDocument();
+		for (int i = start; i < end; i++) {
+			if (icon == getIcon(doc.getCharacterElement(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static ArrayList<TagIcon> getIcons(StyledDocument doc) {
+		ArrayList<TagIcon> res = new ArrayList<>();
+		for (int i = 0; i < doc.getLength(); i++) {
+			TagIcon icon = getIcon(doc.getCharacterElement(i));
+			if (icon != null) {
+				res.add(icon);
+			}
+		}
+		return res;
 	}
 
 	public static String getDocText(StyledDocument doc) {
