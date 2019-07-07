@@ -15,6 +15,7 @@ import conversion.RainbowHandler;
 import xliff_model.ValidationError;
 import conversion.RainbowXliffValidator;
 import java.awt.Font;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
@@ -391,6 +392,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 		JFileChooser fc = new JFileChooser(Settings.getLastOpenedFile().getParentFile());
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLIFF files", "xlf");
+		fc.addChoosableFileFilter(filter);
+		fc.setFileFilter(filter);
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
