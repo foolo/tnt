@@ -430,6 +430,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 		CreatePackageDialog d = new CreatePackageDialog(this, true);
+		d.setLocationRelativeTo(this);
 		d.setVisible(true);
 		if (d.getResult() == false) {
 			return;
