@@ -196,7 +196,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	boolean validateFile() {
-
 		String xmlData;
 		ArrayList<ValidationError> validationErrors;
 		try {
@@ -470,6 +469,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
+	void jumpToNextSegment(SegmentView currentSegmentView) {
+		FileView fileView = (FileView) jTabbedPane1.getSelectedComponent();
+		if (fileView != null) {
+			fileView.jumpToNextSegment(currentSegmentView);
+		}
+	}
+
     private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
 		undoManager.markSnapshot();
 		SegmentView segmentView = SegmentView.getActiveSegmentView();
@@ -490,7 +496,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			segmentView.getSegmentTag().stage();
 			if (validateFile()) {
 				segmentView.setState(SegmentTag.State.TRANSLATED);
+				jumpToNextSegment(segmentView);
 			}
+		}
+		else {
+			jumpToNextSegment(segmentView);
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 

@@ -151,6 +151,10 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
+	void grabFocusTarget() {
+		markupViewTarget.grabFocus();
+	}
+
 	private static SegmentView lastActiveSegmentView = null;
 
 	static void setActiveSegmentView(SegmentView segmentView) {

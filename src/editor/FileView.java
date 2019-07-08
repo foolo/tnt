@@ -67,6 +67,19 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
+	void jumpToNextSegment(SegmentView sv) {
+		boolean found = false;
+		for (Component c : jPanelItems.getComponents()) {
+			if (found) {
+				((SegmentView) c).grabFocusTarget();
+				return;
+			}
+			if ((SegmentView) c == sv) {
+				found = true;
+			}
+		}
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
