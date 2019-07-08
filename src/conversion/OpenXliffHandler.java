@@ -2,11 +2,9 @@ package conversion;
 
 import com.maxprograms.converters.Convert;
 import com.maxprograms.converters.Merge;
-import conversion.ConversionError;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -18,31 +16,25 @@ public class OpenXliffHandler {
 		Files.copy(source, Paths.get(destination), StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	File getResourceDir() {
-		try {
-			File classLocation = new File(OpenXliffHandler.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-			if (classLocation.isFile() && classLocation.getPath().endsWith(".jar")) {
-				return classLocation.getParentFile();
-			}
-			else {
-				return new File(classLocation.getParentFile().getParentFile(), "OpenXLIFF"); // build/classes/../../OpenXLIFF
-			}
+	void checkResource(File f) throws ConversionError {
+		if (f.exists() == false) {
+			throw new ConversionError("Expected resource not found in working directory: " + f);
 		}
-		catch (URISyntaxException ex) {
-			Log.err(ex);
-		}
-		return new File(System.getProperty("user.dir"));
+	}
+
+	void checkResources() throws ConversionError {
+		File dir = new File(System.getProperty("user.dir"));
+		Log.debug("checkResources: " + dir);
+		checkResource(new File(dir, "catalog/catalog.xml"));
+		checkResource(new File(dir, "srx/default.srx"));
+		checkResource(new File(dir, "xmlfilter"));
 	}
 
 	public File createPackage(File inputFile, File xliffFile, File skeletonFile, String sourceLanguage, String targetLanguage) throws ConversionError {
 		Log.debug("createPackage: inputFile: " + inputFile);
 		Log.debug("createPackage: xliffFile: " + xliffFile);
 		Log.debug("createPackage: skeletonFile: " + skeletonFile);
-		File resourceDir = getResourceDir();
-		Log.debug("createPackage: resourceDir: " + resourceDir);
-
-		System.setProperty("user.dir", resourceDir.getAbsolutePath());
-		Log.debug("user.dir: " + System.getProperty("user.dir"));
+		checkResources();
 
 		xliffFile.delete();
 		skeletonFile.delete();
@@ -86,10 +78,7 @@ public class OpenXliffHandler {
 
 	public File exportTranslatedFile(File xliffFile) throws ConversionError, IOException {
 		Log.debug("exportTranslatedFile: xliffFile: " + xliffFile);
-
-		File resourceDir = getResourceDir();
-		System.setProperty("user.dir", resourceDir.getAbsolutePath());
-		Log.debug("user.dir: " + System.getProperty("user.dir"));
+		checkResources();
 
 		String targetFileName = getTargetFilename(xliffFile.getName(), "sv");
 		File targetFile = new File(xliffFile.getParentFile(), targetFileName);
