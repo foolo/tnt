@@ -11,6 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import util.Log;
 import util.Settings;
 
@@ -292,6 +293,10 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 
     private void jButtonChooseInputFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseInputFilesActionPerformed
 		JFileChooser fc = new JFileChooser(Settings.getInputFileDirectory());
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt");
+		fc.addChoosableFileFilter(filter);
+		fc.setFileFilter(filter);
+
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;

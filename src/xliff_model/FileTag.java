@@ -12,7 +12,7 @@ import util.StringUtil;
 public class FileTag {
 
 	private final ArrayList<Item> items = new ArrayList<>();
-	private ArrayList<UnitTag> unitsArray = null;
+	private ArrayList<SegmentTag> segmentArray = null;
 	private final String originalFilePath;
 	private final String id;
 
@@ -64,14 +64,14 @@ public class FileTag {
 		return items;
 	}
 
-	public ArrayList<UnitTag> getUnitsArray() {
-		if (unitsArray == null) {
-			unitsArray = new ArrayList<>();
+	public ArrayList<SegmentTag> getSegmentsArray() {
+		if (segmentArray == null) {
+			segmentArray = new ArrayList<>();
 			for (Item i : items) {
-				unitsArray.addAll(i.getUnitsArray());
+				segmentArray.addAll(i.getSegmentsArray());
 			}
 		}
-		return unitsArray;
+		return segmentArray;
 	}
 
 	public FileTag copy() {

@@ -21,13 +21,16 @@ public class Application {
 			public void run() {
 				Log.initializeLogger();
 				MainForm mainForm = new MainForm();
+				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
 				if (args.length > 0) {
 					mainForm.load_file(new File(args[0]), true);
 				}
 				else {
 					File lastOpenedFile = Settings.getLastOpenedFile();
-					mainForm.load_file(lastOpenedFile, false);
+					if (lastOpenedFile != null) {
+						mainForm.load_file(lastOpenedFile, false);
+					}
 				}
 			}
 		});

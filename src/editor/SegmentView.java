@@ -151,6 +151,10 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
+	void grabFocusTarget() {
+		markupViewTarget.grabFocus();
+	}
+
 	private static SegmentView lastActiveSegmentView = null;
 
 	static void setActiveSegmentView(SegmentView segmentView) {
@@ -170,12 +174,18 @@ public class SegmentView extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         markupViewSource = new editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
         markupViewTarget = new editor.MarkupView(this);
+        jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
+
+        jPanel1.setMinimumSize(new java.awt.Dimension(50, 50));
+        jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
+        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
         markupViewSource.setEditable(false);
         markupViewSource.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -190,6 +200,8 @@ public class SegmentView extends javax.swing.JPanel {
         });
         jScrollPane3.setViewportView(markupViewSource);
 
+        jPanel1.add(jScrollPane3);
+
         markupViewTarget.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewTargetFocusGained(evt);
@@ -202,36 +214,51 @@ public class SegmentView extends javax.swing.JPanel {
         });
         jScrollPane4.setViewportView(markupViewTarget);
 
+        jPanel1.add(jScrollPane4);
+
+        jPanel2.setMinimumSize(new java.awt.Dimension(50, 50));
+        jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
+
         jLabelState.setText("jLabel1");
 
         jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
         jLabelValidationError.setText("jLabel1");
         jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelState)
+                    .addComponent(jLabelValidationError))
+                .addContainerGap(70, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelState)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelValidationError)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelState)
-                    .addComponent(jLabelValidationError))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelState)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelValidationError))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -263,6 +290,8 @@ public class SegmentView extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelState;
     private javax.swing.JLabel jLabelValidationError;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private editor.MarkupView markupViewSource;
