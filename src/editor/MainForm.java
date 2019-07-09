@@ -15,6 +15,7 @@ import conversion.RainbowHandler;
 import xliff_model.ValidationError;
 import conversion.RainbowXliffValidator;
 import java.awt.Font;
+import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
@@ -47,11 +48,33 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return undoManager;
 	}
 
-	void updateMenu() {
+	void updateRecentFilesMenu() {
+		ArrayList<String> recentFiles = Settings.getRecentFiles();
+		jMenuRecentFiles.removeAll();
+		for (int i = recentFiles.size() - 1; i >= 0; i--) {
+			String s = recentFiles.get(i);
+			JMenuItem item = new JMenuItem(s);
+			jMenuRecentFiles.add(item);
+			item.addActionListener(new java.awt.event.ActionListener() {
+				@Override
+				public void actionPerformed(java.awt.event.ActionEvent evt) {
+					if (okToClose() == false) {
+						return;
+					}
+					load_file(new File(item.getText()), true);
+				}
+			});
+		}
+		jMenuRecentFiles.addSeparator();
+		jMenuRecentFiles.add(jMenuItemClearRecentFiles);
+	}
+
+	void updateMenus() {
 		jMenuItemExport.setEnabled(undoManager != null);
 		jMenuItemSave.setEnabled(undoManager != null);
 		jMenuItemCopySrc.setEnabled(undoManager != null);
 		jMenuItemMarkTranslated.setEnabled(undoManager != null);
+		updateRecentFilesMenu();
 	}
 
 	XliffTag load_xliff(File f) throws LoadException {
@@ -83,10 +106,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			if (promptErrors) {
 				JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			}
+			Settings.removeRecentFile(f.getAbsolutePath());
+			updateRecentFilesMenu();
 			return;
 		}
 		undoManager = new UndoManager();
-		updateMenu();
 		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
 		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), this);
 		jTabbedPane1.removeAll();
@@ -100,7 +124,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			fileViews.add(fv);
 		}
 		setTitle(f.toString());
-		Settings.setLastOpenedFile(f);
+		Settings.addRecentFile(f.getAbsolutePath());
+		updateMenus();
 	}
 
 	XliffTag getXliffTag() {
@@ -253,6 +278,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenu1 = new javax.swing.JMenu();
         jMenuItemCreatePackage = new javax.swing.JMenuItem();
         jMenuItemOpen = new javax.swing.JMenuItem();
+        jMenuRecentFiles = new javax.swing.JMenu();
+        jMenuItemClearRecentFiles = new javax.swing.JMenuItem();
         jMenuItemExport = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
@@ -291,6 +318,18 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu1.add(jMenuItemOpen);
+
+        jMenuRecentFiles.setText("Recent files");
+
+        jMenuItemClearRecentFiles.setText("Clear recent files");
+        jMenuItemClearRecentFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemClearRecentFilesActionPerformed(evt);
+            }
+        });
+        jMenuRecentFiles.add(jMenuItemClearRecentFiles);
+
+        jMenu1.add(jMenuRecentFiles);
 
         jMenuItemExport.setText("Export translated file(s)");
         jMenuItemExport.setEnabled(false);
@@ -390,7 +429,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (okToClose() == false) {
 			return;
 		}
-		JFileChooser fc = new JFileChooser(Settings.getLastOpenedFile().getParentFile());
+		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLIFF files", "xlf");
 		fc.addChoosableFileFilter(filter);
 		fc.setFileFilter(filter);
@@ -398,8 +437,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
+		Settings.setOpenDirectory(fc.getSelectedFile().getParentFile());
 		load_file(fc.getSelectedFile(), true);
-		Settings.setLastOpenedFile(fc.getSelectedFile());
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
@@ -524,6 +563,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		applyPreferences();
     }//GEN-LAST:event_formWindowActivated
 
+    private void jMenuItemClearRecentFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemClearRecentFilesActionPerformed
+		Settings.clearRecentFiles();
+		updateRecentFilesMenu();
+    }//GEN-LAST:event_jMenuItemClearRecentFilesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -531,6 +575,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItemClearRecentFiles;
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
@@ -539,6 +584,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemPreferences;
     private javax.swing.JMenuItem jMenuItemSave;
+    private javax.swing.JMenu jMenuRecentFiles;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

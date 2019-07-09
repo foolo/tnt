@@ -28,7 +28,9 @@ public class Application {
 				}
 				else {
 					File lastOpenedFile = Settings.getLastOpenedFile();
-					mainForm.load_file(lastOpenedFile, false);
+					if (lastOpenedFile != null) {
+						mainForm.load_file(lastOpenedFile, false);
+					}
 				}
 			}
 		});
