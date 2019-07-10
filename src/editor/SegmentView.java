@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
+import undo_manager.UndoManager;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
 import xliff_model.ValidationPath;
@@ -41,14 +42,14 @@ public class SegmentView extends javax.swing.JPanel {
 	};
 
 	SegmentTag segmentTag;
-	private final MainForm mainForm;
+	private final UndoManager undoManager;
 	private final FileView fileView;
 	private final String segmentId;
 	boolean ignoreNextCaretUpdate = false;
 
-	SegmentView(MainForm mainForm, FileView fileView, String segmentId) {
+	SegmentView(UndoManager undoManager, FileView fileView, String segmentId) {
 		initComponents();
-		this.mainForm = mainForm;
+		this.undoManager = undoManager;
 		this.fileView = fileView;
 		this.segmentId = segmentId;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
@@ -84,7 +85,7 @@ public class SegmentView extends javax.swing.JPanel {
 		if (setStateField(state)) {
 			int pos = markupViewTarget.getCaretPosition();
 			notifyUndoManager(pos, pos);
-			mainForm.getUndoManager().markSnapshot();
+			undoManager.markSnapshot();
 		}
 	}
 
@@ -92,8 +93,8 @@ public class SegmentView extends javax.swing.JPanel {
 		return segmentTag;
 	}
 
-	public MainForm getMainForm() {
-		return mainForm;
+	public UndoManager getUndoManager() {
+		return undoManager;
 	}
 
 	public FileView getFileView() {
@@ -135,18 +136,18 @@ public class SegmentView extends javax.swing.JPanel {
 	void notifyUndoManager(int caretPos1, int caretPos2) {
 		CaretPosition pos1 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos1);
 		CaretPosition pos2 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos2);
-		mainForm.getUndoManager().getCurrentState().setModified(pos1, pos2);
+		undoManager.getCurrentState().setModified(pos1, pos2);
 	}
 
 	void handleKeyPress(KeyEvent evt) {
 		if (evt.getModifiers() == CTRL_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
-					mainForm.getUndoManager().undo();
+					undoManager.undo();
 					evt.consume();
 					break;
 				case KeyEvent.VK_Y:
-					mainForm.getUndoManager().redo();
+					undoManager.redo();
 					evt.consume();
 					break;
 			}
@@ -270,7 +271,7 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
-		mainForm.getUndoManager().markSnapshot();
+		undoManager.markSnapshot();
 		markupViewSource.getCaret().setVisible(true);
 		lastActiveSegmentView = this;
     }//GEN-LAST:event_markupViewSourceFocusGained
@@ -280,9 +281,8 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewSourceKeyPressed
 
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
-		mainForm.getUndoManager().markSnapshot();
+		undoManager.markSnapshot();
 		lastActiveSegmentView = this;
-
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
@@ -294,7 +294,7 @@ public class SegmentView extends javax.swing.JPanel {
 			ignoreNextCaretUpdate = false;
 			return;
 		}
-		mainForm.getUndoManager().markSnapshot();
+		undoManager.markSnapshot();
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
 	void setEditorFont(Font f) {

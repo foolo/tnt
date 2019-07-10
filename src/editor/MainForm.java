@@ -116,9 +116,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jTabbedPane1.removeAll();
 		fileViews.clear();
 		for (FileTag fileTag : xliffTag.getFiles()) {
-			FileView fv = new FileView(this, fileTag.getId());
+			FileView fv = new FileView(fileTag.getId());
 			fv.setName(fileTag.getAlias());
-			fv.populate_segments(fileTag.getSegmentsArray());
+			fv.populate_segments(fileTag.getSegmentsArray(), undoManager);
 			fv.update_model(fileTag);
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);

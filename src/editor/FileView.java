@@ -3,17 +3,16 @@ package editor;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
+import undo_manager.UndoManager;
 import xliff_model.FileTag;
 import xliff_model.SegmentTag;
 import xliff_model.ValidationPath;
 
 public class FileView extends javax.swing.JPanel {
 
-	private final MainForm mainForm;
 	private final String fileId;
 
-	public FileView(MainForm mainForm, String fileId) {
-		this.mainForm = mainForm;
+	public FileView(String fileId) {
 		this.fileId = fileId;
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
@@ -55,9 +54,9 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void populate_segments(ArrayList<SegmentTag> segmentTags) {
+	void populate_segments(ArrayList<SegmentTag> segmentTags, UndoManager undoManager) {
 		for (SegmentTag st : segmentTags) {
-			jPanelItems.add(new SegmentView(mainForm, this, st.getId()));
+			jPanelItems.add(new SegmentView(undoManager, this, st.getId()));
 		}
 	}
 
