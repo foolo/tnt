@@ -8,6 +8,7 @@ import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
 import undo_manager.CaretPosition;
 import undo_manager.UndoManager;
@@ -19,7 +20,13 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private final DocumentListener targetDocumentListener = new DocumentListener() {
 
-		void update(int caretPosition1, int caretPosition2) {
+		EventType lastEventType = null;
+
+		void update(int caretPosition1, int caretPosition2, EventType eventType) {
+			if (eventType != lastEventType) {
+				undoManager.markSnapshot();
+			}
+			lastEventType = eventType;
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
 			setStateField(SegmentTag.State.INITIAL);
 			notifyUndoManager(caretPosition1, caretPosition2);
@@ -28,12 +35,12 @@ public class SegmentView extends javax.swing.JPanel {
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			update(e.getOffset(), e.getOffset() + e.getLength());
+			update(e.getOffset(), e.getOffset() + e.getLength(), e.getType());
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			update(e.getOffset() + e.getLength(), e.getOffset());
+			update(e.getOffset() + e.getLength(), e.getOffset(), e.getType());
 		}
 
 		@Override
