@@ -151,7 +151,19 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
+	void removeSelection() {
+		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
+		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
+		try {
+			getDocument().remove(p0, p1 - p0);
+		}
+		catch (BadLocationException ex) {
+			Log.err(ex);
+		}
+	}
+
 	public void insertTaggedText(TaggedText t) {
+		removeSelection();
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
 				String text = ((Text) c).getContent();
