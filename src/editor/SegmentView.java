@@ -22,6 +22,7 @@ public class SegmentView extends javax.swing.JPanel {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
 			setStateField(SegmentTag.State.INITIAL);
 			notifyUndoManager(caretPosition1, caretPosition2);
+			ignoreNextCaretUpdate = true;
 		}
 
 		@Override
@@ -43,6 +44,7 @@ public class SegmentView extends javax.swing.JPanel {
 	private final MainForm mainForm;
 	private final FileView fileView;
 	private final String segmentId;
+	boolean ignoreNextCaretUpdate = false;
 
 	SegmentView(MainForm mainForm, FileView fileView, String segmentId) {
 		initComponents();
@@ -202,6 +204,11 @@ public class SegmentView extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane3);
 
+        markupViewTarget.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                markupViewTargetCaretUpdate(evt);
+            }
+        });
         markupViewTarget.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewTargetFocusGained(evt);
@@ -281,6 +288,14 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
 		handleKeyPress(evt);
     }//GEN-LAST:event_markupViewTargetKeyPressed
+
+    private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
+		if (ignoreNextCaretUpdate) {
+			ignoreNextCaretUpdate = false;
+			return;
+		}
+		mainForm.getUndoManager().markSnapshot();
+    }//GEN-LAST:event_markupViewTargetCaretUpdate
 
 	void setEditorFont(Font f) {
 		markupViewSource.setFont(f);
