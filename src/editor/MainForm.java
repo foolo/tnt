@@ -241,10 +241,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	@Override
 	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
 		XliffTag xliffTag = (XliffTag) model;
-		if (fileViews.size() != xliffTag.getFiles().size()) {
-			Log.err("notify_undo: fileViews.size() != xliffTag.getFiles().size() " + fileViews.size() + ", " + xliffTag.getFiles().size());
-			return;
-		}
 		for (int i = 0; i < fileViews.size(); i++) {
 			fileViews.get(i).update_model(xliffTag.getFiles().get(i));
 		}

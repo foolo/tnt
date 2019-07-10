@@ -9,7 +9,25 @@ import util.Settings;
 
 public class Application {
 
+	public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+		public void handle(Throwable thrown) {
+			handleException(Thread.currentThread().getName(), thrown);
+		}
+
+		@Override
+		public void uncaughtException(Thread thread, Throwable thrown) {
+			handleException(thread.getName(), thrown);
+		}
+
+		protected void handleException(String tname, Throwable thrown) {
+			Log.err(thrown);
+		}
+	}
+
 	public static void main(String args[]) {
+		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
+		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		try {
 			javax.swing.UIManager.setLookAndFeel(new MetalLookAndFeel());
 		}
