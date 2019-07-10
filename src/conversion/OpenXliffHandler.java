@@ -84,16 +84,16 @@ public class OpenXliffHandler {
 		File targetFile = new File(xliffFile.getParentFile(), targetFileName);
 		Log.debug("exportTranslatedFile: targetFile: " + targetFile);
 
+		targetFile.delete();
 		String args[] = new String[]{
 			"-xliff", xliffFile.getAbsolutePath(),
 			"-target", targetFile.getAbsolutePath()
 		};
-
 		Log.debug("merge args: " + String.join(" ", args));
 		Merge.main(args);
 
-		if (targetFile.getAbsoluteFile().exists() == false) {
-			throw new ConversionError("Expected output file not found: " + targetFile);
+		if (targetFile.getAbsoluteFile().exists() == false || targetFile.getAbsoluteFile().length() == 0) {
+			throw new ConversionError("Expected output file not found or empty: " + targetFile);
 		}
 		return targetFile;
 	}
