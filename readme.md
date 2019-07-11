@@ -4,6 +4,17 @@
 	git submodule update
 
 
+# build and deploy for linux
+
+make sure java and ant is in PATH and run:
+
+	deploy/deploy_appimage.sh
+
+create AppImage
+
+	appimagetool-x86_64.AppImage tnt.AppDir
+
+
 # build and deploy for windows
 
 download and extract:
