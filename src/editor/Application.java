@@ -1,9 +1,12 @@
 package editor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import language.LanguageCollection;
 import util.Log;
 import util.Settings;
 
@@ -38,6 +41,13 @@ public class Application {
 			@Override
 			public void run() {
 				Log.initializeLogger();
+				try {
+					LanguageCollection.loadLanguages();
+				}
+				catch (IOException ex) {
+					Log.err(ex);
+					JOptionPane.showMessageDialog(null, "Could not load language list. Spelling will not be available.\n" + ex.toString(), "", JOptionPane.ERROR_MESSAGE);
+				}
 				MainForm mainForm = new MainForm();
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);

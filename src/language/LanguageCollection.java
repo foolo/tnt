@@ -1,16 +1,74 @@
 package language;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import util.Log;
 
 public class LanguageCollection {
 
 	static ArrayList<Language> languages = new ArrayList<>();
+	static String LANGUAGE_LIST_FILE_VALUE_DELIMITER = ";";
+	static String LANGUAGE_LIST_FILENAME = "languages.txt";
 
 	public static ArrayList<Language> getLanguages() {
 		return languages;
 	}
 
-	static void addLanguage(String name, String code) {
+	static Language decodeLine(String s, int lineNumber) {
+		String[] parts = s.split(LANGUAGE_LIST_FILE_VALUE_DELIMITER, -1);
+		if (parts.length != 3) {
+			return null;
+		}
+		String name = parts[0];
+		String code = parts[1];
+		String path = parts[2];
+		return new Language(name, code, path);
+	}
+
+	static Language findLanguage(String code) {
+		for (Language l : languages) {
+			if (l.code.equals(code)) {
+				return l;
+			}
+		}
+		return null;
+	}
+
+	public static void loadLanguages() throws IOException {
+		File file = new File(LANGUAGE_LIST_FILENAME);
+
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		int lineNumber = 0;
+		while (br.ready()) {
+			lineNumber++;
+			String line = br.readLine();
+			if (line.trim().startsWith("#")) {
+				continue;
+			}
+			Language decodedLanguage = decodeLine(line, lineNumber);
+			if (decodedLanguage == null) {
+				Log.err("decodeLine: " + file + " (line " + lineNumber + "): Invalid format: " + line);
+				continue;
+			}
+			Language l = findLanguage(decodedLanguage.code);
+			if (l == null) {
+				languages.add(decodedLanguage);
+				Log.debug("Added external language " + decodedLanguage + " from " + file);
+			}
+			else {
+				if (decodedLanguage.dictionaryPath.isEmpty() == false) {
+					l.dictionaryPath = decodedLanguage.dictionaryPath;
+					Log.debug("Added spelling dictionary for " + l);
+				}
+			}
+		}
+	}
+
+	private static void addLanguage(String name, String code) {
 		languages.add(new Language(name, code, null));
 	}
 
@@ -57,6 +115,7 @@ public class LanguageCollection {
 		addLanguage("Bulgarian", "bg");
 		addLanguage("Burmese", "my");
 		addLanguage("Catalan", "ca");
+		addLanguage("Catalan (Valencian)", "ca-valencia");
 		addLanguage("Chamorro", "ch");
 		addLanguage("Chechen", "ce");
 		addLanguage("Chinese", "zh");
@@ -80,14 +139,8 @@ public class LanguageCollection {
 		addLanguage("Dzongkha", "dz");
 		addLanguage("English", "en");
 		addLanguage("English (Australia)", "en-AU");
-		addLanguage("English (Belize)", "en-BZ");
 		addLanguage("English (Canada)", "en-CA");
-		addLanguage("English (Caribbean)", "en-029");
-		addLanguage("English (Ireland)", "en-IE");
-		addLanguage("English (Jamaica)", "en-JM");
-		addLanguage("English (New Zealand)", "en-NZ");
 		addLanguage("English (South Africa)", "en-ZA");
-		addLanguage("English (Trinidad and Tobago)", "en-TT");
 		addLanguage("English (United Kingdom)", "en-GB");
 		addLanguage("English (United States)", "en-US");
 		addLanguage("Esperanto", "eo");
@@ -110,11 +163,9 @@ public class LanguageCollection {
 		addLanguage("German", "de");
 		addLanguage("German (Austria)", "de-AT");
 		addLanguage("German (Germany)", "de-DE");
-		addLanguage("German (Liechtenstein)", "de-LI");
-		addLanguage("German (Luxembourg)", "de-LU");
 		addLanguage("German (Switzerland)", "de-CH");
 		addLanguage("Greek", "el");
-		addLanguage("Guarani", "gn");
+		addLanguage("Guarani", "gug");
 		addLanguage("Gujarati", "gu");
 		addLanguage("Haitian", "ht");
 		addLanguage("Hausa", "ha");
@@ -152,7 +203,9 @@ public class LanguageCollection {
 		addLanguage("Kongo", "kg");
 		addLanguage("Korean", "ko");
 		addLanguage("Kuanyama", "kj");
-		addLanguage("Kurdish", "ku");
+		addLanguage("Kurdish, Central", "ckb");
+		addLanguage("Kurdish, Northern (Latin)", "kmr-Latn");
+		addLanguage("Kurdish, Southern", "sdh");
 		addLanguage("Lao", "lo");
 		addLanguage("Latin", "la");
 		addLanguage("Latvian", "lv");
@@ -205,6 +258,7 @@ public class LanguageCollection {
 		addLanguage("Sardinian", "sc");
 		addLanguage("Scottish Gaelic", "gd");
 		addLanguage("Serbian", "sr");
+		addLanguage("Serbian (Latin)", "sr-Latn");
 		addLanguage("Shona", "sn");
 		addLanguage("Sichuan Yi", "ii");
 		addLanguage("Sindhi", "sd");

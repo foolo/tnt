@@ -13,7 +13,8 @@ public class LanguageComboBox extends JComboBox<String> {
 		removeAllItems();
 		addItem("Select language");
 		for (Language l : languages) {
-			addItem(l.name + " (" + l.code + ")");
+			String spelling = (l.dictionaryPath == null) ? "" : " *";
+			addItem(l.name + " (" + l.code + ")" + spelling);
 		}
 	}
 
