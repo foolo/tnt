@@ -2,29 +2,14 @@ package editor;
 
 import java.util.ArrayList;
 import javax.swing.JComboBox;
+import language.Language;
 
 public class LanguageComboBox extends JComboBox<String> {
-
-	static class Language {
-
-		public final String name;
-		public final String code;
-
-		public Language(String name, String code) {
-			this.name = name;
-			this.code = code;
-		}
-
-		@Override
-		public String toString() {
-			return name + " (" + code + ")";
-		}
-	}
 
 	ArrayList<Language> languages = new ArrayList<>();
 
 	void setLanguages(ArrayList<Language> languages) {
-		this.languages = languages;
+		this.languages = (ArrayList<Language>) languages.clone();
 		removeAllItems();
 		addItem("Select language");
 		for (Language l : languages) {
