@@ -1,3 +1,6 @@
 [submodule "dictionaries"]
 	path = dictionaries
 	url = https://github.com/LibreOffice/dictionaries.git
+[submodule "HunspellJNA"]
+	path = HunspellJNA
+	url = https://github.com/dren-dk/HunspellJNA.git
