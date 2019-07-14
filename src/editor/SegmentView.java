@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
+import language.SpellCheck;
 import undo_manager.CaretPosition;
 import undo_manager.UndoManager;
 import xliff_model.SegmentTag;
@@ -64,6 +65,7 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		jLabelValidationError.setText("");
+		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
@@ -226,6 +228,9 @@ public class SegmentView extends javax.swing.JPanel {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 markupViewTargetKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                markupViewTargetKeyReleased(evt);
+            }
         });
         jScrollPane4.setViewportView(markupViewTarget);
 
@@ -303,6 +308,11 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 		undoManager.markSnapshot();
     }//GEN-LAST:event_markupViewTargetCaretUpdate
+
+    private void markupViewTargetKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyReleased
+		int caretLocation = markupViewTarget.getCaret().getDot();
+		SpellCheck.spellCheck(markupViewTarget, caretLocation);
+    }//GEN-LAST:event_markupViewTargetKeyReleased
 
 	void setEditorFont(Font f) {
 		markupViewSource.setFont(f);

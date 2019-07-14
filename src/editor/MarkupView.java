@@ -133,6 +133,20 @@ public class MarkupView extends JTextPane {
 		return getTaggedText(p0, p1, getStyledDocument());
 	}
 
+	public String getPlainText(ArrayList<Integer> plainToTaggedIndexes) {
+		StyledDocument doc = getStyledDocument();
+		String docText = getDocText(doc);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < doc.getLength(); i++) {
+			Element e = doc.getCharacterElement(i);
+			if (getIcon(e) == null) {
+				sb.appendCodePoint(docText.codePointAt(i));
+				plainToTaggedIndexes.add(i);
+			}
+		}
+		return sb.toString();
+	}
+
 	void appendText(String s) {
 		try {
 			getDocument().insertString(getDocument().getLength(), s, null);
