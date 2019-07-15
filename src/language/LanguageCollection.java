@@ -179,7 +179,7 @@ public class LanguageCollection {
 		addLanguage("Igbo", "ig");
 		addLanguage("Indonesian", "id");
 		addLanguage("Indonesian", "in");
-		addLanguage("Interlingua ", "ia");
+		addLanguage("Interlingua", "ia");
 		addLanguage("Interlingue", "ie");
 		addLanguage("Inuktitut", "iu");
 		addLanguage("Inupiaq", "ik");
@@ -216,7 +216,7 @@ public class LanguageCollection {
 		addLanguage("Luxembourgish", "lb");
 		addLanguage("Macedonian", "mk");
 		addLanguage("Malagasy", "mg");
-		addLanguage("Malay ", "ms");
+		addLanguage("Malay", "ms");
 		addLanguage("Malayalam", "ml");
 		addLanguage("Maltese", "mt");
 		addLanguage("Manx", "gv");
@@ -228,16 +228,16 @@ public class LanguageCollection {
 		addLanguage("Nauru", "na");
 		addLanguage("Navajo", "nv");
 		addLanguage("Ndonga", "ng");
-		addLanguage("Nepali ", "ne");
+		addLanguage("Nepali", "ne");
 		addLanguage("North Ndebele", "nd");
 		addLanguage("Northern Sami", "se");
 		addLanguage("Norwegian", "no");
 		addLanguage("Norwegian Bokmål", "nb");
 		addLanguage("Norwegian Nynorsk", "nn");
 		addLanguage("Nyanja", "ny");
-		addLanguage("Occitan ", "oc");
+		addLanguage("Occitan", "oc");
 		addLanguage("Ojibwa", "oj");
-		addLanguage("Oriya ", "or");
+		addLanguage("Oriya", "or");
 		addLanguage("Oromo", "om");
 		addLanguage("Ossetian", "os");
 		addLanguage("Pali", "pi");
@@ -290,7 +290,7 @@ public class LanguageCollection {
 		addLanguage("Spanish (Uruguay)", "es-UY");
 		addLanguage("Spanish (Venezuela)", "es-VE");
 		addLanguage("Sundanese", "su");
-		addLanguage("Swahili ", "sw");
+		addLanguage("Swahili", "sw");
 		addLanguage("Swati", "ss");
 		addLanguage("Swedish", "sv");
 		addLanguage("Swedish (Finland)", "sv-FI");
@@ -303,7 +303,7 @@ public class LanguageCollection {
 		addLanguage("Thai", "th");
 		addLanguage("Tibetan", "bo");
 		addLanguage("Tigrinya", "ti");
-		addLanguage("Tonga ", "to");
+		addLanguage("Tonga", "to");
 		addLanguage("Tsonga", "ts");
 		addLanguage("Tswana", "tn");
 		addLanguage("Turkish", "tr");

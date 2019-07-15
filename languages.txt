@@ -105,7 +105,7 @@ Ido;io;
 Igbo;ig;
 Indonesian;id;dictionaries/id/id_ID
 Indonesian;in;
-Interlingua ;ia;
+Interlingua;ia;
 Interlingue;ie;
 Inuktitut;iu;
 Inupiaq;ik;
@@ -142,7 +142,7 @@ Luba-Katanga;lu;
 Luxembourgish;lb;
 Macedonian;mk;
 Malagasy;mg;
-Malay ;ms;
+Malay;ms;
 Malayalam;ml;
 Maltese;mt;
 Manx;gv;
@@ -154,16 +154,16 @@ Mongolian;mn;
 Nauru;na;
 Navajo;nv;
 Ndonga;ng;
-Nepali ;ne;dictionaries/ne_NP/ne_NP
+Nepali;ne;dictionaries/ne_NP/ne_NP
 North Ndebele;nd;
 Northern Sami;se;
 Norwegian;no;
 Norwegian Bokmål;nb;dictionaries/no/nb_NO
 Norwegian Nynorsk;nn;dictionaries/no/nn_NO
 Nyanja;ny;
-Occitan ;oc;dictionaries/oc_FR/oc_FR
+Occitan;oc;dictionaries/oc_FR/oc_FR
 Ojibwa;oj;
-Oriya ;or;
+Oriya;or;
 Oromo;om;
 Ossetian;os;
 Pali;pi;
@@ -216,7 +216,7 @@ Spanish (Spain);es-ES;dictionaries/es/es_ANY
 Spanish (Uruguay);es-UY;dictionaries/es/es_ANY
 Spanish (Venezuela);es-VE;dictionaries/es/es_ANY
 Sundanese;su;
-Swahili ;sw;dictionaries/sw_TZ/sw_TZ
+Swahili;sw;dictionaries/sw_TZ/sw_TZ
 Swati;ss;
 Swedish;sv;dictionaries/sv_SE/sv_SE
 Swedish (Finland);sv-FI;dictionaries/sv_SE/sv_FI
@@ -229,7 +229,7 @@ Telugu;te;dictionaries/te_IN/te_IN
 Thai;th;dictionaries/th_TH/th_TH
 Tibetan;bo;dictionaries/bo/bo
 Tigrinya;ti;
-Tonga ;to;
+Tonga;to;
 Tsonga;ts;
 Tswana;tn;
 Turkish;tr;dictionaries/tr_TR/tr_TR
