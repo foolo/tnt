@@ -1,8 +1,10 @@
 package language;
 
+import dk.dren.hunspell.Hunspell;
 import editor.MarkupView;
 import editor.UnderlinerEditorKit;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,6 +17,7 @@ public class SpellCheck {
 	static Pattern WORDS_PATTERN = Pattern.compile("\\b(\\w+)\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	static final SimpleAttributeSet MISSPELLED_ATTRIBUTE_SET = new SimpleAttributeSet();
 	static final SimpleAttributeSet CLEAR_MISSPELLED_ATTRIBUTE_SET = new SimpleAttributeSet();
+	static Hunspell.Dictionary currentDictionary;
 
 	static {
 		MISSPELLED_ATTRIBUTE_SET.addAttribute(UnderlinerEditorKit.UNDERLINE_COLOR_ATTRIBUTE, new UnderlinerEditorKit.UnderlinedAttribute(true, Color.RED));
@@ -59,5 +62,9 @@ public class SpellCheck {
 
 	static boolean misspelled(String s) {
 		return s.length() > 3;
+	}
+
+	public static void loadDictionary(Language l) throws IOException {
+		currentDictionary = Hunspell.getInstance().getDictionary(l.dictionaryPath);
 	}
 }

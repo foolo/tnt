@@ -46,7 +46,7 @@ public class Application {
 				}
 				catch (IOException ex) {
 					Log.err(ex);
-					JOptionPane.showMessageDialog(null, "Could not load language list. Spelling will not be available.\n" + ex.toString(), "", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Could not load language list. Spellcheck will not be available.\n" + ex.toString(), "", JOptionPane.ERROR_MESSAGE);
 				}
 				MainForm mainForm = new MainForm();
 				mainForm.setLocationRelativeTo(null);

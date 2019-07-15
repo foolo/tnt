@@ -17,6 +17,9 @@ import conversion.RainbowXliffValidator;
 import java.awt.Font;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import language.Language;
+import language.LanguageCollection;
+import language.SpellCheck;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
@@ -126,6 +129,34 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		setTitle(f.toString());
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
+		initializeSpelling(xliffTag.getTrgLang());
+	}
+
+	void initializeSpelling(String trgLang) {
+		if (trgLang.isEmpty()) {
+			Log.debug("loadDictionary: languageCode empty, disable spelling");
+			return;
+		}
+		String[] code = Language.stringToCode(trgLang);
+		Language l = LanguageCollection.findLanguageWithFallback(code);
+		if (l == null) {
+			JOptionPane.showMessageDialog(this, "Unrecognized target language code: '" + trgLang + "'\nSpellcheck will not be available", "", JOptionPane.INFORMATION_MESSAGE);
+			return;
+		}
+		Log.debug("Target language " + trgLang + " mapped to " + l);
+
+		if (l.dictionaryPath == null) {
+			Log.debug("No spellcheck dictionary available for target language '" + trgLang + "'");
+			return;
+		}
+
+		Log.debug("Using spelling language " + l + " for target language " + trgLang);
+		try {
+			SpellCheck.loadDictionary(l);
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(this, "Could not load dictionary for target language '" + l + "'\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	XliffTag getXliffTag() {

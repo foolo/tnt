@@ -7,16 +7,20 @@ public class Language {
 	public final String name;
 	public final String[] code;
 	public String dictionaryPath;
-	final Pattern SPLIT_CODE_PATTERN = Pattern.compile("[\\W_]+", Pattern.UNICODE_CHARACTER_CLASS);
+	static final Pattern SPLIT_CODE_PATTERN = Pattern.compile("[\\W_]+", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public Language(String name, String code, String dictionaryLocation) {
 		this.name = name;
-		this.code = SPLIT_CODE_PATTERN.split(code);
+		this.code = stringToCode(code);
 		this.dictionaryPath = dictionaryLocation;
 	}
 
 	public String getCodeAsString() {
 		return String.join("-", code);
+	}
+
+	public static String[] stringToCode(String s) {
+		return SPLIT_CODE_PATTERN.split(s);
 	}
 
 	boolean matchCode(String[] c) {

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import util.Log;
 
 public class LanguageCollection {
@@ -25,6 +26,9 @@ public class LanguageCollection {
 		String name = parts[0];
 		String code = parts[1];
 		String path = parts[2];
+		if (path.isEmpty()) {
+			path = null;
+		}
 		return new Language(name, code, path);
 	}
 
@@ -33,6 +37,17 @@ public class LanguageCollection {
 			if (l.matchCode(code)) {
 				return l;
 			}
+		}
+		return null;
+	}
+
+	public static Language findLanguageWithFallback(String[] code) {
+		while (code.length > 0) {
+			Language l = findLanguage(code);
+			if (l != null) {
+				return l;
+			}
+			code = Arrays.copyOf(code, code.length - 1);
 		}
 		return null;
 	}
@@ -59,7 +74,7 @@ public class LanguageCollection {
 				Log.debug("Added external language " + decodedLanguage + " from " + file);
 			}
 			else {
-				if (decodedLanguage.dictionaryPath.isEmpty() == false) {
+				if (decodedLanguage.dictionaryPath != null) {
 					l.dictionaryPath = decodedLanguage.dictionaryPath;
 					Log.debug("Added spelling dictionary for " + l + " (path: " + l.dictionaryPath + ")");
 				}

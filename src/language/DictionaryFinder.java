@@ -16,6 +16,7 @@ public class DictionaryFinder {
 	static boolean errorFound = false;
 
 	public static void main(String[] args) throws IOException {
+		checkGenericVersions();
 		File workingDir = new File("dictionaries");
 		findDictionaries(workingDir);
 		for (Language l : LanguageCollection.getLanguages()) {
@@ -52,6 +53,16 @@ public class DictionaryFinder {
 			}
 		}
 		System.out.println("Language list written to " + LanguageCollection.LANGUAGE_LIST_FILENAME);
+	}
+
+	static void checkGenericVersions() {
+		for (Language l : LanguageCollection.getLanguages()) {
+			if (l.code.length > 1) {
+				if (LanguageCollection.findLanguage(new String[]{l.code[0]}) == null) {
+					System.out.println("NOTE: No generic entry '" + l.code[0] + "' found for " + l.code);
+				}
+			}
+		}
 	}
 
 	static String join(String[] elements, String delimiter) {
