@@ -38,7 +38,7 @@ public class SpellCheck {
 		Matcher m = WORDS_PATTERN.matcher(text);
 		while (m.find()) {
 			String word = m.group(1);
-			if (misspelled(word)) {
+			if (currentDictionary.misspelled(word)) {
 				int firstLetterTagged = plainToTaggedIndex(m.start(), indexes);
 				int lastLetterTagged = plainToTaggedIndex(m.end(), indexes);
 				markText(markupView, firstLetterTagged, lastLetterTagged);
@@ -58,10 +58,6 @@ public class SpellCheck {
 		int offset = firsttLetter;
 		int length = lastLetter - firsttLetter;
 		doc.setCharacterAttributes(offset, length, MISSPELLED_ATTRIBUTE_SET, false);
-	}
-
-	static boolean misspelled(String s) {
-		return s.length() > 3;
 	}
 
 	public static void loadDictionary(Language l) throws IOException {
