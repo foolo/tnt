@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import util.Log;
 
@@ -29,9 +28,9 @@ public class LanguageCollection {
 		return new Language(name, code, path);
 	}
 
-	static Language findLanguage(String code) {
+	static Language findLanguage(String[] code) {
 		for (Language l : languages) {
-			if (l.code.equals(code)) {
+			if (l.matchCode(code)) {
 				return l;
 			}
 		}
@@ -62,7 +61,7 @@ public class LanguageCollection {
 			else {
 				if (decodedLanguage.dictionaryPath.isEmpty() == false) {
 					l.dictionaryPath = decodedLanguage.dictionaryPath;
-					Log.debug("Added spelling dictionary for " + l);
+					Log.debug("Added spelling dictionary for " + l + " (path: " + l.dictionaryPath + ")");
 				}
 			}
 		}

@@ -14,7 +14,7 @@ public class LanguageComboBox extends JComboBox<String> {
 		addItem("Select language");
 		for (Language l : languages) {
 			String spelling = (l.dictionaryPath == null) ? "" : " *";
-			addItem(l.name + " (" + l.code + ")" + spelling);
+			addItem(l.name + " (" + l.getCodeAsString() + ")" + spelling);
 		}
 	}
 
@@ -23,6 +23,6 @@ public class LanguageComboBox extends JComboBox<String> {
 		if (index == 0) {
 			return "";
 		}
-		return languages.get(index - 1).code;
+		return languages.get(index - 1).getCodeAsString();
 	}
 }

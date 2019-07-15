@@ -38,7 +38,7 @@ public class DictionaryFinder {
 			if (l.dictionaryPath.contains(",")) {
 				logError("Dictionary path contains comma: " + l.dictionaryPath);
 			}
-			lines.add(join(new String[]{l.name, l.code, l.dictionaryPath}, LanguageCollection.LANGUAGE_LIST_FILE_VALUE_DELIMITER));
+			lines.add(join(new String[]{l.name, l.getCodeAsString(), l.dictionaryPath}, LanguageCollection.LANGUAGE_LIST_FILE_VALUE_DELIMITER));
 		}
 		if (errorFound) {
 			System.out.println("errors found, no list generated");
@@ -140,19 +140,18 @@ public class DictionaryFinder {
 		return code;
 	}
 
-	static String findDictionaryLocationByCode(String fullCode) {
-		fullCode = fullCode.replace('-', '_');
+	static String findDictionaryLocationByCode(String[] code) {
+		String fullCode = String.join("_", code);
 		String path = dictionaries.get(fullCode);
 		if (path != null) {
 			System.out.println("Exact match found for " + fullCode);
 			return path;
 		}
 
-		String prefix = fullCode.split("_")[0];
-		if (prefix.equals(fullCode) == false) {
-			path = dictionaries.get(prefix);
+		if (code.length > 1) {
+			path = dictionaries.get(code[0]);
 			if (path != null) {
-				System.out.println("using generic version '" + prefix + "' for " + fullCode);
+				System.out.println("using generic version '" + code[0] + "' for " + fullCode);
 				return path;
 			}
 		}
@@ -160,7 +159,7 @@ public class DictionaryFinder {
 		// generic with no direct match
 		// or specific with no direct match
 		// or specific with no match for prefix
-		ArrayList<String> candidates = findByPrefix(prefix);
+		ArrayList<String> candidates = findByPrefix(code[0]);
 		if (candidates.isEmpty()) {
 			System.out.println("INFO: No dictionary found for " + fullCode);
 			return "";
