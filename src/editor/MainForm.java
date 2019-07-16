@@ -9,7 +9,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
 import conversion.ConversionError;
 import conversion.RainbowHandler;
 import xliff_model.ValidationError;
@@ -32,7 +31,6 @@ import xliff_model.XliffTag;
 import xliff_model.exceptions.LoadException;
 import xliff_model.exceptions.ParseException;
 import xliff_model.exceptions.SaveException;
-import xliff_model.exceptions.XliffVersionException;
 
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
@@ -74,29 +72,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		updateRecentFilesMenu();
 	}
 
-	XliffTag load_xliff(File f) throws LoadException {
-		XliffTag xliffTag = null;
-		try {
-			Document doc = XmlUtil.read_xml(f);
-			xliffTag = new XliffTag(doc, f);
-		}
-		catch (LoadException ex) {
-			throw new LoadException("Could not open file\n" + ex.getMessage());
-		}
-		catch (XliffVersionException ex) {
-			throw new LoadException("Could not open " + f + "\n" + ex.getMessage());
-		}
-		catch (ParseException ex) {
-			Log.debug("load_file: " + ex.toString());
-			throw new LoadException("Could not open " + f + "\nUnrecogized format");
-		}
-		return xliffTag;
-	}
-
 	public void load_file(File f, boolean promptErrors) {
-		XliffTag xliffTag;
 		try {
-			xliffTag = load_xliff(f);
+			Session.newSession(f, this);
 		}
 		catch (LoadException ex) {
 			Log.debug("load_file: " + ex.toString());
@@ -107,11 +85,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			updateRecentFilesMenu();
 			return;
 		}
-
-		Session.newSession(xliffTag, this);
 		jTabbedPane1.removeAll();
 		fileViews.clear();
-		for (FileTag fileTag : xliffTag.getFiles()) {
+		for (FileTag fileTag : getXliffTag().getFiles()) {
 			FileView fv = new FileView(fileTag.getId());
 			fv.setName(fileTag.getAlias());
 			fv.populate_segments(fileTag.getSegmentsArray());
@@ -122,7 +98,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		setTitle(f.toString());
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
-		initializeSpelling(xliffTag.getTrgLang());
+		initializeSpelling(getXliffTag().getTrgLang());
 	}
 
 	void initializeSpelling(String trgLang) {
