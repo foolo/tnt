@@ -9,7 +9,6 @@ public class UndoManager {
 	private UndoableState currentState;
 	private UndoableState savedState;
 	private UndoEventListener listener;
-	private boolean modifiedStatus = false;
 
 	public UndoManager() {
 	}
@@ -37,25 +36,15 @@ public class UndoManager {
 	public void markSaved() {
 		markSnapshot();
 		savedState = undoBuffer.peek();
-		updateModifiedStatus();
 	}
 
 	public boolean isModified() {
-		return modifiedStatus;
-	}
-
-	public void updateModifiedStatus() {
-		boolean newModifiedStatus = (savedState != undoBuffer.peek()) || currentState.isModified();
-		if (newModifiedStatus != modifiedStatus) {
-			modifiedStatus = newModifiedStatus;
-			listener.modifiedStatusChanged(currentState.getModel(), modifiedStatus);
-		}
+		return (savedState != undoBuffer.peek()) || currentState.isModified();
 	}
 
 	private void setNewState(CaretPosition newEditingPosition) {
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
 		listener.notify_undo(currentState.getModel(), newEditingPosition);
-		updateModifiedStatus();
 	}
 
 	public void undo() {
@@ -91,7 +80,6 @@ public class UndoManager {
 		undoBuffer.add(st);
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
 		listener.notify_undo(currentState.getModel(), st.getEndPosition());
-		updateModifiedStatus();
 	}
 
 	public UndoableState getCurrentState() {

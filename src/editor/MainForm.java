@@ -79,9 +79,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if ((srcLang.isEmpty() == false) && (trgLang.isEmpty() == false)) {
 			languageInfo = " (" + srcLang + " -> " + trgLang + ")";
 		}
-		String modifiedInfo = (Session.isModified() ? "* " : "");
 		String fileInfo = getXliffTag().getFile().getName() + " (" + getXliffTag().getFile().getParent() + ")";
-		String title = modifiedInfo + fileInfo + languageInfo;
+		String title = fileInfo + languageInfo;
 		setTitle(title);
 	}
 
@@ -190,7 +189,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return false;
 		}
 		Session.markSaved();
-		modifiedStatusChanged(null, true);
 		return true;
 	}
 
@@ -272,11 +270,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 				}
 			});
 		}
-	}
-
-	@Override
-	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
-		updateTitle();
 	}
 
 	@SuppressWarnings("unchecked")
