@@ -23,7 +23,7 @@ public class Language {
 		return SPLIT_CODE_PATTERN.split(s);
 	}
 
-	boolean matchCode(String[] c) {
+	public boolean matchCode(String[] c) {
 		if (c.length != code.length) {
 			return false;
 		}

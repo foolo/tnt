@@ -32,6 +32,9 @@ public class SpellCheck {
 	}
 
 	public static void spellCheck(MarkupView markupView, int caretLocationTagged) {
+		if (currentDictionary == null) {
+			return;
+		}
 		clearStyle(markupView);
 		ArrayList<Integer> indexes = new ArrayList<>();
 		String text = markupView.getPlainText(indexes);

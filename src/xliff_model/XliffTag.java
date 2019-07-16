@@ -17,13 +17,11 @@ public class XliffTag implements UndoableModel {
 	private final Document document;
 	private final String version;
 	private final File file;
-	private final String trgLang;
 
 	public XliffTag(Document doc, File file) throws ParseException {
 		this.file = file;
 		Element node = doc.getDocumentElement();
 		version = node.getAttribute("version");
-		trgLang = node.getAttribute("trgLang");
 		if (version.isEmpty()) {
 			throw new XliffVersionException("Missing XLIFF version attribute");
 		}
@@ -56,10 +54,6 @@ public class XliffTag implements UndoableModel {
 		return file;
 	}
 
-	public String getTrgLang() {
-		return trgLang;
-	}
-
 	public void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
 		for (FileTag f : files) {
 			f.encode(errors, skipInitialSegments);
@@ -77,7 +71,6 @@ public class XliffTag implements UndoableModel {
 		document = xt.document;
 		version = xt.version;
 		file = xt.file;
-		trgLang = xt.trgLang;
 	}
 
 	@Override

@@ -72,6 +72,19 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		updateRecentFilesMenu();
 	}
 
+	void updateTitle() {
+		String srcLang = Session.getProperties().getSrcLang();
+		String trgLang = Session.getProperties().getTrgLang();
+		String languageInfo = "";
+		if ((srcLang.isEmpty() == false) && (trgLang.isEmpty() == false)) {
+			languageInfo = " (" + srcLang + " -> " + trgLang + ")";
+		}
+		String modifiedInfo = (Session.isModified() ? "* " : "");
+		String fileInfo = getXliffTag().getFile().getName() + " (" + getXliffTag().getFile().getParent() + ")";
+		String title = modifiedInfo + fileInfo + languageInfo;
+		setTitle(title);
+	}
+
 	public void load_file(File f, boolean promptErrors) {
 		try {
 			Session.newSession(f, this);
@@ -95,10 +108,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);
 		}
-		setTitle(f.toString());
+		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
-		initializeSpelling(getXliffTag().getTrgLang());
+		initializeSpelling(Session.getProperties().getTrgLang());
 	}
 
 	void initializeSpelling(String trgLang) {
@@ -160,6 +173,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	public boolean save_file(boolean haltOnEncodeError) {
 		ArrayList<ValidationError> errors = new ArrayList<>();
 		getXliffTag().encode(errors, false);
+		Session.getProperties().encode(getXliffTag().getDocument());
 		if (errors.isEmpty() == false) {
 			showValidationErrors(errors);
 			if (haltOnEncodeError) {
@@ -175,7 +189,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		Session.getUndoManager().markSaved();
+		Session.markSaved();
+		modifiedStatusChanged(null, true);
 		return true;
 	}
 
@@ -183,7 +198,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (Session.getInstance() == null) {
 			return true;
 		}
-		if (Session.getUndoManager().isModified() == false) {
+		if (Session.isModified() == false) {
 			return true;
 		}
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -261,8 +276,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	@Override
 	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
-		String title = (Session.getUndoManager().isModified() ? "* " : "") + getXliffTag().getFile().toString();
-		setTitle(title);
+		updateTitle();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -277,6 +291,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuRecentFiles = new javax.swing.JMenu();
         jMenuItemClearRecentFiles = new javax.swing.JMenuItem();
         jMenuItemExport = new javax.swing.JMenuItem();
+        jMenuItemProperties = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItemPreferences = new javax.swing.JMenuItem();
@@ -284,7 +299,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemCopySrc = new javax.swing.JMenuItem();
         jMenuItemMarkTranslated = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItemLogs = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -336,6 +350,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         });
         jMenu1.add(jMenuItemExport);
 
+        jMenuItemProperties.setText("Properties...");
+        jMenuItemProperties.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemPropertiesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemProperties);
+
         jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemSave.setText("Save");
         jMenuItemSave.setEnabled(false);
@@ -385,9 +407,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("View");
-
-        jMenuItem1.setText("Select font");
-        jMenu3.add(jMenuItem1);
 
         jMenuItemLogs.setText("Log");
         jMenuItemLogs.addActionListener(new java.awt.event.ActionListener() {
@@ -564,13 +583,23 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		updateRecentFilesMenu();
     }//GEN-LAST:event_jMenuItemClearRecentFilesActionPerformed
 
+    private void jMenuItemPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPropertiesActionPerformed
+		// TODO add your handling code here:
+		PropertiesDialog propertiesDialog = new PropertiesDialog(this);
+		propertiesDialog.setLocationRelativeTo(this);
+		propertiesDialog.setVisible(true);
+		if (propertiesDialog.getResult()) {
+			Session.getUndoManager().markSnapshot();
+			updateTitle();
+		}
+    }//GEN-LAST:event_jMenuItemPropertiesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemClearRecentFiles;
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
@@ -579,6 +608,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemMarkTranslated;
     private javax.swing.JMenuItem jMenuItemOpen;
     private javax.swing.JMenuItem jMenuItemPreferences;
+    private javax.swing.JMenuItem jMenuItemProperties;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenu jMenuRecentFiles;
     private javax.swing.JTabbedPane jTabbedPane1;

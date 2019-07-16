@@ -2,6 +2,7 @@ package editor;
 
 import java.io.File;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoManager;
@@ -15,6 +16,51 @@ import xliff_model.exceptions.XliffVersionException;
 
 public class Session {
 
+	public static class Properties {
+
+		private String srcLang;
+		private String trgLang;
+		private boolean modified = false;
+
+		public Properties(Document doc) {
+			Element node = doc.getDocumentElement();
+			srcLang = node.getAttribute("srcLang");
+			trgLang = node.getAttribute("trgLang");
+		}
+
+		public String getSrcLang() {
+			return srcLang;
+		}
+
+		public String getTrgLang() {
+			return trgLang;
+		}
+
+		public void setSrcLang(String s) {
+			if (s.equals(srcLang) == false) {
+				srcLang = s;
+				modified = true;
+			}
+		}
+
+		public void setTrgLang(String s) {
+			if (s.equals(trgLang) == false) {
+				trgLang = s;
+				modified = true;
+			}
+		}
+
+		boolean getModified() {
+			return modified;
+		}
+
+		public void encode(Document doc) {
+			Element node = doc.getDocumentElement();
+			node.setAttribute("srcLang", srcLang);
+			node.setAttribute("trgLang", trgLang);
+		}
+	}
+
 	private static Session session;
 
 	public static void newSession(File f, UndoEventListener undoEventListener) throws LoadException {
@@ -27,9 +73,23 @@ public class Session {
 	}
 
 	private final UndoManager undoManager;
+	private final Properties properties;
 
 	public static UndoManager getUndoManager() {
 		return session.undoManager;
+	}
+
+	public static Properties getProperties() {
+		return session.properties;
+	}
+
+	static boolean isModified() {
+		return session.properties.modified || session.undoManager.isModified();
+	}
+
+	static void markSaved() {
+		session.properties.modified = false;
+		session.undoManager.markSaved();
 	}
 
 	static XliffTag load_xliff(File f) throws LoadException {
@@ -55,5 +115,6 @@ public class Session {
 		undoManager = new UndoManager();
 		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
 		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), undoEventListener);
+		properties = new Properties(xliffTag.getDocument());
 	}
 }
