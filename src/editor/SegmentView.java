@@ -143,8 +143,8 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void notifyUndoManager(int caretPos1, int caretPos2) {
-		CaretPosition pos1 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos1);
-		CaretPosition pos2 = new CaretPosition(SegmentView.this, CaretPosition.Column.TARGET, caretPos2);
+		CaretPosition pos1 = new CaretPosition(this, CaretPosition.Column.TARGET, caretPos1);
+		CaretPosition pos2 = new CaretPosition(this, CaretPosition.Column.TARGET, caretPos2);
 		undoManager.getCurrentState().setModified(pos1, pos2);
 	}
 
