@@ -22,9 +22,7 @@ import language.LanguageCollection;
 import language.SpellCheck;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
-import undo_manager.UndoManager;
 import undo_manager.UndoableModel;
-import undo_manager.UndoableState;
 import util.Log;
 import util.Settings;
 import util.XmlUtil;
@@ -39,16 +37,12 @@ import xliff_model.exceptions.XliffVersionException;
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	private final LogWindow logWindow;
-	private UndoManager undoManager;
+
 	private final ArrayList<FileView> fileViews = new ArrayList<>();
 
 	public MainForm() {
 		initComponents();
 		logWindow = new LogWindow();
-	}
-
-	public UndoManager getUndoManager() {
-		return undoManager;
 	}
 
 	void updateRecentFilesMenu() {
@@ -73,10 +67,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	void updateMenus() {
-		jMenuItemExport.setEnabled(undoManager != null);
-		jMenuItemSave.setEnabled(undoManager != null);
-		jMenuItemCopySrc.setEnabled(undoManager != null);
-		jMenuItemMarkTranslated.setEnabled(undoManager != null);
+		jMenuItemExport.setEnabled(Session.getInstance() != null);
+		jMenuItemSave.setEnabled(Session.getInstance() != null);
+		jMenuItemCopySrc.setEnabled(Session.getInstance() != null);
+		jMenuItemMarkTranslated.setEnabled(Session.getInstance() != null);
 		updateRecentFilesMenu();
 	}
 
@@ -113,15 +107,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			updateRecentFilesMenu();
 			return;
 		}
-		undoManager = new UndoManager();
-		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
-		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), this);
+
+		Session.newSession(xliffTag, this);
 		jTabbedPane1.removeAll();
 		fileViews.clear();
 		for (FileTag fileTag : xliffTag.getFiles()) {
 			FileView fv = new FileView(fileTag.getId());
 			fv.setName(fileTag.getAlias());
-			fv.populate_segments(fileTag.getSegmentsArray(), undoManager);
+			fv.populate_segments(fileTag.getSegmentsArray());
 			fv.update_model(fileTag);
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);
@@ -160,7 +153,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	XliffTag getXliffTag() {
-		return (XliffTag) undoManager.getCurrentState().getModel();
+		return (XliffTag) Session.getUndoManager().getCurrentState().getModel();
 	}
 
 	boolean showValidiationError(ValidationError e) {
@@ -206,15 +199,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		undoManager.markSaved();
+		Session.getUndoManager().markSaved();
 		return true;
 	}
 
 	boolean okToClose() {
-		if (undoManager == null) {
+		if (Session.getInstance() == null) {
 			return true;
 		}
-		if (undoManager.isModified() == false) {
+		if (Session.getUndoManager().isModified() == false) {
 			return true;
 		}
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -292,7 +285,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	@Override
 	public void modifiedStatusChanged(UndoableModel model, boolean modified) {
-		String title = (undoManager.isModified() ? "* " : "") + getXliffTag().getFile().toString();
+		String title = (Session.getUndoManager().isModified() ? "* " : "") + getXliffTag().getFile().toString();
 		setTitle(title);
 	}
 
@@ -473,14 +466,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
-		undoManager.markSnapshot();
+		Session.getUndoManager().markSnapshot();
 		SegmentView segmentView = SegmentView.getActiveSegmentView();
 		if (segmentView == null) {
 			return;
 		}
 		SegmentTag segmentTag = segmentView.getSegmentTag();
 		segmentView.setTargetText(segmentTag.getSourceText().copy());
-		undoManager.markSnapshot();
+		Session.getUndoManager().markSnapshot();
     }//GEN-LAST:event_jMenuItemCopySrcActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -543,7 +536,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
     private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
-		undoManager.markSnapshot();
+		Session.getUndoManager().markSnapshot();
 		SegmentView segmentView = SegmentView.getActiveSegmentView();
 		if (segmentView == null) {
 			return;

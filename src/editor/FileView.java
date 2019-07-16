@@ -3,7 +3,6 @@ package editor;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
-import undo_manager.UndoManager;
 import xliff_model.FileTag;
 import xliff_model.SegmentTag;
 import xliff_model.ValidationPath;
@@ -54,9 +53,9 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void populate_segments(ArrayList<SegmentTag> segmentTags, UndoManager undoManager) {
+	void populate_segments(ArrayList<SegmentTag> segmentTags) {
 		for (SegmentTag st : segmentTags) {
-			jPanelItems.add(new SegmentView(undoManager, this, st.getId()));
+			jPanelItems.add(new SegmentView(this, st.getId()));
 		}
 	}
 
