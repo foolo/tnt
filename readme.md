@@ -3,6 +3,14 @@
 	git submodule init
 	git submodule update
 
+# Compile HunspellJNA
+
+	cd HunspellJNA
+	mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true install
+	cd ..
+	cp $HOME/.m2/repository/dk/dren/hunspell/1.6.2-SNAPSHOT/hunspell-1.6.2-SNAPSHOT.jar  lib/dev/
+	cp $HOME/.m2/repository/dk/dren/hunspell/1.6.2-SNAPSHOT/hunspell-1.6.2-SNAPSHOT-sources.jar  lib/dev/
+
 # Build and run
 
 Option 1: Open the project in Netbeans 11 or later. Configure the project's working directory to the OpenXLIFF subdirectory.
@@ -36,3 +44,8 @@ From Bash prompt (e.g. Cygwin or Git Bash) run
 	deploy/deploy_windows.sh
 
 The application can now be run with ```tnt.winapp/runtnt.bat```
+
+# Configure Netbeans
+
+Go to *Project properties > Run*. Set *Working Directory* to **dist**
+

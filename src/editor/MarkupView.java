@@ -133,6 +133,20 @@ public class MarkupView extends JTextPane {
 		return getTaggedText(p0, p1, getStyledDocument());
 	}
 
+	public String getPlainText(ArrayList<Integer> plainToTaggedIndexes) {
+		StyledDocument doc = getStyledDocument();
+		String docText = getDocText(doc);
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < doc.getLength(); i++) {
+			Element e = doc.getCharacterElement(i);
+			if (getIcon(e) == null) {
+				sb.appendCodePoint(docText.codePointAt(i));
+				plainToTaggedIndexes.add(i);
+			}
+		}
+		return sb.toString();
+	}
+
 	void appendText(String s) {
 		try {
 			getDocument().insertString(getDocument().getLength(), s, null);
@@ -151,7 +165,19 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
+	void removeSelection() {
+		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
+		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
+		try {
+			getDocument().remove(p0, p1 - p0);
+		}
+		catch (BadLocationException ex) {
+			Log.err(ex);
+		}
+	}
+
 	public void insertTaggedText(TaggedText t) {
+		removeSelection();
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
 				String text = ((Text) c).getContent();

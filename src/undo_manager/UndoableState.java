@@ -32,7 +32,6 @@ public class UndoableState {
 		if (!modified) {
 			startPosition = position1;
 			modified = true;
-			undoManager.updateModifiedStatus();
 		}
 		this.endPosition = position2;
 	}

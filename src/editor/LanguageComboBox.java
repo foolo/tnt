@@ -2,33 +2,20 @@ package editor;
 
 import java.util.ArrayList;
 import javax.swing.JComboBox;
+import language.Language;
+import util.Log;
 
 public class LanguageComboBox extends JComboBox<String> {
-
-	static class Language {
-
-		public final String name;
-		public final String code;
-
-		public Language(String name, String code) {
-			this.name = name;
-			this.code = code;
-		}
-
-		@Override
-		public String toString() {
-			return name + " (" + code + ")";
-		}
-	}
 
 	ArrayList<Language> languages = new ArrayList<>();
 
 	void setLanguages(ArrayList<Language> languages) {
-		this.languages = languages;
+		this.languages = (ArrayList<Language>) languages.clone();
 		removeAllItems();
 		addItem("Select language");
 		for (Language l : languages) {
-			addItem(l.name + " (" + l.code + ")");
+			String spelling = (l.dictionaryPath == null) ? "" : " *";
+			addItem(l.name + " (" + l.getCodeAsString() + ")" + spelling);
 		}
 	}
 
@@ -37,6 +24,17 @@ public class LanguageComboBox extends JComboBox<String> {
 		if (index == 0) {
 			return "";
 		}
-		return languages.get(index - 1).code;
+		return languages.get(index - 1).getCodeAsString();
+	}
+
+	public void setSelectedLanguageCode(String codeStr) {
+		String[] code = Language.stringToCode(codeStr);
+		for (int i = 0; i < languages.size(); i++) {
+			if (languages.get(i).matchCode(code)) {
+				setSelectedIndex(i + 1);
+				return;
+			}
+		}
+		Log.err("setSelectedLanguageCode: no matching language for: " + codeStr);
 	}
 }

@@ -25,6 +25,7 @@
 package editor.javax.swing.plaf.basic;
 
 import editor.MarkupView;
+import editor.Session;
 import java.awt.datatransfer.*;
 import java.awt.im.InputContext;
 import java.io.*;
@@ -217,10 +218,10 @@ public class TextTransferHandler extends TransferHandler implements UIResource {
 		}
 
 		if (data instanceof TaggedText) {
-			c.getSegmentView().getMainForm().getUndoManager().markSnapshot();
+			Session.getUndoManager().markSnapshot();
 			TaggedText tt = (TaggedText) data;
 			c.insertTaggedText(tt.copy());
-			c.getSegmentView().getMainForm().getUndoManager().markSnapshot();
+			Session.getUndoManager().markSnapshot();
 			return true;
 		}
 

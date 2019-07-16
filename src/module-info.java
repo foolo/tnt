@@ -7,4 +7,5 @@ module Tnt {
 	requires dtd;
 	requires json;
 	requires jsoup;
+	requires jna;
 }
