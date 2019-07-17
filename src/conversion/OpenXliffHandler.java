@@ -1,5 +1,6 @@
 package conversion;
 
+import com.maxprograms.converters.Constants;
 import com.maxprograms.converters.Convert;
 import com.maxprograms.converters.EncodingResolver;
 import com.maxprograms.converters.FileFormats;
@@ -15,8 +16,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
 import util.Log;
 
 public class OpenXliffHandler {
@@ -86,9 +85,9 @@ public class OpenXliffHandler {
 		params.put("srcLang", srcLang);
 		params.put("tgtLang", tgtLang);
 		Vector<String> result = Convert.run(params);
-		if ("0".equals(result.get(0))) {
+		if (Constants.SUCCESS.equals(result.get(0))) {
 			result = ToXliff2.run(new File(xliff), catalog);
-			if ("0".equals(result.get(0)) == false) {
+			if (Constants.SUCCESS.equals(result.get(0)) == false) {
 				throw new ConversionError(result.get(1));
 			}
 		}
@@ -140,12 +139,9 @@ public class OpenXliffHandler {
 		String target = targetFile.getAbsolutePath();
 		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
 		boolean unapproved = false;
-		try {
-			Merge.merge(xliff, target, catalog, unapproved);
-		}
-		catch (SAXException | ParserConfigurationException ex) {
-			Log.err(ex);
-			throw new ConversionError(ex.toString());
+		Vector<String> result = Merge.merge(xliff, target, catalog, unapproved);
+		if (Constants.SUCCESS.equals(result.get(0)) == false) {
+			throw new ConversionError("Merge error: " + result.get(1));
 		}
 	}
 
