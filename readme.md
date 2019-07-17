@@ -11,12 +11,6 @@
 	cp $HOME/.m2/repository/dk/dren/hunspell/1.6.2-SNAPSHOT/hunspell-1.6.2-SNAPSHOT.jar  lib/dev/
 	cp $HOME/.m2/repository/dk/dren/hunspell/1.6.2-SNAPSHOT/hunspell-1.6.2-SNAPSHOT-sources.jar  lib/dev/
 
-# Build and run
-
-Option 1: Open the project in Netbeans 11 or later. Configure the project's working directory to the OpenXLIFF subdirectory.
-
-Option 2: Build and run from command line. See details below.
-
 # Build and deploy for Linux
 
 Make sure that **java** and **ant** binary directories are in PATH and run:
@@ -30,7 +24,6 @@ The application can now be run with
 To create an AppImage, download appimagetool from https://github.com/AppImage/AppImageKit/releases and run
 
 	./appimagetool-x86_64.AppImage tnt.AppDir
-
 
 # Build and deploy for Windows
 
@@ -47,5 +40,4 @@ The application can now be run with ```tnt.winapp/runtnt.bat```
 
 # Configure Netbeans
 
-Go to *Project properties > Run*. Set *Working Directory* to **dist**
-
+Open the project in Netbeans 11 or later. Under *Project properties > Run*, set *Working Directory* to the tnt.AppDir directory created in previous steps.
