@@ -1,13 +1,20 @@
 package conversion;
 
 import com.maxprograms.converters.Convert;
+import com.maxprograms.converters.EncodingResolver;
+import com.maxprograms.converters.FileFormats;
 import com.maxprograms.converters.Merge;
+import com.maxprograms.converters.Utils;
+import com.maxprograms.xliff2.ToXliff2;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Hashtable;
+import java.util.Vector;
 import util.Log;
 
 public class OpenXliffHandler {
@@ -30,6 +37,63 @@ public class OpenXliffHandler {
 		checkResource(new File(dir, "xmlfilter"));
 	}
 
+	void convert(File inputFile, String srcLang, String tgtLang) throws ConversionError {
+		String source = inputFile.getAbsolutePath();
+		String xliff = inputFile.getAbsolutePath() + ".xlf";
+		String skl = inputFile.getAbsolutePath() + ".skl";
+
+		String type = FileFormats.detectFormat(source);
+		if (type == null) {
+			throw new ConversionError("Unable to auto-detect file format for " + inputFile);
+		}
+		Log.debug("convert: detected type: " + type);
+
+		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
+
+		Charset charset = EncodingResolver.getEncoding(source, type);
+		if (charset == null) {
+			throw new ConversionError("Unable to auto-detect character set for " + inputFile);
+		}
+		String enc = charset.name();
+		Log.debug("Auto-detected encoding: " + enc);
+
+		String srx = new File("srx", "default.srx").getAbsolutePath();
+
+		try {
+			if (Utils.isValidLanguage(srcLang) == false) {
+				Log.warn("'" + srcLang + "' is not a valid language code.");
+			}
+			if (Utils.isValidLanguage(tgtLang) == false) {
+				Log.warn("'" + tgtLang + "' is not a valid language code.");
+			}
+		}
+		catch (IOException ex) {
+			throw new ConversionError(ex.toString());
+		}
+
+		Hashtable<String, String> params = new Hashtable<>();
+		params.put("source", source);
+		params.put("xliff", xliff);
+		params.put("skeleton", skl);
+		params.put("format", type);
+		params.put("catalog", catalog);
+		params.put("srcEncoding", enc);
+		params.put("paragraph", "no");
+		params.put("srxFile", srx);
+		params.put("srcLang", srcLang);
+		params.put("tgtLang", tgtLang);
+		Vector<String> result = Convert.run(params);
+		if ("0".equals(result.get(0))) {
+			result = ToXliff2.run(new File(xliff), catalog);
+			if ("0".equals(result.get(0)) == false) {
+				throw new ConversionError(result.get(1));
+			}
+		}
+		else {
+			throw new ConversionError(result.get(1));
+		}
+	}
+
 	public File createPackage(File inputFile, File xliffFile, File skeletonFile, String sourceLanguage, String targetLanguage) throws ConversionError {
 		Log.debug("createPackage: inputFile: " + inputFile);
 		Log.debug("createPackage: xliffFile: " + xliffFile);
@@ -38,15 +102,7 @@ public class OpenXliffHandler {
 
 		xliffFile.delete();
 		skeletonFile.delete();
-
-		String args[] = new String[]{
-			"-file", inputFile.getAbsolutePath(),
-			"-srcLang", sourceLanguage, // todo language
-			"-tgtLang", targetLanguage,
-			"-2.0"
-		};
-		Log.debug("convert args: " + String.join(" ", args));
-		Convert.main(args);
+		convert(inputFile, sourceLanguage, targetLanguage);
 
 		File skeletonLocalFile = new File(skeletonFile.getName());
 		skeletonLocalFile.renameTo(skeletonFile);

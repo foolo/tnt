@@ -8,7 +8,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
 import conversion.OpenXliffHandler;
 import conversion.ConversionError;
 import conversion.OpenXliffValidator;
