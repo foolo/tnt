@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.Vector;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 import util.Log;
 
 public class OpenXliffHandler {
@@ -68,6 +70,7 @@ public class OpenXliffHandler {
 			}
 		}
 		catch (IOException ex) {
+			Log.err(ex);
 			throw new ConversionError(ex.toString());
 		}
 
@@ -132,6 +135,20 @@ public class OpenXliffHandler {
 		return baseName + "_" + targetLanguage + ext;
 	}
 
+	void merge(File xliffFile, File targetFile) throws ConversionError, IOException {
+		String xliff = xliffFile.getAbsolutePath();
+		String target = targetFile.getAbsolutePath();
+		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
+		boolean unapproved = false;
+		try {
+			Merge.merge(xliff, target, catalog, unapproved);
+		}
+		catch (SAXException | ParserConfigurationException ex) {
+			Log.err(ex);
+			throw new ConversionError(ex.toString());
+		}
+	}
+
 	public File exportTranslatedFile(File xliffFile) throws ConversionError, IOException {
 		Log.debug("exportTranslatedFile: xliffFile: " + xliffFile);
 		checkResources();
@@ -141,12 +158,7 @@ public class OpenXliffHandler {
 		Log.debug("exportTranslatedFile: targetFile: " + targetFile);
 
 		targetFile.delete();
-		String args[] = new String[]{
-			"-xliff", xliffFile.getAbsolutePath(),
-			"-target", targetFile.getAbsolutePath()
-		};
-		Log.debug("merge args: " + String.join(" ", args));
-		Merge.main(args);
+		merge(xliffFile, targetFile);
 
 		if (targetFile.getAbsoluteFile().exists() == false || targetFile.getAbsoluteFile().length() == 0) {
 			throw new ConversionError("Expected output file not found or empty: " + targetFile);
