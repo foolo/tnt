@@ -1,16 +1,9 @@
 package editor;
 
-import com.maxprograms.languages.Language;
-import com.maxprograms.languages.LanguageUtils;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
-import util.Log;
+import language.LanguageCollection;
 import util.Settings;
 
 public final class CreateXliffDialog extends javax.swing.JDialog {
@@ -24,31 +17,11 @@ public final class CreateXliffDialog extends javax.swing.JDialog {
 		return result;
 	}
 
-	List<Language> getCommonLanguages() {
-		try {
-			return LanguageUtils.getCommonLanguages();
-		}
-		catch (SAXException | IOException | ParserConfigurationException ex) {
-			Log.err(ex);
-		}
-		return new ArrayList<>();
-	}
-
-	ArrayList<LanguageComboBox.Language> getLanguages() {
-		ArrayList<LanguageComboBox.Language> res = new ArrayList<>();
-		List<Language> commonLanguages = getCommonLanguages();
-		for (Language l : commonLanguages) {
-			res.add(new LanguageComboBox.Language(l.getDescription(), l.getCode()));
-		}
-		return res;
-	}
-
 	public CreateXliffDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		initComponents();
-		ArrayList<LanguageComboBox.Language> languages = getLanguages();
-		sourceLanguageComboBox.setLanguages(languages);
-		targetLanguageComboBox.setLanguages(languages);
+		sourceLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
+		targetLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		update();
 	}
 
