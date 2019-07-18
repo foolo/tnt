@@ -15,7 +15,7 @@ import language.LanguageCollection;
 import util.Log;
 import util.Settings;
 
-public final class CreatePackageDialog extends javax.swing.JDialog {
+public final class CreatePackageDialog extends BaseDialog {
 
 	class ValueChangedDocumentListener implements DocumentListener {
 
@@ -35,15 +35,10 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		}
 	}
 
-	private boolean result = false;
-
-	boolean getResult() {
-		return result;
-	}
-
-	public CreatePackageDialog(java.awt.Frame parent, boolean modal) {
-		super(parent, modal);
+	public CreatePackageDialog(java.awt.Frame parent) {
+		super(parent);
 		initComponents();
+		initButtons(jButtonOk, jButtonCancel);
 
 		jTextFieldInputFile.getDocument().addDocumentListener(new ValueChangedDocumentListener());
 		jTextFieldCommonDir.getDocument().addDocumentListener(new ValueChangedDocumentListener());
@@ -57,7 +52,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 
 		sourceLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		targetLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
-
 		update();
 	}
 
@@ -183,11 +177,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
         });
 
         jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelActionPerformed(evt);
-            }
-        });
 
         jLabelError.setForeground(new java.awt.Color(255, 0, 0));
         jLabelError.setText("jLabelError");
@@ -326,10 +315,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
 		update();
     }//GEN-LAST:event_jButtonChoosePackageDirectoryActionPerformed
 
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-		setVisible(false);
-    }//GEN-LAST:event_jButtonCancelActionPerformed
-
 	void showError(String msg) {
 		JOptionPane.showMessageDialog(this, msg, "", JOptionPane.ERROR_MESSAGE);
 	}
@@ -386,7 +371,6 @@ public final class CreatePackageDialog extends javax.swing.JDialog {
     private void targetLanguageComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetLanguageComboBoxActionPerformed
 		update();
     }//GEN-LAST:event_targetLanguageComboBoxActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;

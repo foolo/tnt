@@ -334,7 +334,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenu1.add(jMenuRecentFiles);
 
-        jMenuItemExport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemExport.setText("Export translated file(s)");
         jMenuItemExport.setEnabled(false);
         jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
@@ -480,7 +479,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (okToClose() == false) {
 			return;
 		}
-		CreatePackageDialog d = new CreatePackageDialog(this, true);
+		CreatePackageDialog d = new CreatePackageDialog(this);
 		d.setLocationRelativeTo(this);
 		d.setVisible(true);
 		if (d.getResult() == false) {
