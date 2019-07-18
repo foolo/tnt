@@ -65,6 +65,12 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
+	void clearSpellcheck() {
+		for (Component c : jPanelItems.getComponents()) {
+			((SegmentView) c).clearSpellcheck();
+		}
+	}
+
 	void jumpToNextSegment(SegmentView sv) {
 		boolean found = false;
 		for (Component c : jPanelItems.getComponents()) {
@@ -99,7 +105,6 @@ public class FileView extends javax.swing.JPanel {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanelItems;

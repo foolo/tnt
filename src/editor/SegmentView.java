@@ -312,6 +312,10 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setFont(f);
 	}
 
+	void clearSpellcheck() {
+		SpellCheck.clearStyle(markupViewTarget);
+	}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelState;
     private javax.swing.JLabel jLabelValidationError;

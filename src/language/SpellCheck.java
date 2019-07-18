@@ -49,7 +49,7 @@ public class SpellCheck {
 		}
 	}
 
-	static void clearStyle(MarkupView markupView) {
+	public static void clearStyle(MarkupView markupView) {
 		MutableAttributeSet inputAttributes = markupView.getInputAttributes();
 		inputAttributes.removeAttributes(inputAttributes);
 		StyledDocument doc = markupView.getStyledDocument();
