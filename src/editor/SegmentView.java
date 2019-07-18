@@ -175,6 +175,11 @@ public class SegmentView extends javax.swing.JPanel {
 		return lastActiveSegmentView;
 	}
 
+	void applySpellcheck() {
+		int caretLocation = markupViewTarget.getCaret().getDot();
+		SpellCheck.spellCheck(markupViewTarget, caretLocation);
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -288,6 +293,7 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		Session.getUndoManager().markSnapshot();
 		lastActiveSegmentView = this;
+		applySpellcheck();
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
@@ -303,8 +309,7 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
     private void markupViewTargetKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyReleased
-		int caretLocation = markupViewTarget.getCaret().getDot();
-		SpellCheck.spellCheck(markupViewTarget, caretLocation);
+		applySpellcheck();
     }//GEN-LAST:event_markupViewTargetKeyReleased
 
 	void setEditorFont(Font f) {
