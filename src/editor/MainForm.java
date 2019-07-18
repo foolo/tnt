@@ -334,6 +334,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenu1.add(jMenuRecentFiles);
 
+        jMenuItemExport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemExport.setText("Export translated file(s)");
         jMenuItemExport.setEnabled(false);
         jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
