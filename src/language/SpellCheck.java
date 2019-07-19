@@ -31,35 +31,52 @@ public class SpellCheck {
 		return indexes.get(plainIndex);
 	}
 
-	public static void spellCheck(MarkupView markupView, int caretLocationTagged) {
+	static int taggedToPlainIndex(int taggedIndex, ArrayList<Integer> indexes) {
+		for (int i = 0; i < indexes.size(); i++) {
+			int ti = indexes.get(i);
+			if (ti >= taggedIndex) {
+				return i;
+			}
+		}
+		return indexes.size();
+	}
+
+	public static void spellCheck(MarkupView markupView, int caretLocationTagged, boolean modified) {
 		if (currentDictionary == null) {
 			return;
 		}
 		clearStyle(markupView);
 		ArrayList<Integer> indexes = new ArrayList<>();
 		String text = markupView.getPlainText(indexes);
+		int caretLocationPlain = taggedToPlainIndex(caretLocationTagged, indexes);
 		Matcher m = WORDS_PATTERN.matcher(text);
 		while (m.find()) {
 			String word = m.group(1);
-			if (currentDictionary.misspelled(word)) {
-				int firstLetterTagged = plainToTaggedIndex(m.start(), indexes);
-				int lastLetterTagged = plainToTaggedIndex(m.end(), indexes);
-				markText(markupView, firstLetterTagged, lastLetterTagged);
+			int startPlain = m.start();
+			int endPlain = m.end();
+			boolean caretIsAtWordEnd = (caretLocationPlain == endPlain);
+			boolean skipSpellCheckForWord = (caretIsAtWordEnd && modified);
+			if (skipSpellCheckForWord == false) {
+				if (currentDictionary.misspelled(word)) {
+					int startTagged = plainToTaggedIndex(startPlain, indexes);
+					int endTagged = plainToTaggedIndex(endPlain, indexes);
+					markText(markupView, startTagged, endTagged);
+				}
 			}
 		}
 	}
 
-	static void clearStyle(MarkupView markupView) {
+	public static void clearStyle(MarkupView markupView) {
 		MutableAttributeSet inputAttributes = markupView.getInputAttributes();
 		inputAttributes.removeAttributes(inputAttributes);
 		StyledDocument doc = markupView.getStyledDocument();
 		doc.setCharacterAttributes(0, doc.getLength(), CLEAR_MISSPELLED_ATTRIBUTE_SET, false);
 	}
 
-	static void markText(MarkupView markupView, int firsttLetter, int lastLetter) {
+	static void markText(MarkupView markupView, int start, int end) {
 		StyledDocument doc = markupView.getStyledDocument();
-		int offset = firsttLetter;
-		int length = lastLetter - firsttLetter;
+		int offset = start;
+		int length = end - start;
 		doc.setCharacterAttributes(offset, length, MISSPELLED_ATTRIBUTE_SET, false);
 	}
 

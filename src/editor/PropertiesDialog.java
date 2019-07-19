@@ -3,17 +3,12 @@ package editor;
 import javax.swing.JOptionPane;
 import language.LanguageCollection;
 
-public final class PropertiesDialog extends javax.swing.JDialog {
-
-	private boolean result = false;
-
-	boolean getResult() {
-		return result;
-	}
+public final class PropertiesDialog extends BaseDialog {
 
 	public PropertiesDialog(java.awt.Frame parent) {
-		super(parent, true);
+		super(parent);
 		initComponents();
+		initButtons(jButtonOk, jButtonCancel);
 		sourceLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		targetLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		sourceLanguageComboBox.setSelectedLanguageCode(Session.getProperties().getSrcLang());
@@ -75,11 +70,6 @@ public final class PropertiesDialog extends javax.swing.JDialog {
         });
 
         jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelActionPerformed(evt);
-            }
-        });
 
         jLabelError.setForeground(new java.awt.Color(255, 0, 0));
         jLabelError.setText("jLabelError");
@@ -155,10 +145,6 @@ public final class PropertiesDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-		setVisible(false);
-    }//GEN-LAST:event_jButtonCancelActionPerformed
-
 	void showError(String msg) {
 		JOptionPane.showMessageDialog(this, msg, "", JOptionPane.ERROR_MESSAGE);
 	}
@@ -182,7 +168,6 @@ public final class PropertiesDialog extends javax.swing.JDialog {
     private void targetLanguageComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetLanguageComboBoxActionPerformed
 		update();
     }//GEN-LAST:event_targetLanguageComboBoxActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;

@@ -7,10 +7,24 @@ import javax.swing.JOptionPane;
 
 public class ExportCompletedPanel extends javax.swing.JPanel {
 
-	public ExportCompletedPanel(File mergeDir) {
+	private final File outputFile;
+
+	public ExportCompletedPanel(File outputFile) {
 		initComponents();
-		jTextFieldOutputDir.setText(mergeDir.getAbsolutePath());
+		jTextFieldOutputDir.setText(outputFile.getAbsolutePath());
 		jTextFieldOutputDir.setBackground(null);
+		this.outputFile = outputFile;
+	}
+
+	void desktopOpen(File f) {
+		try {
+			if (Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().open(f);
+			}
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(this, "Could not open direcory: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -20,19 +34,27 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jTextFieldOutputDir = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        jButtonLocateInBrowser = new javax.swing.JButton();
+        jButtonOpenFile = new javax.swing.JButton();
 
         jLabel5.setText("Export completed sucecssfully!");
 
-        jLabel1.setText("Output directory:");
+        jLabel1.setText("Output file:");
 
         jTextFieldOutputDir.setEditable(false);
         jTextFieldOutputDir.setText("jTextFieldOutputDir");
 
-        jButton1.setText("Open in browser...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLocateInBrowser.setText("Locate in browser");
+        jButtonLocateInBrowser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonLocateInBrowserActionPerformed(evt);
+            }
+        });
+
+        jButtonOpenFile.setText("Open file");
+        jButtonOpenFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonOpenFileActionPerformed(evt);
             }
         });
 
@@ -43,12 +65,16 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldOutputDir)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextFieldOutputDir, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonOpenFile)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonLocateInBrowser)))
+                        .addGap(0, 297, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -59,28 +85,26 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldOutputDir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldOutputDir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jButtonOpenFile)
+                    .addComponent(jButtonLocateInBrowser))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-		File dir = new File(jTextFieldOutputDir.getText());
-		try {
-			if (Desktop.isDesktopSupported()) {
-				Desktop.getDesktop().open(dir);
-			}
-		}
-		catch (IOException ex) {
-			JOptionPane.showMessageDialog(this, "Could not open direcory: " + dir.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-		}
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonLocateInBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLocateInBrowserActionPerformed
+		desktopOpen(outputFile.getParentFile());
+    }//GEN-LAST:event_jButtonLocateInBrowserActionPerformed
 
+    private void jButtonOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenFileActionPerformed
+		desktopOpen(outputFile);
+    }//GEN-LAST:event_jButtonOpenFileActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonLocateInBrowser;
+    private javax.swing.JButton jButtonOpenFile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jTextFieldOutputDir;

@@ -133,6 +133,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		Log.debug("Using spelling language " + l + " for target language " + trgLang);
 		try {
 			SpellCheck.loadDictionary(l);
+			for (FileView fileView : fileViews) {
+				fileView.clearSpellcheck();
+			}
 		}
 		catch (IOException ex) {
 			JOptionPane.showMessageDialog(this, "Could not load dictionary for target language '" + l + "'\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
@@ -501,8 +504,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		File f = getXliffTag().getFile().getAbsoluteFile();
 		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
-			File outputDir = converter.exportTranslatedFile(f);
-			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
+			File outputFile = converter.exportTranslatedFile(f);
+			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
 		}
 		catch (IOException | ConversionError ex) {
 			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
@@ -570,13 +573,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemClearRecentFilesActionPerformed
 
     private void jMenuItemPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPropertiesActionPerformed
-		// TODO add your handling code here:
 		PropertiesDialog propertiesDialog = new PropertiesDialog(this);
 		propertiesDialog.setLocationRelativeTo(this);
 		propertiesDialog.setVisible(true);
 		if (propertiesDialog.getResult()) {
 			Session.getUndoManager().markSnapshot();
 			updateTitle();
+			initializeSpelling(Session.getProperties().getTrgLang());
 		}
     }//GEN-LAST:event_jMenuItemPropertiesActionPerformed
 

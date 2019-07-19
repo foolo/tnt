@@ -92,6 +92,7 @@ class TagIcon implements Icon {
 
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
+		Font previousFont = g.getFont();
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, g2.getFont().getSize()));
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -120,6 +121,7 @@ class TagIcon implements Icon {
 		g2.setColor(Color.WHITE);
 		g2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, g2.getFont().getSize() - 3));
 		drawCenteredText(g2, tag.getLabel(), center_x, center_y);
+		g.setFont(previousFont);
 	}
 
 	public Tag getTag() {
