@@ -7,6 +7,7 @@ import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
@@ -30,7 +31,7 @@ public class SegmentView extends javax.swing.JPanel {
 			segmentTag.setTargetText(markupViewTarget.getTaggedText());
 			setStateField(SegmentTag.State.INITIAL);
 			notifyUndoManager(caretPosition1, caretPosition2);
-			ignoreNextCaretUpdate = true;
+			modifiedFlag = true;
 		}
 
 		@Override
@@ -51,7 +52,7 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentTag segmentTag;
 	private final FileView fileView;
 	private final String segmentId;
-	boolean ignoreNextCaretUpdate = false;
+	boolean modifiedFlag = false;
 
 	SegmentView(FileView fileView, String segmentId) {
 		initComponents();
@@ -175,9 +176,14 @@ public class SegmentView extends javax.swing.JPanel {
 		return lastActiveSegmentView;
 	}
 
-	void applySpellcheck() {
+	void applySpellcheck(boolean modified) {
 		int caretLocation = markupViewTarget.getCaret().getDot();
-		SpellCheck.spellCheck(markupViewTarget, caretLocation);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				SpellCheck.spellCheck(markupViewTarget, caretLocation, modified);
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
@@ -225,9 +231,6 @@ public class SegmentView extends javax.swing.JPanel {
         markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 markupViewTargetKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                markupViewTargetKeyReleased(evt);
             }
         });
         jScrollPane4.setViewportView(markupViewTarget);
@@ -293,7 +296,7 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		Session.getUndoManager().markSnapshot();
 		lastActiveSegmentView = this;
-		applySpellcheck();
+		applySpellcheck(false);
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
@@ -301,16 +304,12 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetKeyPressed
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		if (ignoreNextCaretUpdate) {
-			ignoreNextCaretUpdate = false;
-			return;
+		if (modifiedFlag == false) {
+			Session.getUndoManager().markSnapshot();
 		}
-		Session.getUndoManager().markSnapshot();
+		applySpellcheck(modifiedFlag);
+		modifiedFlag = false;
     }//GEN-LAST:event_markupViewTargetCaretUpdate
-
-    private void markupViewTargetKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyReleased
-		applySpellcheck();
-    }//GEN-LAST:event_markupViewTargetKeyReleased
 
 	void setEditorFont(Font f) {
 		markupViewSource.setFont(f);
