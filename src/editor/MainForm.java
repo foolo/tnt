@@ -511,8 +511,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		try {
 			File tempDir = Files.createTempDirectory("tnt_tmp_").toFile();
 			String xliffData = save_to_string();
-			File outputDir = rainbowHandler.exportTranslatedFile(tempDir, f, xliffData);
-			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputDir), "Export result", JOptionPane.INFORMATION_MESSAGE);
+			File outputFile = rainbowHandler.exportTranslatedFile(tempDir, f, xliffData);
+			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
 		}
 		catch (IOException | ConversionError | SaveException ex) {
 			JOptionPane.showMessageDialog(this, "Could not export file: " + f.toString() + "\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);

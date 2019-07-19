@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import org.w3c.dom.Document;
 import util.Log;
 import util.XmlUtil;
@@ -169,6 +170,7 @@ public class RainbowHandler {
 
 		File mergeDir = new File(manifestDir, manifest.getMergeDir());
 		mergeDir.mkdirs();
+		ArrayList<File> targetFiles = new ArrayList<>();
 		for (String f : manifest.getTargetFiles()) {
 			File tmpMergeDir = new File(tmpManifestDir, manifest.getMergeDir());
 			File tmpTargetFile = new File(tmpMergeDir, f);
@@ -178,7 +180,14 @@ public class RainbowHandler {
 			if (targetFile.getAbsoluteFile().exists() == false) {
 				throw new ConversionError("Expected output file not found: " + targetFile);
 			}
+			targetFiles.add(targetFile);
 		}
-		return new File(manifestDir, manifest.getMergeDir());
+		if (targetFiles.isEmpty()) {
+			throw new ConversionError("No target files in manifest");
+		}
+		if (targetFiles.size() > 1) {
+			Log.debug("More than one target file in manifest: " + targetFiles);
+		}
+		return targetFiles.get(0);
 	}
 }
