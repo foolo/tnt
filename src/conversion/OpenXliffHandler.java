@@ -7,6 +7,7 @@ import com.maxprograms.converters.FileFormats;
 import com.maxprograms.converters.Merge;
 import com.maxprograms.converters.Utils;
 import com.maxprograms.xliff2.ToXliff2;
+import editor.Session;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -120,7 +121,11 @@ public class OpenXliffHandler {
 		return xliffFile;
 	}
 
-	static String getTargetFilename(String originalFilePath, String targetLanguage) {
+	static String getTargetFilename(String originalFilePath) {
+		String targetLanguage = Session.getProperties().getTrgLang();
+		if (targetLanguage.isEmpty()) {
+			targetLanguage = "unknown_target_language";
+		}
 		String originalName = new File(originalFilePath).getName();
 		int dotPos = originalName.lastIndexOf('.');
 		if (dotPos < 0) {
@@ -148,7 +153,7 @@ public class OpenXliffHandler {
 		checkResources();
 
 		String originalFilePath = xliffTag.getFiles().get(0).getOriginalFilePath();
-		String targetFileName = getTargetFilename(originalFilePath, "sv");
+		String targetFileName = getTargetFilename(originalFilePath);
 		File targetFile = new File(xliffFile.getParentFile(), targetFileName);
 		Log.debug("exportTranslatedFile: targetFile: " + targetFile);
 
