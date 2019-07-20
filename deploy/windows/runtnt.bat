@@ -1,2 +1,2 @@
 cd %~dp0
-jre\bin\java.exe --module Tnt/editor.Application
+jre\bin\java.exe --class-path "lib/*" editor.Application

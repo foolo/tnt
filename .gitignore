@@ -2,5 +2,5 @@
 build/
 dist/
 lib/dev/
-tnt.AppDir/
-tnt.winapp/
+*.AppDir/
+.sconsign.dblite

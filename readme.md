@@ -3,41 +3,49 @@
 	git submodule init
 	git submodule update
 
-# Compile HunspellJNA
+# Prerequisities
 
-	cd HunspellJNA
-	mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true install
-	cd ..
-	cp $HOME/.m2/repository/dk/dren/hunspell/1.6.2-SNAPSHOT/hunspell-1.6.2-SNAPSHOT.jar  lib/dev/
-	cp $HOME/.m2/repository/dk/dren/hunspell/1.6.2-SNAPSHOT/hunspell-1.6.2-SNAPSHOT-sources.jar  lib/dev/
+## Linux
 
-# Build and deploy for Linux
+Install JDK 11, Apache Ant and Apache Maven
 
-Make sure that **java** and **ant** binary directories are in PATH and run:
+Add all ```/bin``` directories to PATH
 
-	deploy/create_appdir.sh
+Install scons (e.g. ```sudo apt install scons``` on Ubuntu )
 
-The application can now be run with
+## Windows
 
-	tnt.AppDir/AppRun
+Download and extract
+
+https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip
+
+http://apache.mirrors.spacedump.net//ant/binaries/apache-ant-1.10.6-bin.zip
+
+http://apache.mirrors.spacedump.net/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.zip
+
+Download and install Python 3 from https://www.python.org/downloads/
+Make sure to check "add Python to PATH" and similar.
+
+Install scons
+
+	pip install scons
+
+Before running the build commands under Windows, set the PATH (assuming tools were extracted under %userprofile%)
+
+	set PATH="%userprofile%\apache-ant-1.10.6\bin;%userprofile%\apache-maven-3.6.1\bin;%userprofile%\jdk-12.0.1\bin";%PATH%
+
+# Create release directory
+
+	scons
+
+The application can now be run with ```tnt.AppDir/AppRun``` on Linux or ```tnt.AppDir\runtnt.bat``` on Windows.
+
+## Create Linux AppImage
 
 To create an AppImage, download appimagetool from https://github.com/AppImage/AppImageKit/releases and run
 
 	./appimagetool-x86_64.AppImage tnt.AppDir
 
-# Build and deploy for Windows
-
-Download and extract
-https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip and
-http://apache.mirrors.spacedump.net//ant/binaries/apache-ant-1.10.6-bin.zip
-
-From Bash prompt (e.g. Cygwin or Git Bash) run
-
-	PATH="/path/to/jdk-12.0.1/bin:/path/to/apache-ant-1.10.6/bin:$PATH"
-	deploy/deploy_windows.sh
-
-The application can now be run with ```tnt.winapp/runtnt.bat```
-
 # Configure Netbeans
 
-Open the project in Netbeans 11 or later. Under *Project properties > Run*, set *Working Directory* to the tnt.AppDir directory created in previous steps.
+Open the project in Netbeans 11 or later. Under *Project properties > Run*, set *Working Directory* to the tnt.AppDir directory created in previous step.
