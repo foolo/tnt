@@ -74,6 +74,10 @@ public class FileTag {
 		return segmentArray;
 	}
 
+	public String getOriginalFilePath() {
+		return originalFilePath;
+	}
+
 	public FileTag copy() {
 		return new FileTag(this);
 	}

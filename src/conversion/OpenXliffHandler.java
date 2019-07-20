@@ -17,6 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.Vector;
 import util.Log;
+import xliff_model.XliffTag;
 
 public class OpenXliffHandler {
 
@@ -119,15 +120,11 @@ public class OpenXliffHandler {
 		return xliffFile;
 	}
 
-	static String getTargetFilename(String xliffFilename, String targetLanguage) {
-		String unknownFilename = xliffFilename + "." + targetLanguage + ".unknown_filetype";
-		if (xliffFilename.endsWith(".xlf") == false) {
-			return unknownFilename;
-		}
-		String originalName = xliffFilename.substring(0, xliffFilename.length() - 4);
+	static String getTargetFilename(String originalFilePath, String targetLanguage) {
+		String originalName = new File(originalFilePath).getName();
 		int dotPos = originalName.lastIndexOf('.');
 		if (dotPos < 0) {
-			return unknownFilename;
+			return originalName + "_" + targetLanguage;
 		}
 		String baseName = originalName.substring(0, dotPos);
 		String ext = originalName.substring(dotPos, originalName.length());
@@ -145,11 +142,13 @@ public class OpenXliffHandler {
 		}
 	}
 
-	public File exportTranslatedFile(File xliffFile) throws ConversionError, IOException {
+	public File exportTranslatedFile(XliffTag xliffTag) throws ConversionError, IOException {
+		File xliffFile = xliffTag.getFile();
 		Log.debug("exportTranslatedFile: xliffFile: " + xliffFile);
 		checkResources();
 
-		String targetFileName = getTargetFilename(xliffFile.getName(), "sv");
+		String originalFilePath = xliffTag.getFiles().get(0).getOriginalFilePath();
+		String targetFileName = getTargetFilename(originalFilePath, "sv");
 		File targetFile = new File(xliffFile.getParentFile(), targetFileName);
 		Log.debug("exportTranslatedFile: targetFile: " + targetFile);
 
