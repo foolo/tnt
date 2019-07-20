@@ -6,20 +6,16 @@ import javax.swing.JOptionPane;
 import language.LanguageCollection;
 import util.Settings;
 
-public final class CreateXliffDialog extends javax.swing.JDialog {
+public final class CreateXliffDialog extends BaseDialog {
 
-	private boolean result = false;
 	File inputFile = null;
 	File xliffFile = null;
 	File sklFile = null;
 
-	boolean getResult() {
-		return result;
-	}
-
-	public CreateXliffDialog(java.awt.Frame parent, boolean modal) {
-		super(parent, modal);
+	public CreateXliffDialog(java.awt.Frame parent) {
+		super(parent);
 		initComponents();
+		initButtons(jButtonOk, jButtonCancel);
 		sourceLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		targetLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		update();
@@ -109,11 +105,6 @@ public final class CreateXliffDialog extends javax.swing.JDialog {
         });
 
         jButtonCancel.setText("Cancel");
-        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelActionPerformed(evt);
-            }
-        });
 
         jLabelError.setForeground(new java.awt.Color(255, 0, 0));
         jLabelError.setText("jLabelError");
@@ -208,10 +199,6 @@ public final class CreateXliffDialog extends javax.swing.JDialog {
 		sklFile = new File(inputFile.getAbsolutePath() + ".skl");
 		update();
     }//GEN-LAST:event_jButtonChooseInputFilesActionPerformed
-
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-		setVisible(false);
-    }//GEN-LAST:event_jButtonCancelActionPerformed
 
 	void showError(String msg) {
 		JOptionPane.showMessageDialog(this, msg, "", JOptionPane.ERROR_MESSAGE);

@@ -482,7 +482,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (okToClose() == false) {
 			return;
 		}
-		CreateXliffDialog d = new CreateXliffDialog(this, true);
+		CreateXliffDialog d = new CreateXliffDialog(this);
 		d.setLocationRelativeTo(this);
 		d.setVisible(true);
 		if (d.getResult() == false) {
