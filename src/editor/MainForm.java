@@ -286,9 +286,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemOpen = new javax.swing.JMenuItem();
         jMenuRecentFiles = new javax.swing.JMenu();
         jMenuItemClearRecentFiles = new javax.swing.JMenuItem();
+        jMenuItemSave = new javax.swing.JMenuItem();
         jMenuItemExport = new javax.swing.JMenuItem();
         jMenuItemProperties = new javax.swing.JMenuItem();
-        jMenuItemSave = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItemPreferences = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
@@ -337,6 +337,17 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenu1.add(jMenuRecentFiles);
 
+        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemSave.setText("Save");
+        jMenuItemSave.setEnabled(false);
+        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemSaveActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemSave);
+
+        jMenuItemExport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemExport.setText("Export translated file(s)");
         jMenuItemExport.setEnabled(false);
         jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
@@ -353,16 +364,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu1.add(jMenuItemProperties);
-
-        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemSave.setText("Save");
-        jMenuItemSave.setEnabled(false);
-        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemSaveActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemSave);
 
         jMenuBar1.add(jMenu1);
 
