@@ -12,13 +12,12 @@ import util.Log;
 import util.Settings;
 import xliff_model.Tag;
 
-public class PreferencesForm extends javax.swing.JDialog {
-
-	private boolean result = false;
+public class PreferencesForm extends BaseDialog {
 
 	public PreferencesForm(java.awt.Frame parent) {
-		super(parent, true);
+		super(parent);
 		initComponents();
+		initButtons(jButton1, jButton2);
 		jComboBoxFont.addItem(Font.MONOSPACED);
 		jComboBoxFont.addItem(Font.SANS_SERIF);
 		jComboBoxFont.addItem(Font.SERIF);
@@ -38,10 +37,6 @@ public class PreferencesForm extends javax.swing.JDialog {
 			}
 		});
 		addSampleText();
-	}
-
-	boolean getResult() {
-		return result;
 	}
 
 	private int getFontStyle() {
