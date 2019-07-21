@@ -4,7 +4,6 @@ import xliff_model.exceptions.EncodeException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import util.Log;
 import util.NodeArray;
@@ -14,11 +13,8 @@ public class TaggedText {
 
 	private static final ArrayList<String> EMPTY_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"cp", "ph", "sc", "ec", "sm", "em"}));
 	private static final ArrayList<String> COMPOSITE_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"pc", "mrk"}));
-	// http://docs.oasis-open.org/xliff/xliff-core/v2.0/os/xliff-core-v2.0-os.html#id
-	private static final ArrayList<String> ID_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"mrk", "sm", "pc", "sc", "ec", "ph"}));
 
 	private final ArrayList<TaggedTextContent> content;
-	private final ArrayList<String> ids = new ArrayList<>();
 
 	static Node createRefNode(Node node) {
 		Node newNode = node.cloneNode(false);
@@ -26,7 +22,7 @@ public class TaggedText {
 		return newNode;
 	}
 
-	public static ArrayList<TaggedTextContent> decode(Node node, ArrayList<String> ids) {
+	public static ArrayList<TaggedTextContent> decode(Node node) {
 		ArrayList<TaggedTextContent> res = new ArrayList<>();
 		for (Node n : new NodeArray(node.getChildNodes())) {
 			if (n.getNodeType() == Node.TEXT_NODE) {
@@ -35,7 +31,7 @@ public class TaggedText {
 			else if (n.getNodeType() == Node.ELEMENT_NODE) {
 				if (COMPOSITE_TAG_NAMES.contains(n.getNodeName())) {
 					res.add(new Tag(createRefNode(n), Tag.Type.START));
-					res.addAll(decode(n, ids));
+					res.addAll(decode(n));
 					res.add(new Tag(null, Tag.Type.END));
 				}
 				else if (EMPTY_TAG_NAMES.contains(n.getNodeName())) {
@@ -43,17 +39,6 @@ public class TaggedText {
 				}
 				else {
 					Log.debug("TaggedText: unhandled node name: " + n.getNodeName(), node);
-				}
-
-				if (ID_TAG_NAMES.contains(n.getNodeName())) {
-					Element e = (Element) n;
-					String id = e.getAttribute("id");
-					if (id.isEmpty()) {
-						Log.debug("Missing id for tag: " + n.getNodeName());
-					}
-					else {
-						ids.add(id);
-					}
 				}
 			}
 			else {
@@ -64,7 +49,7 @@ public class TaggedText {
 	}
 
 	public TaggedText(Node node) {
-		content = decode(node, ids);
+		content = decode(node);
 	}
 
 	public TaggedText(ArrayList<TaggedTextContent> content) {
@@ -73,10 +58,6 @@ public class TaggedText {
 
 	public ArrayList<TaggedTextContent> getContent() {
 		return content;
-	}
-
-	public ArrayList<String> getIds() {
-		return ids;
 	}
 
 	public String getTextContent() {
