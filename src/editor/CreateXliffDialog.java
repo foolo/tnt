@@ -10,7 +10,6 @@ public final class CreateXliffDialog extends BaseDialog {
 
 	File inputFile = null;
 	File xliffFile = null;
-	File sklFile = null;
 
 	public CreateXliffDialog(java.awt.Frame parent) {
 		super(parent);
@@ -27,10 +26,6 @@ public final class CreateXliffDialog extends BaseDialog {
 
 	File getXliffFile() {
 		return xliffFile;
-	}
-
-	File getSkeletonFile() {
-		return sklFile;
 	}
 
 	String getSourceLanguage() {
@@ -196,7 +191,6 @@ public final class CreateXliffDialog extends BaseDialog {
 		Settings.setInputFileDirectory(fc.getSelectedFile());
 		inputFile = fc.getSelectedFile().getAbsoluteFile();
 		xliffFile = new File(inputFile.getAbsolutePath() + ".xlf");
-		sklFile = new File(inputFile.getAbsolutePath() + ".skl");
 		update();
     }//GEN-LAST:event_jButtonChooseInputFilesActionPerformed
 
@@ -212,10 +206,6 @@ public final class CreateXliffDialog extends BaseDialog {
 		}
 		/*if (xliffFile.exists()) {
 			JOptionPane.showMessageDialog(this, "Output XLIFF file already exists:\n" + xliffFile.getAbsolutePath(), "", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		if (sklFile.exists()) {
-			JOptionPane.showMessageDialog(this, "Output skeleton file already exists:\n" + sklFile.getAbsolutePath(), "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}*/
 		result = true;

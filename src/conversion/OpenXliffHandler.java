@@ -43,7 +43,7 @@ public class OpenXliffHandler {
 	void convert(File inputFile, String srcLang, String tgtLang) throws ConversionError {
 		String source = inputFile.getAbsolutePath();
 		String xliff = inputFile.getAbsolutePath() + ".xlf";
-		String skl = inputFile.getAbsolutePath() + ".skl";
+		String skl = inputFile.getAbsolutePath() + "_tmp_" + System.currentTimeMillis() + ".skl";
 
 		String type = FileFormats.detectFormat(source);
 		if (type == null) {
@@ -88,6 +88,7 @@ public class OpenXliffHandler {
 		params.put("tgtLang", tgtLang);
 		Vector<String> result = Convert.run(params);
 		if (Constants.SUCCESS.equals(result.get(0))) {
+			Convert.addSkeleton(xliff, catalog);
 			result = ToXliff2.run(new File(xliff), catalog);
 			if (Constants.SUCCESS.equals(result.get(0)) == false) {
 				throw new ConversionError(result.get(1));
@@ -98,26 +99,17 @@ public class OpenXliffHandler {
 		}
 	}
 
-	public File createPackage(File inputFile, File xliffFile, File skeletonFile, String sourceLanguage, String targetLanguage) throws ConversionError {
+	public File createPackage(File inputFile, File xliffFile, String sourceLanguage, String targetLanguage) throws ConversionError {
 		Log.debug("createPackage: inputFile: " + inputFile);
 		Log.debug("createPackage: xliffFile: " + xliffFile);
-		Log.debug("createPackage: skeletonFile: " + skeletonFile);
 		checkResources();
 
 		xliffFile.delete();
-		skeletonFile.delete();
 		convert(inputFile, sourceLanguage, targetLanguage);
-
-		File skeletonLocalFile = new File(skeletonFile.getName());
-		skeletonLocalFile.renameTo(skeletonFile);
 
 		if (xliffFile.exists() == false) {
 			throw new ConversionError("No output XLIFF file was found at: " + xliffFile);
 		}
-		if (skeletonFile.exists() == false) {
-			throw new ConversionError("No output skeleton file was found at: " + skeletonFile);
-		}
-
 		return xliffFile;
 	}
 
