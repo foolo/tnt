@@ -57,7 +57,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+E"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Save and export"/>
+                <Property name="text" type="java.lang.String" value="Export translated file"/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>

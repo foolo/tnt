@@ -337,7 +337,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenu1.add(jMenuItemSave);
 
         jMenuItemExport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemExport.setText("Save and export");
+        jMenuItemExport.setText("Export translated file");
         jMenuItemExport.setEnabled(false);
         jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -491,7 +491,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
-		save_file(false);
 		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
 			String xliffData = save_to_string();
