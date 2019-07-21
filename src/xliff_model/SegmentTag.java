@@ -102,6 +102,10 @@ public class SegmentTag {
 		return id;
 	}
 
+	public boolean getStaged() {
+		return staged;
+	}
+
 	public ValidationError testEncode() {
 		ArrayList<ValidationError> errors = new ArrayList<>();
 		encodeContent(targetNode, targetText, errors);

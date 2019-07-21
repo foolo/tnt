@@ -28,7 +28,6 @@ import xliff_model.FileTag;
 import xliff_model.SegmentTag;
 import xliff_model.XliffTag;
 import xliff_model.exceptions.LoadException;
-import xliff_model.exceptions.ParseException;
 import xliff_model.exceptions.SaveException;
 
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
@@ -236,16 +235,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	boolean validateFile() {
-		String xmlData;
-		ArrayList<ValidationError> validationErrors;
-		try {
-			xmlData = save_to_string();
-			validationErrors = OpenXliffValidator.validate(xmlData);
-		}
-		catch (SaveException | ParseException ex) {
-			JOptionPane.showMessageDialog(this, "Could not validate file\n" + ex.toString(), "Unexpected error", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
+		ArrayList<ValidationError> validationErrors = OpenXliffValidator.validate(getXliffTag());
 		if (validationErrors.isEmpty() == false) {
 			showValidationErrors(validationErrors);
 			return false;

@@ -89,6 +89,16 @@ public class TaggedText {
 		return sb.toString();
 	}
 
+	public ArrayList<Tag> getTags() {
+		ArrayList<Tag> res = new ArrayList<>();
+		for (TaggedTextContent c : content) {
+			if (c instanceof Tag) {
+				res.add((Tag) c);
+			}
+		}
+		return res;
+	}
+
 	public TaggedText copy() {
 		ArrayList<TaggedTextContent> newContent = new ArrayList<>();
 		for (TaggedTextContent t : content) {
