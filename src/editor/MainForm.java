@@ -494,10 +494,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		save_file(false);
 		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
-			File outputFile = converter.exportTranslatedFile(getXliffTag());
+			String xliffData = save_to_string();
+			File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
 			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
 		}
-		catch (IOException | ConversionError ex) {
+		catch (IOException | ConversionError | SaveException ex) {
 			JOptionPane.showMessageDialog(this, "Could not export file:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
 		}
     }//GEN-LAST:event_jMenuItemExportActionPerformed

@@ -139,18 +139,22 @@ public class OpenXliffHandler {
 		}
 	}
 
-	public File exportTranslatedFile(XliffTag xliffTag) throws ConversionError, IOException {
-		File xliffFile = xliffTag.getFile();
-		Log.debug("exportTranslatedFile: xliffFile: " + xliffFile);
+	public File exportTranslatedFile(XliffTag xliffTag, String xliffData) throws ConversionError, IOException {
+		File xliffTmpFile = File.createTempFile("tnt_", ".xlf");
+		xliffTmpFile.deleteOnExit();
+		Log.debug("exportTranslatedFile: xliffFile: " + xliffTmpFile);
 		checkResources();
 
+		Files.write(Paths.get(xliffTmpFile.getPath()), xliffData.getBytes());
+
 		String originalFilePath = xliffTag.getFiles().get(0).getOriginalFilePath();
+
 		String targetFileName = getTargetFilename(originalFilePath);
-		File targetFile = new File(xliffFile.getParentFile(), targetFileName);
+		File targetFile = new File(xliffTag.getFile().getParentFile(), targetFileName);
 		Log.debug("exportTranslatedFile: targetFile: " + targetFile);
 
 		targetFile.delete();
-		merge(xliffFile, targetFile);
+		merge(xliffTmpFile, targetFile);
 
 		if (targetFile.getAbsoluteFile().exists() == false || targetFile.getAbsoluteFile().length() == 0) {
 			throw new ConversionError("Expected output file not found or empty: " + targetFile);
