@@ -46,6 +46,10 @@ public class XliffTag implements UndoableModel {
 		}
 	}
 
+	public boolean hasMetadata() {
+		return document.getElementsByTagName("mda:metadata").getLength() > 0;
+	}
+
 	public ArrayList<FileTag> getFiles() {
 		return files;
 	}

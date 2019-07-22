@@ -491,6 +491,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
+		if (getXliffTag().hasMetadata() == false) {
+			JOptionPane.showMessageDialog(this, "Could not export. No document metadata found in XLIFF file.", "Export result", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
 		OpenXliffHandler converter = new OpenXliffHandler();
 		try {
 			String xliffData = save_to_string();
