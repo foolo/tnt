@@ -208,10 +208,10 @@ public final class CreateXliffDialog extends BaseDialog {
 			JOptionPane.showMessageDialog(this, preValidateResult, "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		/*if (xliffFile.exists()) {
+		if (xliffFile.exists()) {
 			JOptionPane.showMessageDialog(this, "Output XLIFF file already exists:\n" + xliffFile.getAbsolutePath(), "", JOptionPane.ERROR_MESSAGE);
 			return;
-		}*/
+		}
 		result = true;
 		setVisible(false);
     }//GEN-LAST:event_jButtonOkActionPerformed
