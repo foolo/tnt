@@ -3,6 +3,7 @@ package editor;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import language.LanguageCollection;
 import util.Settings;
 
@@ -184,6 +185,9 @@ public final class CreateXliffDialog extends BaseDialog {
 
     private void jButtonChooseInputFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseInputFilesActionPerformed
 		JFileChooser fc = new JFileChooser(Settings.getInputFileDirectory());
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt");
+		fc.addChoosableFileFilter(filter);
+		fc.setFileFilter(filter);
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
@@ -219,7 +223,6 @@ public final class CreateXliffDialog extends BaseDialog {
     private void targetLanguageComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetLanguageComboBoxActionPerformed
 		update();
     }//GEN-LAST:event_targetLanguageComboBoxActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
