@@ -3,6 +3,8 @@ package xliff_model;
 import xliff_model.exceptions.EncodeException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import util.Log;
@@ -50,6 +52,7 @@ public class TaggedText {
 
 	public TaggedText(Node node) {
 		content = decode(node);
+		System.out.println("" + content);
 	}
 
 	public TaggedText(ArrayList<TaggedTextContent> content) {
@@ -95,8 +98,12 @@ public class TaggedText {
 		return result;
 	}
 
-	public ArrayList<Node> toNodes(Document document) throws EncodeException {
+	public ArrayList<Node> toNodes(Document document, String leadingWhitespace) throws EncodeException {
 		ArrayList<TaggedTextContent> tmpContent = new ArrayList<>(content);
+		if ((tmpContent.isEmpty() == false) && (tmpContent.get(0) instanceof Text)) {
+			Text text = new Text(leadingWhitespace + ((Text) tmpContent.get(0)).getContent());
+			tmpContent.set(0, text);
+		}
 		tmpContent.add(new Tag(null, Tag.Type.END));
 		ArrayList<Node> result = getNodeList(tmpContent, document);
 		if (tmpContent.isEmpty() == false) {
@@ -136,6 +143,23 @@ public class TaggedText {
 			}
 		}
 		throw new EncodeException("Missing end tag");
+	}
+
+	String trim() {
+		if (content.isEmpty()) {
+			return "";
+		}
+		TaggedTextContent start = content.get(0);
+		if (start instanceof Text) {
+			Text text = (Text) start;
+			Pattern p = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
+			Matcher m = p.matcher(text.getContent());
+			if (m.find() && m.groupCount() == 1 && m.start(1) == 0) {
+				content.set(0, new Text(text.getContent().substring(m.end(1), text.getContent().length())));
+				return m.group(1);
+			}
+		}
+		return "";
 	}
 
 	@Override

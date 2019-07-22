@@ -136,4 +136,12 @@ public class Settings {
 		}
 		return new File(recentFiles.get(recentFiles.size() - 1));
 	}
+
+	public static boolean getShowWhitespace() {
+		return prefs.getBoolean("show_whitespace", false);
+	}
+
+	public static void setShowWhitespace(boolean showWhitespace) {
+		prefs.putBoolean("show_whitespace", showWhitespace);
+	}
 }

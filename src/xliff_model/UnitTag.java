@@ -41,7 +41,7 @@ public class UnitTag implements Item {
 		node = ut.node;
 		id = ut.id;
 		for (SegmentTag s : ut.segments) {
-			segments.add(new SegmentTag(s, this));
+			segments.add(new SegmentTag(s));
 		}
 	}
 

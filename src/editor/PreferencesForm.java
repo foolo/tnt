@@ -37,6 +37,8 @@ public class PreferencesForm extends BaseDialog {
 			}
 		});
 		addSampleText();
+
+		jCheckBoxShowWhitespace.setSelected(Settings.getShowWhitespace());
 	}
 
 	private int getFontStyle() {
@@ -90,6 +92,8 @@ public class PreferencesForm extends BaseDialog {
         markupView1 = new editor.MarkupView();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jCheckBoxShowWhitespace = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -186,6 +190,27 @@ public class PreferencesForm extends BaseDialog {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Whitespace handling"));
+
+        jCheckBoxShowWhitespace.setText("Show leading whitespace characters (requires restart)");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxShowWhitespace)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxShowWhitespace)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -193,6 +218,7 @@ public class PreferencesForm extends BaseDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -206,6 +232,8 @@ public class PreferencesForm extends BaseDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -233,6 +261,7 @@ public class PreferencesForm extends BaseDialog {
 		int style = getFontStyle();
 		Integer size = (Integer) jSpinnerFontSize.getValue();
 		Settings.setEditorFont(fontName, style, size);
+		Settings.setShowWhitespace(jCheckBoxShowWhitespace.isSelected());
 		result = true;
 		setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -250,9 +279,11 @@ public class PreferencesForm extends BaseDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBoxBold;
     private javax.swing.JCheckBox jCheckBoxItalic;
+    private javax.swing.JCheckBox jCheckBoxShowWhitespace;
     private javax.swing.JComboBox<String> jComboBoxFont;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSpinner jSpinnerFontSize;

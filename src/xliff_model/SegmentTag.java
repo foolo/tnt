@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import util.Settings;
 import util.XmlUtil;
 
 public class SegmentTag {
@@ -18,6 +19,7 @@ public class SegmentTag {
 	private State state;
 	private boolean staged = false;
 	private final String id;
+	private final String sourceLeadingWhitepace;
 
 	public static final String ATTRIBUTE_STATE = "state";
 
@@ -62,10 +64,17 @@ public class SegmentTag {
 		targetNode = tn;
 		sourceText = new TaggedText(sourceNode);
 		targetText = new TaggedText(targetNode);
+		if (Settings.getShowWhitespace()) {
+			sourceLeadingWhitepace = "";
+		}
+		else {
+			sourceLeadingWhitepace = sourceText.trim();
+			targetText.trim();
+		}
 		id = generateId();
 	}
 
-	public SegmentTag(SegmentTag st, UnitTag parent) {
+	public SegmentTag(SegmentTag st) {
 		this.sourceText = st.sourceText;
 		this.targetText = st.targetText;
 		this.node = st.node;
@@ -73,6 +82,7 @@ public class SegmentTag {
 		this.targetNode = st.targetNode;
 		this.state = st.state;
 		this.id = st.id;
+		this.sourceLeadingWhitepace = st.sourceLeadingWhitepace;
 	}
 
 	public TaggedText getSourceText() {
@@ -137,7 +147,7 @@ public class SegmentTag {
 	public void encodeContent(Node n, TaggedText text, ArrayList<ValidationError> errors) {
 		ArrayList<Node> nodes;
 		try {
-			nodes = text.toNodes(n.getOwnerDocument());
+			nodes = text.toNodes(n.getOwnerDocument(), sourceLeadingWhitepace);
 		}
 		catch (EncodeException ex) {
 			nodes = text.onlyTextToNodes(n.getOwnerDocument());

@@ -14,7 +14,7 @@ public class Text implements TaggedTextContent {
 
 	@Override
 	public String toString() {
-		return content;
+		return "'" + content + "'";
 	}
 
 	@Override
