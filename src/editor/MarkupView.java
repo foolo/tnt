@@ -1,6 +1,5 @@
 package editor;
 
-import editor.javax.swing.plaf.basic.TextTransferHandler;
 import java.awt.Font;
 import xliff_model.TaggedText;
 import xliff_model.Tag;
@@ -24,7 +23,7 @@ public class MarkupView extends JTextPane {
 
 	public MarkupView(SegmentView segmentView) {
 		this.segmentView = segmentView;
-		setTransferHandler(new TextTransferHandler());
+		setTransferHandler(new TaggedTextTransferHandler());
 	}
 
 	public SegmentView getSegmentView() {
