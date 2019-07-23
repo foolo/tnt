@@ -34,7 +34,7 @@ public class XliffTag implements UndoableModel {
 				continue;
 			}
 			if (n.getNodeName().equals("file")) {
-				FileTag fileObj = new FileTag(n);
+				FileTag fileObj = new FileTag((Element) n);
 				files.add(fileObj);
 			}
 			else {

@@ -14,7 +14,7 @@ import javax.swing.text.StyledDocument;
 
 public class SpellCheck {
 
-	static Pattern WORDS_PATTERN = Pattern.compile("\\b(\\w+)\\b", Pattern.UNICODE_CHARACTER_CLASS);
+	static Pattern WORDS_PATTERN = Pattern.compile("\\b\\w+\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	static final SimpleAttributeSet MISSPELLED_ATTRIBUTE_SET = new SimpleAttributeSet();
 	static final SimpleAttributeSet CLEAR_MISSPELLED_ATTRIBUTE_SET = new SimpleAttributeSet();
 	static Hunspell.Dictionary currentDictionary;
@@ -51,7 +51,7 @@ public class SpellCheck {
 		int caretLocationPlain = taggedToPlainIndex(caretLocationTagged, indexes);
 		Matcher m = WORDS_PATTERN.matcher(text);
 		while (m.find()) {
-			String word = m.group(1);
+			String word = m.group();
 			int startPlain = m.start();
 			int endPlain = m.end();
 			boolean caretIsAtWordEnd = (caretLocationPlain == endPlain);

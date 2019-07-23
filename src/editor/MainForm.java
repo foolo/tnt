@@ -105,6 +105,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);
 		}
+		applyFontPreferences();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
@@ -132,8 +133,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		Log.debug("Using spelling language " + l + " for target language " + trgLang);
 		try {
 			SpellCheck.loadDictionary(l);
-			for (FileView fileView : fileViews) {
-				fileView.clearSpellcheck();
+			for (SegmentView segmentView : getSegmentViews()) {
+				segmentView.clearSpellcheck();
 			}
 		}
 		catch (IOException ex) {
@@ -143,6 +144,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	XliffTag getXliffTag() {
 		return (XliffTag) Session.getUndoManager().getCurrentState().getModel();
+	}
+
+	ArrayList<SegmentView> getSegmentViews() {
+		ArrayList<SegmentView> res = new ArrayList<>();
+		for (FileView fileView : fileViews) {
+			fileView.getSegmentViews(res);
+		}
+		return res;
 	}
 
 	boolean showValidiationError(ValidationError e) {
@@ -542,11 +551,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
-	void applyPreferences() {
+	void applyFontPreferences() {
 		Font f = new Font(Settings.getEditorFontName(), Settings.getEditorFontStyle(), Settings.getEditorFontSize());
-		for (FileView fileView : fileViews) {
-			fileView.setEditorFont(f);
+		for (SegmentView segmentView : getSegmentViews()) {
+			segmentView.setEditorFont(f);
 		}
+	}
+
+	void applyPreferences() {
+		applyFontPreferences();
 	}
 
     private void jMenuItemPreferencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreferencesActionPerformed

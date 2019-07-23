@@ -1,7 +1,6 @@
 package editor;
 
 import java.awt.Component;
-import java.awt.Font;
 import java.util.ArrayList;
 import xliff_model.FileTag;
 import xliff_model.SegmentTag;
@@ -59,15 +58,9 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void setEditorFont(Font f) {
+	void getSegmentViews(ArrayList<SegmentView> segmentViews) {
 		for (Component c : jPanelItems.getComponents()) {
-			((SegmentView) c).setEditorFont(f);
-		}
-	}
-
-	void clearSpellcheck() {
-		for (Component c : jPanelItems.getComponents()) {
-			((SegmentView) c).clearSpellcheck();
+			segmentViews.add((SegmentView) c);
 		}
 	}
 
