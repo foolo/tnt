@@ -16,9 +16,9 @@ public class FileTag {
 	private final String originalFilePath;
 	private final String id;
 
-	public FileTag(Node node) throws ParseException {
-		originalFilePath = ((Element) node).getAttribute("original");
-		id = ((Element) node).getAttribute("id");
+	public FileTag(Element node) throws ParseException {
+		originalFilePath = node.getAttribute("original");
+		id = node.getAttribute("id");
 		if (id.isEmpty()) {
 			throw new ParseException("Mandatory attribute 'id' missing or empty in <file>");
 		}
