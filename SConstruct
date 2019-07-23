@@ -13,8 +13,8 @@ jredir = appdir + "/jre"
 
 env.Command("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar", None, "mvn -f HunspellJNA/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package")
 env.AlwaysBuild("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
-env.Command("dist/tntsrc.jar", None, "ant jar")
-env.AlwaysBuild("dist/tntsrc.jar")
+env.Command("dist/tnt.jar", None, "ant jar")
+env.AlwaysBuild("dist/tnt.jar")
 
 modules = "java.base,java.datatransfer,java.desktop,java.logging,java.prefs,java.xml,java.sql"
 jlink_cmd = "jlink --add-modules " + modules + " --output " + jredir
@@ -41,7 +41,7 @@ env.Install(appdirlib, "OpenXLIFF/lib/dtd.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/json.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/jsoup-1.11.3.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/xlifffilters.jar")
-env.Install(appdirlib, "dist/tntsrc.jar")
+env.Install(appdirlib, "dist/tnt.jar")
 env.Install(appdirlib, "HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
 env.Install(appdirlib, "HunspellJNA/lib/jna.jar")
 env.Install(appdir, "languages.txt")
