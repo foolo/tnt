@@ -52,7 +52,6 @@ public class TaggedText {
 
 	public TaggedText(Node node) {
 		content = decode(node);
-		System.out.println("" + content);
 	}
 
 	public TaggedText(ArrayList<TaggedTextContent> content) {
