@@ -107,6 +107,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			jTabbedPane1.add(fv);
 			fileViews.add(fv);
 		}
+		applyFontPreferences();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
@@ -563,11 +564,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
-	void applyPreferences() {
+	void applyFontPreferences() {
 		Font f = new Font(Settings.getEditorFontName(), Settings.getEditorFontStyle(), Settings.getEditorFontSize());
 		for (SegmentView segmentView : getSegmentViews()) {
 			segmentView.setEditorFont(f);
 		}
+	}
+
+	void applyPreferences() {
+		applyFontPreferences();
 	}
 
     private void jMenuItemPreferencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreferencesActionPerformed
