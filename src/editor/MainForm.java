@@ -452,7 +452,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
-		save_file(false);
+		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Saving... ");
+		dialog.run(() -> {
+			save_file(false);
+		});
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
@@ -488,15 +491,18 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 
-		File xliffFile;
-		OpenXliffHandler converter = new OpenXliffHandler();
-		try {
-			xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSourceLanguage(), d.getTargetLanguage());
-			load_file(xliffFile, true);
-		}
-		catch (ConversionError ex) {
-			JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-		}
+		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Importing " + d.getInputFile().getName() + "...");
+		dialog.run(() -> {
+			File xliffFile;
+			OpenXliffHandler converter = new OpenXliffHandler();
+			try {
+				xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSourceLanguage(), d.getTargetLanguage());
+				load_file(xliffFile, true);
+			}
+			catch (ConversionError ex) {
+				JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			}
+		});
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
 
     private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
@@ -504,16 +510,19 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			JOptionPane.showMessageDialog(this, "Could not export. No document metadata found in XLIFF file.", "Export result", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Exporting " + getXliffTag().getFile().getName() + "...");
+		dialog.run(() -> {
+			OpenXliffHandler converter = new OpenXliffHandler();
+			try {
 
-		OpenXliffHandler converter = new OpenXliffHandler();
-		try {
-			String xliffData = save_to_string();
-			File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
-			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (IOException | ConversionError | SaveException ex) {
-			JOptionPane.showMessageDialog(this, "Could not export file:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
-		}
+				String xliffData = save_to_string();
+				File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
+				JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
+			}
+			catch (IOException | ConversionError | SaveException ex) {
+				JOptionPane.showMessageDialog(this, "Could not export file:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
+			}
+		});
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
 	void jumpToNextSegment(SegmentView currentSegmentView) {
