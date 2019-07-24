@@ -40,7 +40,7 @@ public class FileView extends javax.swing.JPanel {
 	}
 
 	void scroll_to_segment(SegmentView segmentView) {
-		int dest_y = segmentView.getBounds().y + segmentView.getParent().getBounds().y;
+		int dest_y = segmentView.getBounds().y;
 		int dest_h = segmentView.getBounds().height;
 		int view_y = jScrollPane1.getVerticalScrollBar().getValue();
 		int view_h = jScrollPane1.getVerticalScrollBar().getVisibleAmount();
@@ -68,7 +68,9 @@ public class FileView extends javax.swing.JPanel {
 		boolean found = false;
 		for (Component c : jPanelItems.getComponents()) {
 			if (found) {
-				((SegmentView) c).grabFocusTarget();
+				SegmentView segmentView = ((SegmentView) c);
+				segmentView.grabFocusTarget();
+				scroll_to_segment(segmentView);
 				return;
 			}
 			if ((SegmentView) c == sv) {
