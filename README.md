@@ -9,7 +9,7 @@ Tnt is a basic open source computer-assisted translation tool
 ## Limitations
 Few document formats are supported.
 No translation memory tool or terminology manager.
-No dictorary tool or integration.
+No dictionary integration.
 
 ## Supported file formats
 - ODT
