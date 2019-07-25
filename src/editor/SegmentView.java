@@ -142,20 +142,9 @@ public class SegmentView extends javax.swing.JPanel {
 		jLabelValidationError.setToolTipText(tagIdDetails + message);
 	}
 
-	public void setTextPosition(CaretPosition.Column column, int position) {
-		if (column == CaretPosition.Column.SOURCE) {
-			markupViewSource.setCaretPosition(position);
-			markupViewSource.grabFocus();
-		}
-		else {
-			markupViewTarget.setCaretPosition(position);
-			markupViewTarget.grabFocus();
-		}
-	}
-
 	void notifyUndoManager(int caretPos1, int caretPos2) {
-		CaretPosition pos1 = new CaretPosition(this, CaretPosition.Column.TARGET, caretPos1);
-		CaretPosition pos2 = new CaretPosition(this, CaretPosition.Column.TARGET, caretPos2);
+		CaretPosition pos1 = new CaretPosition(this, caretPos1);
+		CaretPosition pos2 = new CaretPosition(this, caretPos2);
 		Session.getUndoManager().getCurrentState().setModified(pos1, pos2);
 	}
 
@@ -201,10 +190,10 @@ public class SegmentView extends javax.swing.JPanel {
 		return Column.TARGET;
 	}
 
-	void navigateToView(Column column) {
+	void navigateToView(Column column, int caretPosition) {
 		MarkupView markupView = getMarkupView(column);
 		markupView.grabFocus();
-		markupView.setCaretPosition(0);
+		markupView.setCaretPosition(caretPosition);
 	}
 
 	private static SegmentView lastActiveSegmentView = null;

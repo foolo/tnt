@@ -113,7 +113,7 @@ public class Session {
 
 	public Session(XliffTag xliffTag, UndoEventListener undoEventListener) {
 		undoManager = new UndoManager();
-		CaretPosition pos = new CaretPosition(null, CaretPosition.Column.TARGET, 0);
+		CaretPosition pos = new CaretPosition(null, 0);
 		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), undoEventListener);
 		properties = new Properties(xliffTag.getDocument());
 	}

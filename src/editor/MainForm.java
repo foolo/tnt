@@ -267,7 +267,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					segmentView.setTextPosition(newEditingPosition.getColumn(), newEditingPosition.getTextPosition());
+					segmentView.navigateToView(SegmentView.Column.TARGET, newEditingPosition.getTextPosition());
 				}
 			});
 		}

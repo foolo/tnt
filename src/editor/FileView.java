@@ -69,7 +69,7 @@ public class FileView extends javax.swing.JPanel {
 		for (Component c : jPanelItems.getComponents()) {
 			if (found) {
 				SegmentView segmentView = ((SegmentView) c);
-				segmentView.navigateToView(currentSegment.getActiveColumn());
+				segmentView.navigateToView(currentSegment.getActiveColumn(), 0);
 				scroll_to_segment(segmentView);
 				return;
 			}
@@ -84,7 +84,7 @@ public class FileView extends javax.swing.JPanel {
 		for (Component c : jPanelItems.getComponents()) {
 			if ((SegmentView) c == currentSegment) {
 				if (previousSegment != null) {
-					previousSegment.navigateToView(currentSegment.getActiveColumn());
+					previousSegment.navigateToView(currentSegment.getActiveColumn(), 0);
 					scroll_to_segment(previousSegment);
 				}
 				return;
