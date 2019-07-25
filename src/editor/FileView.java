@@ -64,18 +64,32 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void jumpToNextSegment(SegmentView sv) {
+	void jumpToNextSegment(SegmentView currentSegment) {
 		boolean found = false;
 		for (Component c : jPanelItems.getComponents()) {
 			if (found) {
 				SegmentView segmentView = ((SegmentView) c);
-				segmentView.grabFocusTarget();
+				segmentView.navigateToView(currentSegment.getActiveColumn());
 				scroll_to_segment(segmentView);
 				return;
 			}
-			if ((SegmentView) c == sv) {
+			if ((SegmentView) c == currentSegment) {
 				found = true;
 			}
+		}
+	}
+
+	void jumpToPreviousSegment(SegmentView currentSegment) {
+		SegmentView previousSegment = null;
+		for (Component c : jPanelItems.getComponents()) {
+			if ((SegmentView) c == currentSegment) {
+				if (previousSegment != null) {
+					previousSegment.navigateToView(currentSegment.getActiveColumn());
+					scroll_to_segment(previousSegment);
+				}
+				return;
+			}
+			previousSegment = (SegmentView) c;
 		}
 	}
 

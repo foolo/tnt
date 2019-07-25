@@ -7,6 +7,7 @@ import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentEvent.EventType;
@@ -18,6 +19,10 @@ import xliff_model.TaggedText;
 import xliff_model.ValidationPath;
 
 public class SegmentView extends javax.swing.JPanel {
+
+	public enum Column {
+		SOURCE, TARGET
+	}
 
 	private final DocumentListener targetDocumentListener = new DocumentListener() {
 
@@ -64,6 +69,18 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		jLabelValidationError.setText("");
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
+		markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent evt) {
+				handleKeyPress(evt, markupViewSource);
+			}
+		});
+		markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent evt) {
+				handleKeyPress(evt, markupViewTarget);
+			}
+		});
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
@@ -142,7 +159,7 @@ public class SegmentView extends javax.swing.JPanel {
 		Session.getUndoManager().getCurrentState().setModified(pos1, pos2);
 	}
 
-	void handleKeyPress(KeyEvent evt) {
+	void handleKeyPress(KeyEvent evt, MarkupView markupView) {
 		if (evt.getModifiers() == CTRL_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
@@ -155,10 +172,39 @@ public class SegmentView extends javax.swing.JPanel {
 					break;
 			}
 		}
+		if (evt.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
+			if (markupView.canMoveCaret(SwingConstants.SOUTH) == false) {
+				fileView.jumpToNextSegment(this);
+			}
+		}
+		if (evt.getExtendedKeyCode() == KeyEvent.VK_UP) {
+			if (markupView.canMoveCaret(SwingConstants.NORTH) == false) {
+				fileView.jumpToPreviousSegment(this);
+			}
+		}
 	}
 
-	void grabFocusTarget() {
-		markupViewTarget.grabFocus();
+	MarkupView getMarkupView(Column column) {
+		switch (column) {
+			case SOURCE:
+				return markupViewSource;
+			case TARGET:
+			default:
+				return markupViewTarget;
+		}
+	}
+
+	Column getActiveColumn() {
+		if (markupViewSource.hasFocus()) {
+			return Column.SOURCE;
+		}
+		return Column.TARGET;
+	}
+
+	void navigateToView(Column column) {
+		MarkupView markupView = getMarkupView(column);
+		markupView.grabFocus();
+		markupView.setCaretPosition(0);
 	}
 
 	private static SegmentView lastActiveSegmentView = null;
@@ -209,11 +255,6 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewSourceFocusGained(evt);
             }
         });
-        markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                markupViewSourceKeyPressed(evt);
-            }
-        });
         jScrollPane3.setViewportView(markupViewSource);
 
         jPanel1.add(jScrollPane3);
@@ -226,11 +267,6 @@ public class SegmentView extends javax.swing.JPanel {
         markupViewTarget.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewTargetFocusGained(evt);
-            }
-        });
-        markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                markupViewTargetKeyPressed(evt);
             }
         });
         jScrollPane4.setViewportView(markupViewTarget);
@@ -255,7 +291,7 @@ public class SegmentView extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelState)
                     .addComponent(jLabelValidationError))
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,19 +325,11 @@ public class SegmentView extends javax.swing.JPanel {
 		lastActiveSegmentView = this;
     }//GEN-LAST:event_markupViewSourceFocusGained
 
-    private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
-		handleKeyPress(evt);
-    }//GEN-LAST:event_markupViewSourceKeyPressed
-
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		Session.getUndoManager().markSnapshot();
 		lastActiveSegmentView = this;
 		applySpellcheck(false);
     }//GEN-LAST:event_markupViewTargetFocusGained
-
-    private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
-		handleKeyPress(evt);
-    }//GEN-LAST:event_markupViewTargetKeyPressed
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
 		if (modifiedFlag == false) {
