@@ -41,10 +41,10 @@ public class SegmentTag {
 		}
 	};
 
-	static int idCounter = 0;
+	static int idCounter = 1;
 
 	static String generateId() {
-		return "st" + idCounter++;
+		return "" + idCounter++;
 	}
 
 	public SegmentTag(Element node, UnitTag parent) throws ParseException {

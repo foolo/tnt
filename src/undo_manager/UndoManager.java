@@ -16,7 +16,14 @@ public class UndoManager {
 	public void initialize(UndoableState currentState, UndoEventListener listener) {
 		this.currentState = currentState;
 		this.listener = listener;
-		//this.listener.notify_undo();
+		push_snapshot();
+		markSaved();
+	}
+
+	public void resetUndoBuffer() {
+		undoBuffer.clear();
+		CaretPosition pos = new CaretPosition(null, 0);
+		currentState = new UndoableState(currentState.getModel(), pos, pos, this);
 		push_snapshot();
 		markSaved();
 	}

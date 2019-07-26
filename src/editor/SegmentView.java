@@ -14,6 +14,7 @@ import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
 import language.SpellCheck;
 import undo_manager.CaretPosition;
+import util.StringUtil;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
 import xliff_model.ValidationPath;
@@ -81,6 +82,7 @@ public class SegmentView extends javax.swing.JPanel {
 				handleKeyPress(evt, markupViewTarget);
 			}
 		});
+		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
@@ -233,6 +235,7 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
+        jLabelId = new javax.swing.JLabel();
 
         jPanel1.setMinimumSize(new java.awt.Dimension(50, 50));
         jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
@@ -292,12 +295,19 @@ public class SegmentView extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabelId.setFont(new java.awt.Font("DejaVu Sans Mono", 1, 12)); // NOI18N
+        jLabelId.setText("id");
+        jLabelId.setMinimumSize(new java.awt.Dimension(14, 15));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                .addGap(6, 6, 6)
+                .addComponent(jLabelId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -305,6 +315,10 @@ public class SegmentView extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabelId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -338,6 +352,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabelId;
     private javax.swing.JLabel jLabelState;
     private javax.swing.JLabel jLabelValidationError;
     private javax.swing.JPanel jPanel1;

@@ -8,4 +8,14 @@ public class StringUtil {
 		}
 		return s;
 	}
+
+	public static String leftPad(String s, char c, int length) {
+		int padLength = length - s.length();
+		StringBuilder sb = new StringBuilder();
+		while (padLength-- > 0) {
+			sb.append(c);
+		}
+		sb.append(s);
+		return sb.toString();
+	}
 }

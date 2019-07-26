@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.ToolTipManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import language.LanguageCollection;
 import util.Log;
@@ -48,6 +49,7 @@ public class Application {
 					Log.err(ex);
 					JOptionPane.showMessageDialog(null, "Could not load language list. Spellcheck will not be available.\n" + ex.toString(), "", JOptionPane.ERROR_MESSAGE);
 				}
+				ToolTipManager.sharedInstance().setInitialDelay(500);
 				MainForm mainForm = new MainForm();
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
