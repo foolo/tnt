@@ -21,6 +21,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import language.SpellCheck;
 import undo_manager.CaretPosition;
 import util.RegexUtil;
@@ -97,6 +101,15 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewSource.setBorder(new CompoundBorder(markupViewSource.getBorder(), PADDING_BORDER));
 		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
+
+		AbstractDocument targetAbstractDocument = ((AbstractDocument) markupViewTarget.getDocument());
+		targetAbstractDocument.setDocumentFilter(new DocumentFilter() {
+			@Override
+			public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String s, AttributeSet attrs) throws BadLocationException {
+				s = s.replaceAll("\\R|\t", "");
+				super.replace(fb, offset, length, s, attrs);
+			}
+		});
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
