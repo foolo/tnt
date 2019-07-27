@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.InputEvent;
@@ -10,9 +11,13 @@ import java.util.ArrayList;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
@@ -64,6 +69,8 @@ public class SegmentView extends javax.swing.JPanel {
 	private final FileView fileView;
 	private final String segmentId;
 	boolean modifiedFlag = false;
+	private int minHeight = 0;
+	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
 
 	SegmentView(FileView fileView, String segmentId) {
 		initComponents();
@@ -87,6 +94,8 @@ public class SegmentView extends javax.swing.JPanel {
 				handleKeyPress(evt, markupViewTarget);
 			}
 		});
+		markupViewSource.setBorder(new CompoundBorder(markupViewSource.getBorder(), PADDING_BORDER));
+		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
 	}
 
@@ -255,6 +264,16 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
+	void updateHeight() {
+		Dimension d = getPreferredSize();
+		int newHeight = Math.max(minHeight, Math.max(markupViewSource.getPreferredSize().height, markupViewTarget.getPreferredSize().height));
+		if (newHeight != d.height) {
+			d.height = newHeight + 3;
+			setPreferredSize(d);
+		}
+		fileView.validate();
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -373,6 +392,9 @@ public class SegmentView extends javax.swing.JPanel {
 			Session.getUndoManager().markSnapshot();
 		}
 		applySpellcheck(modifiedFlag);
+		if (modifiedFlag) {
+			updateHeight();
+		}
 		modifiedFlag = false;
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
@@ -380,9 +402,18 @@ public class SegmentView extends javax.swing.JPanel {
 		applySpellcheck(false);
     }//GEN-LAST:event_markupViewTargetFocusLost
 
-	void setEditorFont(Font f) {
+	void setEditorFont(Font f, int minHeight) {
+		this.minHeight = minHeight;
 		markupViewSource.setFont(f);
 		markupViewTarget.setFont(f);
+	}
+
+	static int getMinHeightForFont(Font font) {
+		JTextPane textPane = new JTextPane();
+		textPane.setBorder(new CompoundBorder(textPane.getBorder(), PADDING_BORDER));
+		textPane.setFont(font);
+		textPane.setText("\n");
+		return textPane.getPreferredSize().height;
 	}
 
 	void clearSpellcheck() {

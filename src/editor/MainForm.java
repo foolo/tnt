@@ -13,6 +13,8 @@ import conversion.ConversionError;
 import conversion.OpenXliffValidator;
 import xliff_model.ValidationError;
 import java.awt.Font;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import language.Language;
@@ -110,6 +112,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
 		initializeSpelling(Session.getProperties().getTrgLang());
+		SwingUtilities.invokeLater(this::updateHeights);
 	}
 
 	void initializeSpelling(String trgLang) {
@@ -152,6 +155,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			fileView.getSegmentViews(res);
 		}
 		return res;
+	}
+
+	void updateHeights() {
+		for (SegmentView segmentView : getSegmentViews()) {
+			segmentView.updateHeight();
+		}
 	}
 
 	boolean showValidiationError(ValidationError e) {
@@ -563,8 +572,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	void applyFontPreferences() {
 		Font f = new Font(Settings.getEditorFontName(), Settings.getEditorFontStyle(), Settings.getEditorFontSize());
+		int minHeight = SegmentView.getMinHeightForFont(f);
 		for (SegmentView segmentView : getSegmentViews()) {
-			segmentView.setEditorFont(f);
+			segmentView.setEditorFont(f, minHeight);
 		}
 	}
 
@@ -583,6 +593,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
 		applyPreferences();
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent componentEvent) {
+				updateHeights();
+			}
+		});
     }//GEN-LAST:event_formWindowActivated
 
     private void jMenuItemClearRecentFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemClearRecentFilesActionPerformed
