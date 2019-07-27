@@ -292,6 +292,9 @@ public class SegmentView extends javax.swing.JPanel {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewTargetFocusGained(evt);
             }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                markupViewTargetFocusLost(evt);
+            }
         });
         jScrollPane4.setViewportView(markupViewTarget);
 
@@ -329,7 +332,6 @@ public class SegmentView extends javax.swing.JPanel {
 
         jLabelId.setFont(new java.awt.Font("DejaVu Sans Mono", 1, 12)); // NOI18N
         jLabelId.setText("id");
-        jLabelId.setMinimumSize(new java.awt.Dimension(14, 15));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -337,7 +339,7 @@ public class SegmentView extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(jLabelId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelId)
                 .addGap(6, 6, 6)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -349,7 +351,7 @@ public class SegmentView extends javax.swing.JPanel {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addComponent(jLabelId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelId)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -373,6 +375,10 @@ public class SegmentView extends javax.swing.JPanel {
 		applySpellcheck(modifiedFlag);
 		modifiedFlag = false;
     }//GEN-LAST:event_markupViewTargetCaretUpdate
+
+    private void markupViewTargetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusLost
+		applySpellcheck(false);
+    }//GEN-LAST:event_markupViewTargetFocusLost
 
 	void setEditorFont(Font f) {
 		markupViewSource.setFont(f);
