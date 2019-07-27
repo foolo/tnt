@@ -408,6 +408,7 @@ public class SegmentView extends javax.swing.JPanel {
 		if (modifiedFlag) {
 			updateHeight();
 		}
+		fileView.scroll_to_segment(this);
 		modifiedFlag = false;
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
