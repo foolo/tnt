@@ -106,9 +106,8 @@ public class FileView extends javax.swing.JPanel {
 	void applyFilter() {
 		for (Component c : jPanelItems.getComponents()) {
 			SegmentView sv = (SegmentView) c;
-			boolean matchSource = match(jTextFieldSourceFilter.getText(), sv.segmentTag.getSourceText().getTextContent(), jCheckBoxMatchCase.isSelected());
-			boolean matchTarget = match(jTextFieldTargetFilter.getText(), sv.segmentTag.getTargetText().getTextContent(), jCheckBoxMatchCase.isSelected());
-			sv.setVisible(matchSource && matchTarget);
+			int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
+			sv.applyFilter(jTextFieldSourceFilter.getText(), jTextFieldTargetFilter.getText(), flags);
 		}
 		Session.getUndoManager().resetUndoBuffer();
 	}

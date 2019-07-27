@@ -1,5 +1,7 @@
 package util;
 
+import java.util.ArrayList;
+
 public class StringUtil {
 
 	public static String truncate(String s, int maxLength) {
@@ -17,5 +19,25 @@ public class StringUtil {
 		}
 		sb.append(s);
 		return sb.toString();
+	}
+
+	public static int plainToTaggedIndex(int plainIndex, ArrayList<Integer> indexes) {
+		if (plainIndex == 0 && indexes.isEmpty()) {
+			return 0;
+		}
+		if (plainIndex >= indexes.size()) {
+			return indexes.get(indexes.size() - 1) + 1;
+		}
+		return indexes.get(plainIndex);
+	}
+
+	public static int taggedToPlainIndex(int taggedIndex, ArrayList<Integer> indexes) {
+		for (int i = 0; i < indexes.size(); i++) {
+			int ti = indexes.get(i);
+			if (ti >= taggedIndex) {
+				return i;
+			}
+		}
+		return indexes.size();
 	}
 }

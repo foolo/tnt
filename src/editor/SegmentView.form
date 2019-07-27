@@ -154,9 +154,6 @@
           <Font name="DejaVu Sans Mono" size="12" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="id"/>
-        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[14, 15]"/>
-        </Property>
       </Properties>
     </Component>
   </SubComponents>

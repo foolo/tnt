@@ -6,6 +6,10 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -14,6 +18,7 @@ import javax.swing.event.DocumentEvent.EventType;
 import javax.swing.event.DocumentListener;
 import language.SpellCheck;
 import undo_manager.CaretPosition;
+import util.RegexUtil;
 import util.StringUtil;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
@@ -221,6 +226,33 @@ public class SegmentView extends javax.swing.JPanel {
 				SpellCheck.spellCheck(markupViewTarget, caretLocation, modified);
 			}
 		});
+	}
+
+	ArrayList<MatchResult> findMatches(String term, String text, int flags) {
+		if (term.isEmpty()) {
+			return new ArrayList<>();
+		}
+		Matcher m = Pattern.compile(Pattern.quote(term), flags | Pattern.UNICODE_CHARACTER_CLASS).matcher(text);
+		return RegexUtil.matchAll(m);
+	}
+
+	void applyFilter(String sourceTerm, String targetTerm, int flags) {
+		ArrayList<Integer> sourceIndexes = new ArrayList<>();
+		ArrayList<Integer> targetIndexes = new ArrayList<>();
+		String sourceText = markupViewSource.getPlainText(sourceIndexes);
+		String targetText = markupViewTarget.getPlainText(targetIndexes);
+		ArrayList<MatchResult> sourceMatchResults = findMatches(sourceTerm, sourceText, flags);
+		ArrayList<MatchResult> targetMatchResults = findMatches(targetTerm, targetText, flags);
+		boolean sourceMatch = sourceTerm.isEmpty() || (sourceMatchResults.isEmpty() == false);
+		boolean targetMatch = targetTerm.isEmpty() || (targetMatchResults.isEmpty() == false);
+		if (sourceMatch && targetMatch) {
+			markupViewSource.applyHighlighting(sourceMatchResults, sourceIndexes);
+			markupViewTarget.applyHighlighting(targetMatchResults, targetIndexes);
+			setVisible(true);
+		}
+		else {
+			setVisible(false);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

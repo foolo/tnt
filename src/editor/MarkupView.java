@@ -1,23 +1,29 @@
 package editor;
 
+import java.awt.Color;
 import java.awt.Font;
 import xliff_model.TaggedText;
 import xliff_model.Tag;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.regex.MatchResult;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 import util.Log;
+import util.StringUtil;
 import xliff_model.TaggedTextContent;
 import xliff_model.Text;
 
 public class MarkupView extends JTextPane {
 
 	private SegmentView segmentView;
+
+	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 
 	public MarkupView() {
 	}
@@ -215,6 +221,20 @@ public class MarkupView extends JTextPane {
 			}
 			else {
 				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
+			}
+		}
+	}
+
+	void applyHighlighting(ArrayList<MatchResult> matchResults, ArrayList<Integer> plainToTaggedIndexes) {
+		getHighlighter().removeAllHighlights();
+		for (MatchResult matchResult : matchResults) {
+			try {
+				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), plainToTaggedIndexes);
+				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), plainToTaggedIndexes);
+				getHighlighter().addHighlight(startTagged, endTagged, FILTER_MATCH_HIGHLIGHT_PAINTER);
+			}
+			catch (BadLocationException ex) {
+				Log.err(ex);
 			}
 		}
 	}
