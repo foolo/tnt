@@ -38,8 +38,8 @@ public class SpellCheck {
 			String word = m.group();
 			int startPlain = m.start();
 			int endPlain = m.end();
-			boolean caretIsAtWordEnd = (caretLocationPlain == endPlain);
-			boolean skipSpellCheckForWord = (caretIsAtWordEnd && modified);
+			boolean caretInWord = (caretLocationPlain <= endPlain) && (caretLocationPlain >= startPlain);
+			boolean skipSpellCheckForWord = (caretInWord && modified);
 			if (skipSpellCheckForWord == false) {
 				if (currentDictionary.misspelled(word)) {
 					int startTagged = StringUtil.plainToTaggedIndex(startPlain, indexes);
