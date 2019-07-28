@@ -1,5 +1,6 @@
 package editor;
 
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -51,6 +52,7 @@ public class Application {
 				}
 				ToolTipManager.sharedInstance().setInitialDelay(500);
 				MainForm mainForm = new MainForm();
+				mainForm.setIconImage(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_48.png")));
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
 				if (args.length > 0) {
