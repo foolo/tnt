@@ -174,9 +174,18 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
-	void insertText(String s) {
+	void insertText(int pos, String s) {
 		try {
-			getDocument().insertString(getCaretPosition(), s, null);
+			getDocument().insertString(pos, s, null);
+		}
+		catch (BadLocationException ex) {
+			Log.err(ex);
+		}
+	}
+
+	void removeText(int start, int length) {
+		try {
+			getDocument().remove(start, length);
 		}
 		catch (BadLocationException ex) {
 			Log.err(ex);
@@ -199,7 +208,7 @@ public class MarkupView extends JTextPane {
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
 				String text = ((Text) c).getContent();
-				insertText(text);
+				insertText(getCaretPosition(), text);
 			}
 			else if (c instanceof Tag) {
 				insertTag((Tag) c);

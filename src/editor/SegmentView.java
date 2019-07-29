@@ -4,13 +4,18 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
@@ -328,6 +333,14 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewTargetFocusLost(evt);
             }
         });
+        markupViewTarget.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                markupViewTargetMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                markupViewTargetMouseReleased(evt);
+            }
+        });
         jScrollPane4.setViewportView(markupViewTarget);
 
         jPanel1.add(jScrollPane4);
@@ -415,6 +428,51 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewTargetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusLost
 		applySpellcheck(false);
     }//GEN-LAST:event_markupViewTargetFocusLost
+
+	void showTargetPopup(MouseEvent evt) {
+		ArrayList<Integer> indexes = new ArrayList<>();
+		String plainText = markupViewTarget.getPlainText(indexes);
+		int textPositionTagged = markupViewTarget.viewToModel2D(evt.getPoint());
+		int textPositionPlain = StringUtil.taggedToPlainIndex(textPositionTagged, indexes);
+		MatchResult matchResult = RegexUtil.findWordAtPosition(plainText, textPositionPlain);
+		if (matchResult == null) {
+			return;
+		}
+		String word = matchResult.group();
+		if (SpellCheck.isMisspelled(word) == false) {
+			return;
+		}
+		List<String> suggestions = SpellCheck.getSuggestions(word);
+		JPopupMenu popupMenu = new JPopupMenu();
+		if (suggestions.isEmpty()) {
+			popupMenu.add(new JMenuItem("(No suggestions)"));
+		}
+		for (String s : suggestions) {
+			JMenuItem menuItem = new JMenuItem(s);
+			menuItem.addActionListener((ActionEvent e) -> {
+				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), indexes);
+				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), indexes);
+				unregisterListeners();
+				markupViewTarget.removeText(startTagged, endTagged - startTagged);
+				registerListeners();
+				markupViewTarget.insertText(startTagged, s);
+			});
+			popupMenu.add(menuItem);
+		}
+		popupMenu.show(markupViewTarget, evt.getX(), evt.getY());
+	}
+
+    private void markupViewTargetMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewTargetMousePressed
+		if (evt.isPopupTrigger()) {
+			showTargetPopup(evt);
+		}
+    }//GEN-LAST:event_markupViewTargetMousePressed
+
+    private void markupViewTargetMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewTargetMouseReleased
+		if (evt.isPopupTrigger()) {
+			showTargetPopup(evt);
+		}
+    }//GEN-LAST:event_markupViewTargetMouseReleased
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;

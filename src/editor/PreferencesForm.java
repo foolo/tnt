@@ -61,11 +61,11 @@ public class PreferencesForm extends BaseDialog {
 		n1.setAttribute("id", "1");
 		n2.setAttribute("id", "2");
 
-		markupView1.insertText("Sample text. ");
+		markupView1.appendText("Sample text. ");
 		markupView1.insertTag(new Tag(n1, Tag.Type.START));
-		markupView1.insertText("Sample text.");
+		markupView1.appendText("Sample text.");
 		markupView1.insertTag(new Tag(n1, Tag.Type.END));
-		markupView1.insertText("This font will be used in the segment view");
+		markupView1.appendText("This font will be used in the segment view");
 		markupView1.insertTag(new Tag(n2, Tag.Type.EMPTY));
 	}
 
