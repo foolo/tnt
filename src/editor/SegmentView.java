@@ -44,7 +44,7 @@ public class SegmentView extends javax.swing.JPanel {
 		SOURCE, TARGET
 	}
 
-	private final DocumentListener targetDocumentListener = new DocumentListener() {
+	class TargetDocumentListener implements DocumentListener {
 
 		EventType lastEventType = null;
 
@@ -115,15 +115,14 @@ public class SegmentView extends javax.swing.JPanel {
 				super.replace(fb, offset, length, s, attrs);
 			}
 		});
+		markupViewTarget.documentListener = new TargetDocumentListener();
 	}
 
 	public void setSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
-		unregisterListeners();
 		markupViewSource.setTaggedText(segmentTag.getSourceText());
 		markupViewTarget.setTaggedText(segmentTag.getTargetText());
 		jLabelState.setText(segmentTag.getState().toString());
-		registerListeners();
 	}
 
 	public void setTargetText(TaggedText t) {
@@ -157,14 +156,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	public String getSegmentId() {
 		return segmentId;
-	}
-
-	public void registerListeners() {
-		markupViewTarget.getDocument().addDocumentListener(targetDocumentListener);
-	}
-
-	public void unregisterListeners() {
-		markupViewTarget.getDocument().removeDocumentListener(targetDocumentListener);
 	}
 
 	void showValidationError(String message, ValidationPath path) {
@@ -452,10 +443,7 @@ public class SegmentView extends javax.swing.JPanel {
 			menuItem.addActionListener((ActionEvent e) -> {
 				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), indexes);
 				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), indexes);
-				unregisterListeners();
-				markupViewTarget.removeText(startTagged, endTagged - startTagged);
-				registerListeners();
-				markupViewTarget.insertText(startTagged, s);
+				markupViewTarget.replaceTaggedText(startTagged, endTagged, s);
 			});
 			popupMenu.add(menuItem);
 		}

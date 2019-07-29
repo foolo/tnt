@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.regex.MatchResult;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
@@ -22,6 +23,7 @@ import xliff_model.Text;
 public class MarkupView extends JTextPane {
 
 	private SegmentView segmentView;
+	DocumentListener documentListener;
 
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 
@@ -219,7 +221,15 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
+	public void replaceTaggedText(int start, int end, String newText) {
+		getDocument().removeDocumentListener(documentListener);
+		removeText(start, end - start);
+		getDocument().addDocumentListener(documentListener);
+		insertText(start, newText);
+	}
+
 	public void setTaggedText(TaggedText t) {
+		getDocument().removeDocumentListener(documentListener);
 		setText("");
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
@@ -232,6 +242,7 @@ public class MarkupView extends JTextPane {
 				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
+		getDocument().addDocumentListener(documentListener);
 	}
 
 	void applyHighlighting(ArrayList<MatchResult> matchResults, ArrayList<Integer> plainToTaggedIndexes) {
