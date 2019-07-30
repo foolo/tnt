@@ -23,12 +23,9 @@ public class PreferencesForm extends BaseDialog {
 		jComboBoxFont.addItem(Font.SERIF);
 
 		String fontName = Settings.getEditorFontName();
-		int fontStyle = Settings.getEditorFontStyle();
 		int fontSize = Settings.getEditorFontSize();
 		jComboBoxFont.setSelectedItem(fontName);
 		jSpinnerFontSize.setValue(fontSize);
-		jCheckBoxBold.setSelected((fontStyle & Font.BOLD) != 0);
-		jCheckBoxItalic.setSelected((fontStyle & Font.ITALIC) != 0);
 		jTextAreaWordlist.setText(Settings.getWordlistData());
 
 		pack();
@@ -41,10 +38,6 @@ public class PreferencesForm extends BaseDialog {
 		addSampleText();
 
 		jCheckBoxShowWhitespace.setSelected(Settings.getShowWhitespace());
-	}
-
-	private int getFontStyle() {
-		return (jCheckBoxBold.isSelected() ? Font.BOLD : 0) + (jCheckBoxItalic.isSelected() ? Font.ITALIC : 0);
 	}
 
 	final void addSampleText() {
@@ -73,10 +66,8 @@ public class PreferencesForm extends BaseDialog {
 
 	void updateFontPreview() {
 		String name = jComboBoxFont.getSelectedItem().toString();
-		int style = getFontStyle();
 		Integer size = (Integer) jSpinnerFontSize.getValue();
-		//jTextArea1.setFont(new Font(name, style, size));
-		markupView1.setFont(new Font(name, style, size));
+		markupView1.setFont(new Font(name, Font.PLAIN, size));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -92,8 +83,6 @@ public class PreferencesForm extends BaseDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jComboBoxFont = new javax.swing.JComboBox<>();
-        jCheckBoxBold = new javax.swing.JCheckBox();
-        jCheckBoxItalic = new javax.swing.JCheckBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         markupView1 = new editor.MarkupView();
         jPanel1 = new javax.swing.JPanel();
@@ -139,20 +128,6 @@ public class PreferencesForm extends BaseDialog {
             }
         });
 
-        jCheckBoxBold.setText("Bold");
-        jCheckBoxBold.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxBoldActionPerformed(evt);
-            }
-        });
-
-        jCheckBoxItalic.setText("Italic");
-        jCheckBoxItalic.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxItalicActionPerformed(evt);
-            }
-        });
-
         markupView1.setEditable(false);
         jScrollPane2.setViewportView(markupView1);
 
@@ -172,11 +147,7 @@ public class PreferencesForm extends BaseDialog {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jSpinnerFontSize)
                             .addComponent(jComboBoxFont, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jCheckBoxBold)
-                        .addGap(18, 18, 18)
-                        .addComponent(jCheckBoxItalic)
-                        .addGap(0, 163, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -185,9 +156,7 @@ public class PreferencesForm extends BaseDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBoxFont, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBoxBold)
-                    .addComponent(jCheckBoxItalic))
+                    .addComponent(jComboBoxFont, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(11, 11, 11)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSpinnerFontSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,19 +286,10 @@ public class PreferencesForm extends BaseDialog {
 		updateFontPreview();
     }//GEN-LAST:event_jComboBoxFontActionPerformed
 
-    private void jCheckBoxBoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxBoldActionPerformed
-		updateFontPreview();
-    }//GEN-LAST:event_jCheckBoxBoldActionPerformed
-
-    private void jCheckBoxItalicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxItalicActionPerformed
-		updateFontPreview();
-    }//GEN-LAST:event_jCheckBoxItalicActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 		String fontName = jComboBoxFont.getSelectedItem().toString();
-		int style = getFontStyle();
 		Integer size = (Integer) jSpinnerFontSize.getValue();
-		Settings.setEditorFont(fontName, style, size);
+		Settings.setEditorFont(fontName, size);
 		Settings.setShowWhitespace(jCheckBoxShowWhitespace.isSelected());
 		Settings.setWordlistData(jTextAreaWordlist.getText());
 		result = true;
@@ -347,8 +307,6 @@ public class PreferencesForm extends BaseDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBoxBold;
-    private javax.swing.JCheckBox jCheckBoxItalic;
     private javax.swing.JCheckBox jCheckBoxShowWhitespace;
     private javax.swing.JComboBox<String> jComboBoxFont;
     private javax.swing.JLabel jLabel1;

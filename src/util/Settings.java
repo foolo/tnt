@@ -19,7 +19,6 @@ public class Settings {
 	private static final String INPUT_FILE_DIRECTORY = "input_file_directory";
 	private static final String LAST_OPENED_FILE = "last_opened_file";
 	private static final String MARKUP_VIEW_FONT_NAME = "markup_view_font_name";
-	private static final String MARKUP_VIEW_FONT_STYLE = "markup_view_font_style";
 	private static final String MARKUP_VIEW_FONT_SIZE = "markup_view_font_size";
 	private static final String RECENT_FILES = "recent_files";
 	private static final String SHOW_WHITESPACE = "show_whitespace";
@@ -58,17 +57,12 @@ public class Settings {
 		return prefs.get(MARKUP_VIEW_FONT_NAME, Font.SANS_SERIF);
 	}
 
-	public static int getEditorFontStyle() {
-		return prefs.getInt(MARKUP_VIEW_FONT_STYLE, Font.PLAIN);
-	}
-
 	public static int getEditorFontSize() {
 		return prefs.getInt(MARKUP_VIEW_FONT_SIZE, 14);
 	}
 
-	public static void setEditorFont(String name, int style, int size) {
+	public static void setEditorFont(String name, int size) {
 		prefs.put(MARKUP_VIEW_FONT_NAME, name);
-		prefs.putInt(MARKUP_VIEW_FONT_STYLE, style);
 		prefs.putInt(MARKUP_VIEW_FONT_SIZE, size);
 	}
 

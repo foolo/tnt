@@ -571,7 +571,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
 	void applyFontPreferences() {
-		Font f = new Font(Settings.getEditorFontName(), Settings.getEditorFontStyle(), Settings.getEditorFontSize());
+		Font f = new Font(Settings.getEditorFontName(), Font.PLAIN, Settings.getEditorFontSize());
 		int minHeight = SegmentView.getMinHeightForFont(f);
 		for (SegmentView segmentView : getSegmentViews()) {
 			segmentView.setEditorFont(f, minHeight);
