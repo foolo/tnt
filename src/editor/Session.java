@@ -62,8 +62,10 @@ public class Session {
 	}
 
 	private static Session session;
+	private static int idSegmentCounter = 1;
 
 	public static void newSession(File f, UndoEventListener undoEventListener) throws LoadException {
+		idSegmentCounter = 1;
 		XliffTag xliffTag = load_xliff(f);
 		session = new Session(xliffTag, undoEventListener);
 	}
@@ -90,6 +92,10 @@ public class Session {
 	static void markSaved() {
 		session.properties.modified = false;
 		session.undoManager.markSaved();
+	}
+
+	public static String generateSegmentId() {
+		return "" + idSegmentCounter++;
 	}
 
 	static XliffTag load_xliff(File f) throws LoadException {

@@ -1,5 +1,6 @@
 package xliff_model;
 
+import editor.Session;
 import xliff_model.exceptions.EncodeException;
 import xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
@@ -41,12 +42,6 @@ public class SegmentTag {
 		}
 	};
 
-	static int idCounter = 1;
-
-	static String generateId() {
-		return "" + idCounter++;
-	}
-
 	public SegmentTag(Element node, UnitTag parent) throws ParseException {
 		this.node = node;
 		state = State.fromString(node.getAttribute(ATTRIBUTE_STATE));
@@ -71,7 +66,7 @@ public class SegmentTag {
 			sourceLeadingWhitepace = sourceText.trim();
 			targetText.trim();
 		}
-		id = generateId();
+		id = Session.generateSegmentId();
 	}
 
 	public SegmentTag(SegmentTag st) {
