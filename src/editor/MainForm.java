@@ -580,6 +580,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	void applyPreferences() {
 		applyFontPreferences();
+		updateHeights();
 	}
 
     private void jMenuItemPreferencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreferencesActionPerformed
