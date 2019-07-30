@@ -12,6 +12,7 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
 import util.RegexUtil;
+import util.Settings;
 import util.StringUtil;
 
 public class SpellCheck {
@@ -41,7 +42,7 @@ public class SpellCheck {
 			boolean caretInWord = (caretLocationPlain <= endPlain) && (caretLocationPlain >= startPlain);
 			boolean skipSpellCheckForWord = (caretInWord && modified);
 			if (skipSpellCheckForWord == false) {
-				if (currentDictionary.misspelled(word)) {
+				if (isMisspelled(word)) {
 					int startTagged = StringUtil.plainToTaggedIndex(startPlain, indexes);
 					int endTagged = StringUtil.plainToTaggedIndex(endPlain, indexes);
 					markText(markupView, startTagged, endTagged);
@@ -69,6 +70,9 @@ public class SpellCheck {
 	}
 
 	public static boolean isMisspelled(String word) {
+		if (Settings.getWordList().contains(word)) {
+			return false;
+		}
 		return currentDictionary.misspelled(word);
 	}
 

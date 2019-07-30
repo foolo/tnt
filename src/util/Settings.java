@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.prefs.Preferences;
 
 public class Settings {
@@ -143,5 +144,42 @@ public class Settings {
 
 	public static void setShowWhitespace(boolean showWhitespace) {
 		prefs.putBoolean("show_whitespace", showWhitespace);
+	}
+
+	private static TreeSet<String> wordlistCache = null;
+
+	public static String getWordlistData() {
+		return prefs.get("wordlist", "");
+	}
+
+	public static void setWordlistData(String s) {
+		wordlistCache = null;
+		prefs.put("wordlist", s);
+	}
+
+	public static TreeSet<String> getWordList() {
+		initWordlistCache();
+		return wordlistCache;
+	}
+
+	private static void initWordlistCache() {
+		if (wordlistCache != null) {
+			return;
+		}
+		wordlistCache = new TreeSet<>();
+		String data = getWordlistData();
+		String[] words = data.split("\n");
+		for (String word : words) {
+			if (word.isEmpty() == false) {
+				wordlistCache.add(word);
+			}
+		}
+	}
+
+	public static void addWordToWordlist(String word) {
+		initWordlistCache();
+		wordlistCache.add(word);
+		String data = String.join("\n", wordlistCache);
+		prefs.put("wordlist", data);
 	}
 }

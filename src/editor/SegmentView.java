@@ -33,6 +33,7 @@ import javax.swing.text.DocumentFilter;
 import language.SpellCheck;
 import undo_manager.CaretPosition;
 import util.RegexUtil;
+import util.Settings;
 import util.StringUtil;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
@@ -447,6 +448,12 @@ public class SegmentView extends javax.swing.JPanel {
 			});
 			popupMenu.add(menuItem);
 		}
+		popupMenu.addSeparator();
+		JMenuItem menuItem = new JMenuItem("Add to dictionary");
+		menuItem.addActionListener((ActionEvent e) -> {
+			Settings.addWordToWordlist(word);
+		});
+		popupMenu.add(menuItem);
 		popupMenu.show(markupViewTarget, evt.getX(), evt.getY());
 	}
 
