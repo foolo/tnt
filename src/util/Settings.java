@@ -15,51 +15,61 @@ public class Settings {
 
 	private static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
 
+	private static final String PACKAGE_DIRECTORY = "package_directory";
+	private static final String INPUT_FILE_DIRECTORY = "input_file_directory";
+	private static final String LAST_OPENED_FILE = "last_opened_file";
+	private static final String MARKUP_VIEW_FONT_NAME = "markup_view_font_name";
+	private static final String MARKUP_VIEW_FONT_STYLE = "markup_view_font_style";
+	private static final String MARKUP_VIEW_FONT_SIZE = "markup_view_font_size";
+	private static final String RECENT_FILES = "recent_files";
+	private static final String SHOW_WHITESPACE = "show_whitespace";
+	private static final String WORDLIST = "wordlist";
+
 	public static File getPackageDirectory() {
 		File defaultDir = new File(System.getProperty("user.home"), "RainbowPackages");
-		String dir = prefs.get("package_directory", defaultDir.getAbsolutePath());
+		String dir = prefs.get(PACKAGE_DIRECTORY, defaultDir.getAbsolutePath());
 		return new File(dir);
 	}
 
 	public static void setPackageDirectory(File dir) {
-		prefs.put("package_directory", dir.getAbsolutePath());
+		prefs.put(PACKAGE_DIRECTORY, dir.getAbsolutePath());
 	}
 
 	public static File getInputFileDirectory() {
 		File defaultDir = new File(System.getProperty("user.home"));
-		String dir = prefs.get("input_file_directory", defaultDir.getAbsolutePath());
+		String dir = prefs.get(INPUT_FILE_DIRECTORY, defaultDir.getAbsolutePath());
 		return new File(dir);
 	}
 
 	public static void setInputFileDirectory(File dir) {
-		prefs.put("input_file_directory", dir.getAbsolutePath());
+		prefs.put(INPUT_FILE_DIRECTORY, dir.getAbsolutePath());
 	}
 
 	public static File getOpenDirectory() {
-		String dir = prefs.get("last_opened_file", System.getProperty("user.home"));
+		String dir = prefs.get(LAST_OPENED_FILE, System.getProperty("user.home"));
 		return new File(dir);
 	}
 
 	public static void setOpenDirectory(File f) {
-		prefs.put("last_opened_file", f.getAbsolutePath());
+		prefs.put(LAST_OPENED_FILE, f.getAbsolutePath());
 	}
 
 	public static String getEditorFontName() {
-		return prefs.get("markup_view_font_name", Font.SANS_SERIF);
+		return prefs.get(MARKUP_VIEW_FONT_NAME, Font.SANS_SERIF);
 	}
 
 	public static int getEditorFontStyle() {
-		return prefs.getInt("markup_view_font_style", Font.PLAIN);
+		return prefs.getInt(MARKUP_VIEW_FONT_STYLE, Font.PLAIN);
 	}
 
 	public static int getEditorFontSize() {
-		return prefs.getInt("markup_view_font_size", 14);
+		return prefs.getInt(MARKUP_VIEW_FONT_SIZE, 14);
 	}
 
 	public static void setEditorFont(String name, int style, int size) {
-		prefs.put("markup_view_font_name", name);
-		prefs.putInt("markup_view_font_style", style);
-		prefs.putInt("markup_view_font_size", size);
+		prefs.put(MARKUP_VIEW_FONT_NAME, name);
+		prefs.putInt(MARKUP_VIEW_FONT_STYLE, style);
+		prefs.putInt(MARKUP_VIEW_FONT_SIZE, size);
 	}
 
 	static ArrayList<String> bytesToStringArray(byte[] b) {
@@ -97,13 +107,13 @@ public class Settings {
 	}
 
 	public static ArrayList<String> getRecentFiles() {
-		byte[] b = prefs.getByteArray("recent_files", null);
+		byte[] b = prefs.getByteArray(RECENT_FILES, null);
 		return bytesToStringArray(b);
 	}
 
 	static void setRecentFiles(ArrayList<String> recentFiles) {
 		byte[] b = stringArrayToByteArray(recentFiles);
-		prefs.putByteArray("recent_files", b);
+		prefs.putByteArray(RECENT_FILES, b);
 	}
 
 	public static void addRecentFile(String s) {
@@ -139,22 +149,22 @@ public class Settings {
 	}
 
 	public static boolean getShowWhitespace() {
-		return prefs.getBoolean("show_whitespace", false);
+		return prefs.getBoolean(SHOW_WHITESPACE, false);
 	}
 
 	public static void setShowWhitespace(boolean showWhitespace) {
-		prefs.putBoolean("show_whitespace", showWhitespace);
+		prefs.putBoolean(SHOW_WHITESPACE, showWhitespace);
 	}
 
 	private static TreeSet<String> wordlistCache = null;
 
 	public static String getWordlistData() {
-		return prefs.get("wordlist", "");
+		return prefs.get(WORDLIST, "");
 	}
 
 	public static void setWordlistData(String s) {
 		wordlistCache = null;
-		prefs.put("wordlist", s);
+		prefs.put(WORDLIST, s);
 	}
 
 	public static TreeSet<String> getWordList() {
@@ -180,6 +190,6 @@ public class Settings {
 		initWordlistCache();
 		wordlistCache.add(word);
 		String data = String.join("\n", wordlistCache);
-		prefs.put("wordlist", data);
+		prefs.put(WORDLIST, data);
 	}
 }
