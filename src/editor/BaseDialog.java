@@ -37,7 +37,7 @@ public abstract class BaseDialog extends javax.swing.JDialog {
 		return result;
 	}
 
-	void initButtons(JButton okButton, JButton cancelButton) {
+	final void initButtons(JButton okButton, JButton cancelButton) {
 		getRootPane().setDefaultButton(okButton);
 		cancelButton.addActionListener(new java.awt.event.ActionListener() {
 			@Override

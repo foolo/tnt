@@ -298,6 +298,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemProperties = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItemPreferences = new javax.swing.JMenuItem();
+        jMenuItemAddSpecialChar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
         jMenuItemMarkTranslated = new javax.swing.JMenuItem();
@@ -307,11 +308,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(840, 0));
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -384,6 +385,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu4.add(jMenuItemPreferences);
+
+        jMenuItemAddSpecialChar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemAddSpecialChar.setText("Insert special character");
+        jMenuItemAddSpecialChar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAddSpecialCharActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItemAddSpecialChar);
 
         jMenuBar1.add(jMenu4);
 
@@ -618,12 +628,29 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemPropertiesActionPerformed
 
+    private void jMenuItemAddSpecialCharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAddSpecialCharActionPerformed
+		SpecialCharacterDialog dialog = new SpecialCharacterDialog(this);
+		dialog.setLocationRelativeTo(this);
+		dialog.setVisible(true);
+		if (dialog.getResult()) {
+			Session.getUndoManager().markSnapshot();
+			SegmentView segmentView = SegmentView.getActiveSegmentView();
+			if (segmentView == null) {
+				return;
+			}
+			SegmentTag segmentTag = segmentView.getSegmentTag();
+			segmentView.insertText(dialog.getSelectedChar());
+			Session.getUndoManager().markSnapshot();
+		}
+    }//GEN-LAST:event_jMenuItemAddSpecialCharActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemAddSpecialChar;
     private javax.swing.JMenuItem jMenuItemClearRecentFiles;
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;

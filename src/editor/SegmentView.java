@@ -130,6 +130,10 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setTaggedText(t);
 	}
 
+	public void insertText(String s) {
+		markupViewTarget.insertText(markupViewTarget.getCaretPosition(), s);
+	}
+
 	private boolean setStateField(SegmentTag.State state) {
 		boolean res = segmentTag.setState(state);
 		jLabelState.setText(segmentTag.getState().toString());

@@ -23,6 +23,7 @@ public class Settings {
 	private static final String RECENT_FILES = "recent_files";
 	private static final String SHOW_WHITESPACE = "show_whitespace";
 	private static final String WORDLIST = "wordlist";
+	private static final String CUSTOM_SPECIAL_CHARACTERS = "custom_special_characters";
 
 	public static File getPackageDirectory() {
 		File defaultDir = new File(System.getProperty("user.home"), "RainbowPackages");
@@ -185,5 +186,13 @@ public class Settings {
 		wordlistCache.add(word);
 		String data = String.join("\n", wordlistCache);
 		prefs.put(WORDLIST, data);
+	}
+
+	public static String getCustomSpecialCharacters() {
+		return prefs.get(CUSTOM_SPECIAL_CHARACTERS, "");
+	}
+
+	public static void setCustomSpecialCharacters(String s) {
+		prefs.put(CUSTOM_SPECIAL_CHARACTERS, s);
 	}
 }
