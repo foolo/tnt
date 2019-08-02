@@ -114,7 +114,7 @@ public class MarkupView extends JTextPane {
 			return doc.getText(0, doc.getLength());
 		}
 		catch (BadLocationException ex) {
-			System.err.println(ex);
+			Log.err(ex);
 			return "";
 		}
 	}

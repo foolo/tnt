@@ -56,8 +56,8 @@ class TaggedTextTransferable implements Transferable, UIResource {
 			p0 = markupView.getDocument().createPosition(start);
 			p1 = markupView.getDocument().createPosition(end);
 		}
-		catch (BadLocationException ble) {
-			System.err.println(ble);
+		catch (BadLocationException ex) {
+			Log.err(ex);
 		}
 	}
 
