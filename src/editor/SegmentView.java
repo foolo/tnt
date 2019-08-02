@@ -119,10 +119,10 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.documentListener = new TargetDocumentListener();
 	}
 
-	public void setSegmentTag(SegmentTag segmentTag) {
+	public void updateSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
-		markupViewSource.setTaggedText(segmentTag.getSourceText());
-		markupViewTarget.setTaggedText(segmentTag.getTargetText());
+		markupViewSource.updateTaggedText(segmentTag.getSourceText());
+		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		jLabelState.setText(segmentTag.getState().toString());
 	}
 

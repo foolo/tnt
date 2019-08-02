@@ -229,7 +229,6 @@ public class MarkupView extends JTextPane {
 	}
 
 	public void setTaggedText(TaggedText t) {
-		getDocument().removeDocumentListener(documentListener);
 		setText("");
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
@@ -242,6 +241,11 @@ public class MarkupView extends JTextPane {
 				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
+	}
+
+	public void updateTaggedText(TaggedText t) {
+		getDocument().removeDocumentListener(documentListener);
+		setTaggedText(t);
 		getDocument().addDocumentListener(documentListener);
 	}
 

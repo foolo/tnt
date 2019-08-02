@@ -36,7 +36,7 @@ public class FileView extends javax.swing.JPanel {
 		ArrayList<SegmentTag> segmentTags = fileTag.getSegmentsArray();
 		for (int i = 0; i < segmentTags.size(); i++) {
 			SegmentView segmentView = (SegmentView) jPanelItems.getComponent(i);
-			segmentView.setSegmentTag(segmentTags.get(i));
+			segmentView.updateSegmentTag(segmentTags.get(i));
 		}
 	}
 
