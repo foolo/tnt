@@ -72,7 +72,7 @@ public class UnitTag implements Item {
 	}
 
 	@Override
-	public void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
+	public void encode(ArrayList<String> errors, boolean skipInitialSegments) {
 		for (SegmentTag st : segments) {
 			st.encode(errors, skipInitialSegments);
 		}

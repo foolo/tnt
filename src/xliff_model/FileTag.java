@@ -82,7 +82,7 @@ public class FileTag {
 		return new FileTag(this);
 	}
 
-	void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
+	void encode(ArrayList<String> errors, boolean skipInitialSegments) {
 		for (Item i : items) {
 			i.encode(errors, skipInitialSegments);
 		}

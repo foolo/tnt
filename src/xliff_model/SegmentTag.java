@@ -18,7 +18,6 @@ public class SegmentTag {
 	private final Node sourceNode;
 	private final Node targetNode;
 	private State state;
-	private boolean staged = false;
 	private final String id;
 	private final String sourceLeadingWhitepace;
 
@@ -107,17 +106,8 @@ public class SegmentTag {
 		return id;
 	}
 
-	public boolean getStaged() {
-		return staged;
-	}
-
-	public ValidationError testEncode() {
-		ArrayList<ValidationError> errors = new ArrayList<>();
-		encodeContent(targetNode, targetText, errors);
-		if (errors.isEmpty() == false) {
-			return errors.get(0);
-		}
-		return null;
+	public String testEncodeTarget() {
+		return encodeContent(targetNode, targetText);
 	}
 
 	public boolean setState(State state) {
@@ -128,10 +118,6 @@ public class SegmentTag {
 		return false;
 	}
 
-	public void stage() {
-		staged = true;
-	}
-
 	static void replaceChildren(Node node, ArrayList<Node> newNodes) {
 		XmlUtil.clearChildren(node);
 		for (Node n : newNodes) {
@@ -139,16 +125,18 @@ public class SegmentTag {
 		}
 	}
 
-	public void encodeContent(Node n, TaggedText text, ArrayList<ValidationError> errors) {
+	public String encodeContent(Node n, TaggedText text) {
+		String errMsg = null;
 		ArrayList<Node> nodes;
 		try {
 			nodes = text.toNodes(n.getOwnerDocument(), sourceLeadingWhitepace);
 		}
 		catch (EncodeException ex) {
 			nodes = text.onlyTextToNodes(n.getOwnerDocument());
-			errors.add(new ValidationError(this, ex.getMessage()));
+			errMsg = ex.getMessage();
 		}
 		replaceChildren(n, nodes);
+		return errMsg;
 	}
 
 	void removeChild(Node n) {
@@ -162,13 +150,32 @@ public class SegmentTag {
 		}
 	}
 
-	public void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
+	static Element findFileParent(Node n) {
+		if (n.getNodeName().equals("file")) {
+			return (Element) n;
+		}
+		return findFileParent(n.getParentNode());
+	}
+
+	String getPath() {
+		Element unitNode = (Element) getNode().getParentNode();
+		String unitId = unitNode.getAttribute("id");
+		Element fileNode = findFileParent(unitNode.getParentNode());
+		String fileId = fileNode.getAttribute("id");
+		return "file='" + fileId + "', unit='" + unitId + "', segment='" + getId();
+	}
+
+	private void encodeContent(Node n, TaggedText text, ArrayList<String> errors) {
+		String errMsg = encodeContent(n, text);
+		if (errMsg != null) {
+			errors.add(errMsg + " (" + getPath() + ")");
+		}
+	}
+
+	public void encode(ArrayList<String> errors, boolean skipInitialSegments) {
 		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 		encodeContent(sourceNode, sourceText, errors);
-
-		boolean skipInitial = skipInitialSegments && !staged;
-		staged = false;
-		boolean skipNode = targetText.getContent().isEmpty() || (skipInitial && (state == State.INITIAL));
+		boolean skipNode = targetText.getContent().isEmpty() || (skipInitialSegments && (state == State.INITIAL));
 		if (skipNode) {
 			removeChild(targetNode);
 		}

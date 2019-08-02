@@ -5,31 +5,12 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import xliff_model.FileTag;
 import xliff_model.SegmentTag;
-import xliff_model.ValidationPath;
 
 public class FileView extends javax.swing.JPanel {
 
-	private final String fileId;
-
 	public FileView(String fileId) {
-		this.fileId = fileId;
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
-	}
-
-	public String getFileId() {
-		return fileId;
-	}
-
-	boolean showValidiationError(String message, ValidationPath path) {
-		for (Component c : jPanelItems.getComponents()) {
-			SegmentView segmentView = (SegmentView) c;
-			if (segmentView.getSegmentId().equals(path.segmentId)) {
-				segmentView.showValidationError(message, path);
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public void update_model(FileTag fileTag) {

@@ -6,7 +6,7 @@ public interface Item {
 
 	Item copy();
 
-	void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments);
+	void encode(ArrayList<String> errors, boolean skipInitialSegments);
 
 	ArrayList<SegmentTag> getSegmentsArray();
 }

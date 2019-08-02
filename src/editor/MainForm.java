@@ -11,7 +11,6 @@ import javax.xml.transform.stream.StreamResult;
 import conversion.OpenXliffHandler;
 import conversion.ConversionError;
 import conversion.OpenXliffValidator;
-import xliff_model.ValidationError;
 import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -163,41 +162,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 	}
 
-	boolean showValidiationError(ValidationError e) {
-		if (e.path == null) {
-			return false;
-		}
-		FileView fileView = getFileView(e.path.fileId);
-		if (fileView == null) {
-			return false;
-		}
-		return fileView.showValidiationError(e.message, e.path);
-	}
-
-	void showValidationErrors(ArrayList<ValidationError> errors) {
-		StringBuilder undhandledErrors = new StringBuilder();
-		for (ValidationError e : errors) {
-			Log.debug("showValidationErrors: ValidationError: " + e.toString());
-			if (showValidiationError(e) == false) {
-				undhandledErrors.append(e.toString());
-				undhandledErrors.append('\n');
-			}
-		}
-		if (undhandledErrors.length() > 0) {
-			JOptionPane.showMessageDialog(this, "Tag errors found:\n" + undhandledErrors.toString(), "", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-
-	public boolean save_file(boolean haltOnEncodeError) {
-		ArrayList<ValidationError> errors = new ArrayList<>();
+	public boolean save_file() {
+		ArrayList<String> errors = new ArrayList<>();
 		getXliffTag().encode(errors, false);
 		Session.getProperties().encode(getXliffTag().getDocument());
-		if (errors.isEmpty() == false) {
-			showValidationErrors(errors);
-			if (haltOnEncodeError) {
-				JOptionPane.showMessageDialog(this, "Could not export. Some segments contain invalid tags.", "", JOptionPane.ERROR_MESSAGE);
-				return false;
-			}
+		for (String e : errors) {
+			Log.debug("showValidationErrors: ValidationError: " + e);
 		}
 		try {
 			Log.debug("save_to_file: " + getXliffTag().getFile());
@@ -221,7 +191,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 		switch (choice) {
 			case JOptionPane.YES_OPTION:
-				return save_file(false);
+				return save_file();
 			case JOptionPane.NO_OPTION:
 				return true;
 			case JOptionPane.CANCEL_OPTION:
@@ -231,34 +201,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	String save_to_string() throws SaveException {
-		ArrayList<ValidationError> encodeErrors = new ArrayList<>();
+		ArrayList<String> encodeErrors = new ArrayList<>();
 		getXliffTag().encode(encodeErrors, true);
-		for (ValidationError e : encodeErrors) {
+		for (String e : encodeErrors) {
 			// there should be no invalid non-initial segments, log for debugging only
-			Log.err("validateFile: ValidationError: " + e.toString());
+			Log.err("validateFile: ValidationError: " + e);
 		}
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
 		return writer.toString();
-	}
-
-	FileView getFileView(String fileId) {
-		for (FileView fileView : fileViews) {
-			if (fileView.getFileId().equals(fileId)) {
-				return fileView;
-			}
-		}
-		Log.err("getFileView: no fileView with id: " + fileId);
-		return null;
-	}
-
-	boolean validateFile() {
-		ArrayList<ValidationError> validationErrors = OpenXliffValidator.validate(getXliffTag());
-		if (validationErrors.isEmpty() == false) {
-			showValidationErrors(validationErrors);
-			return false;
-		}
-		return true;
 	}
 
 	@Override
@@ -474,7 +425,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
 		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Saving... ");
 		dialog.run(() -> {
-			save_file(false);
+			save_file();
 		});
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
@@ -563,16 +514,19 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 
-		ValidationError validationError = segmentView.getSegmentTag().testEncode();
-		if (validationError != null) {
-			segmentView.showValidationError(validationError.message, validationError.path);
+		String errMsg = segmentView.getSegmentTag().testEncodeTarget();
+		if (errMsg != null) {
+			segmentView.showValidationError(errMsg);
 			return;
 		}
 		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {
-			segmentView.getSegmentTag().stage();
-			if (validateFile()) {
+			errMsg = OpenXliffValidator.validate(segmentView.getSegmentTag());
+			if (errMsg == null) {
 				segmentView.setState(SegmentTag.State.TRANSLATED);
 				jumpToNextSegment(segmentView);
+			}
+			else {
+				segmentView.showValidationError(errMsg);
 			}
 		}
 		else {

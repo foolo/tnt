@@ -58,7 +58,7 @@ public class XliffTag implements UndoableModel {
 		return file;
 	}
 
-	public void encode(ArrayList<ValidationError> errors, boolean skipInitialSegments) {
+	public void encode(ArrayList<String> errors, boolean skipInitialSegments) {
 		for (FileTag f : files) {
 			f.encode(errors, skipInitialSegments);
 		}

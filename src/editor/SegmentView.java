@@ -37,7 +37,6 @@ import util.Settings;
 import util.StringUtil;
 import xliff_model.SegmentTag;
 import xliff_model.TaggedText;
-import xliff_model.ValidationPath;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -77,7 +76,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	SegmentTag segmentTag;
 	private final FileView fileView;
-	private final String segmentId;
 	boolean modifiedFlag = false;
 	private int minHeight = 0;
 	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
@@ -85,7 +83,6 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentView(FileView fileView, String segmentId) {
 		initComponents();
 		this.fileView = fileView;
-		this.segmentId = segmentId;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
@@ -159,16 +156,9 @@ public class SegmentView extends javax.swing.JPanel {
 		return fileView;
 	}
 
-	public String getSegmentId() {
-		return segmentId;
-	}
-
-	void showValidationError(String message, ValidationPath path) {
+	void showValidationError(String message) {
 		jLabelValidationError.setText("Tag errors found");
 		String tagIdDetails = "";
-		if (path != null && path.codeId.isEmpty() == false) {
-			tagIdDetails = "Tag ID=" + path.codeId + ": ";
-		}
 		jLabelValidationError.setToolTipText(tagIdDetails + message);
 	}
 
