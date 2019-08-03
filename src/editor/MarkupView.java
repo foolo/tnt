@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import java.util.regex.MatchResult;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
@@ -23,7 +22,6 @@ import xliff_model.Text;
 public class MarkupView extends JTextPane {
 
 	private SegmentView segmentView;
-	DocumentListener documentListener;
 
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 
@@ -119,7 +117,7 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
-	private static TaggedText getTaggedText(int p0, int p1, StyledDocument doc) {
+	static TaggedText getTaggedText(int p0, int p1, StyledDocument doc) {
 		String docText = getDocText(doc);
 		if (docText.isEmpty()) {
 			return new TaggedText(new ArrayList<>());
@@ -140,11 +138,6 @@ public class MarkupView extends JTextPane {
 		}
 		res.add(new Text(sb.toString()));
 		return new TaggedText(res);
-	}
-
-	public TaggedText getTaggedText() {
-		StyledDocument doc = getStyledDocument();
-		return getTaggedText(0, doc.getLength(), doc);
 	}
 
 	public TaggedText getSelectedTaggedText() {
@@ -176,58 +169,6 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
-	void insertText(int pos, String s) {
-		try {
-			getDocument().insertString(pos, s, null);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
-	}
-
-	void removeText(int start, int length) {
-		try {
-			getDocument().remove(start, length);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
-	}
-
-	void removeSelection() {
-		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
-		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
-		try {
-			getDocument().remove(p0, p1 - p0);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
-	}
-
-	public void insertTaggedText(TaggedText t) {
-		removeSelection();
-		for (TaggedTextContent c : t.getContent()) {
-			if (c instanceof Text) {
-				String text = ((Text) c).getContent();
-				insertText(getCaretPosition(), text);
-			}
-			else if (c instanceof Tag) {
-				insertTag((Tag) c);
-			}
-			else {
-				Log.warn("insertTaggedText: unexpected instance: " + c.getClass().getName());
-			}
-		}
-	}
-
-	public void replaceTaggedText(int start, int end, String newText) {
-		getDocument().removeDocumentListener(documentListener);
-		removeText(start, end - start);
-		getDocument().addDocumentListener(documentListener);
-		insertText(start, newText);
-	}
-
 	public void setTaggedText(TaggedText t) {
 		setText("");
 		for (TaggedTextContent c : t.getContent()) {
@@ -241,12 +182,6 @@ public class MarkupView extends JTextPane {
 				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
-	}
-
-	public void updateTaggedText(TaggedText t) {
-		getDocument().removeDocumentListener(documentListener);
-		setTaggedText(t);
-		getDocument().addDocumentListener(documentListener);
 	}
 
 	void applyHighlighting(ArrayList<MatchResult> matchResults, ArrayList<Integer> plainToTaggedIndexes) {

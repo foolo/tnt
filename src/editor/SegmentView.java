@@ -23,9 +23,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentEvent.EventType;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -44,36 +41,6 @@ public class SegmentView extends javax.swing.JPanel {
 		SOURCE, TARGET
 	}
 
-	class TargetDocumentListener implements DocumentListener {
-
-		EventType lastEventType = null;
-
-		void update(int caretPosition1, int caretPosition2, EventType eventType) {
-			if (eventType != lastEventType) {
-				Session.getUndoManager().markSnapshot();
-			}
-			lastEventType = eventType;
-			segmentTag.setTargetText(markupViewTarget.getTaggedText());
-			setStateField(SegmentTag.State.INITIAL);
-			notifyUndoManager(caretPosition1, caretPosition2);
-			modifiedFlag = true;
-		}
-
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			update(e.getOffset(), e.getOffset() + e.getLength(), e.getType());
-		}
-
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			update(e.getOffset() + e.getLength(), e.getOffset(), e.getType());
-		}
-
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-		}
-	};
-
 	SegmentTag segmentTag;
 	private final FileView fileView;
 	boolean modifiedFlag = false;
@@ -89,6 +56,7 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		jLabelValidationError.setText("");
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
+		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -113,18 +81,17 @@ public class SegmentView extends javax.swing.JPanel {
 				super.replace(fb, offset, length, s, attrs);
 			}
 		});
-		markupViewTarget.documentListener = new TargetDocumentListener();
 	}
 
 	public void updateSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
-		markupViewSource.updateTaggedText(segmentTag.getSourceText());
+		markupViewSource.setTaggedText(segmentTag.getSourceText());
 		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		jLabelState.setText(segmentTag.getState().toString());
 	}
 
 	public void setTargetText(TaggedText t) {
-		markupViewTarget.setTaggedText(t);
+		markupViewTarget.replaceTaggedText(t);
 	}
 
 	public void insertText(String s) {
@@ -166,6 +133,13 @@ public class SegmentView extends javax.swing.JPanel {
 		CaretPosition pos1 = new CaretPosition(this, caretPos1);
 		CaretPosition pos2 = new CaretPosition(this, caretPos2);
 		Session.getUndoManager().getCurrentState().setModified(pos1, pos2);
+	}
+
+	void update(int caretPosition1, int caretPosition2) {
+		segmentTag.setTargetText(markupViewTarget.getTaggedText());
+		setStateField(SegmentTag.State.INITIAL);
+		notifyUndoManager(caretPosition1, caretPosition2);
+		modifiedFlag = true;
 	}
 
 	void handleKeyPress(KeyEvent evt, MarkupView markupView) {
@@ -286,7 +260,7 @@ public class SegmentView extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         markupViewSource = new editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
-        markupViewTarget = new editor.MarkupView(this);
+        markupViewTarget = new editor.EditableMarkupView(this);
         jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
@@ -442,7 +416,9 @@ public class SegmentView extends javax.swing.JPanel {
 			menuItem.addActionListener((ActionEvent e) -> {
 				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), indexes);
 				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), indexes);
+				Session.getUndoManager().markSnapshot();
 				markupViewTarget.replaceTaggedText(startTagged, endTagged, s);
+				Session.getUndoManager().markSnapshot();
 			});
 			popupMenu.add(menuItem);
 		}
@@ -498,6 +474,6 @@ public class SegmentView extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private editor.MarkupView markupViewSource;
-    private editor.MarkupView markupViewTarget;
+    private editor.EditableMarkupView markupViewTarget;
     // End of variables declaration//GEN-END:variables
 }

@@ -66,8 +66,11 @@ public class TaggedTextTransferHandler extends TransferHandler implements UIReso
 
 	@Override
 	public boolean importData(JComponent comp, Transferable t) {
-
-		MarkupView c = (MarkupView) comp;
+		if ((comp instanceof EditableMarkupView) == false) {
+			Log.err("importData: unexpected instance: " + comp.getClass());
+			return false;
+		}
+		EditableMarkupView c = (EditableMarkupView) comp;
 		DataFlavor importFlavor = getImportFlavor(t.getTransferDataFlavors(), c.getEditorKit().getContentType());
 		if (importFlavor == null) {
 			return false;
