@@ -1,5 +1,6 @@
 package editor;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -47,6 +48,7 @@ public class SegmentView extends javax.swing.JPanel {
 	boolean modifiedFlag = false;
 	private int minHeight = 0;
 	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
+	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
 
 	SegmentView(FileView fileView, String segmentId) {
 		initComponents();
@@ -85,11 +87,21 @@ public class SegmentView extends javax.swing.JPanel {
 		});
 	}
 
+	void updateStateLabel(SegmentTag.State state) {
+		jLabelState.setText(state.toString());
+		if (state == SegmentTag.State.INITIAL) {
+			jLabelState.setForeground(Color.DARK_GRAY);
+		}
+		else {
+			jLabelState.setForeground(NON_INITIAL_LABEL_COLOR);
+		}
+	}
+
 	public void updateSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
 		markupViewSource.setTaggedText(segmentTag.getSourceText());
 		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
-		jLabelState.setText(segmentTag.getState().toString());
+		updateStateLabel(segmentTag.getState());
 		if (segmentTag.getState() != SegmentTag.State.INITIAL) {
 			jLabelValidationError.setVisible(false);
 			ArrayList<String> qcRes = Qc.runQc(getSegmentTag());
@@ -107,7 +119,7 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private boolean setStateField(SegmentTag.State state) {
 		boolean res = segmentTag.setState(state);
-		jLabelState.setText(segmentTag.getState().toString());
+		updateStateLabel(segmentTag.getState());
 		if (state != SegmentTag.State.INITIAL) {
 			jLabelValidationError.setVisible(false);
 		}
