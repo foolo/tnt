@@ -1,8 +1,10 @@
 package editor;
 
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -52,7 +54,10 @@ public class Application {
 				}
 				ToolTipManager.sharedInstance().setInitialDelay(500);
 				MainForm mainForm = new MainForm();
-				mainForm.setIconImage(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_48.png")));
+				ArrayList<Image> images = new ArrayList<>();
+				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_48.png")));
+				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_64.png")));
+				mainForm.setIconImages(images);
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
 				if (args.length > 0) {
