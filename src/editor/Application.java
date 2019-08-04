@@ -53,6 +53,7 @@ public class Application {
 					JOptionPane.showMessageDialog(null, "Could not load language list. Spellcheck will not be available.\n" + ex.toString(), "", JOptionPane.ERROR_MESSAGE);
 				}
 				ToolTipManager.sharedInstance().setInitialDelay(500);
+				ToolTipManager.sharedInstance().setDismissDelay(60000);
 				MainForm mainForm = new MainForm();
 				ArrayList<Image> images = new ArrayList<>();
 				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_48.png")));

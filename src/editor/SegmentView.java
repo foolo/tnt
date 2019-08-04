@@ -55,8 +55,8 @@ public class SegmentView extends javax.swing.JPanel {
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
-		jLabelValidationError.setText("");
-		jLabelQc.setText("");
+		jLabelValidationError.setVisible(false);
+		jLabelQc.setVisible(false);
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -91,7 +91,7 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		jLabelState.setText(segmentTag.getState().toString());
 		if (segmentTag.getState() != SegmentTag.State.INITIAL) {
-			jLabelValidationError.setText("");
+			jLabelValidationError.setVisible(false);
 			ArrayList<String> qcRes = Qc.runQc(getSegmentTag());
 			showQcMsg(qcRes);
 		}
@@ -109,7 +109,7 @@ public class SegmentView extends javax.swing.JPanel {
 		boolean res = segmentTag.setState(state);
 		jLabelState.setText(segmentTag.getState().toString());
 		if (state != SegmentTag.State.INITIAL) {
-			jLabelValidationError.setText("");
+			jLabelValidationError.setVisible(false);
 		}
 		return res;
 	}
@@ -131,8 +131,8 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void showValidationError(String message) {
-		jLabelValidationError.setText("Errors");
-		jLabelValidationError.setToolTipText(message);
+		jLabelValidationError.setVisible(true);
+		jLabelValidationError.setToolTipText("<html><body><b>Target text errors</b><p>" + message + "</p></body></html>");
 	}
 
 	String qcMessagesToHtml(ArrayList<String> msgs) {
@@ -147,11 +147,11 @@ public class SegmentView extends javax.swing.JPanel {
 
 	void showQcMsg(ArrayList<String> msgs) {
 		if (msgs.isEmpty()) {
-			jLabelQc.setText("");
+			jLabelQc.setVisible(false);
 			jLabelQc.setToolTipText(null);
 			return;
 		}
-		jLabelQc.setText("Notices");
+		jLabelQc.setVisible(true);
 		jLabelQc.setToolTipText(qcMessagesToHtml(msgs));
 	}
 
@@ -340,11 +340,11 @@ public class SegmentView extends javax.swing.JPanel {
         jLabelState.setText("jLabel1");
 
         jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
-        jLabelValidationError.setText("jLabel1");
+        jLabelValidationError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dialog-error.png"))); // NOI18N
         jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabelQc.setForeground(new java.awt.Color(255, 204, 0));
-        jLabelQc.setText("jLabel1");
+        jLabelQc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dialog-information.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -354,9 +354,11 @@ public class SegmentView extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelState)
-                    .addComponent(jLabelValidationError)
-                    .addComponent(jLabelQc))
-                .addContainerGap(72, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabelValidationError)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelQc)))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,9 +366,9 @@ public class SegmentView extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabelState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelValidationError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelQc)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelValidationError)
+                    .addComponent(jLabelQc))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
