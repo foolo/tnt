@@ -28,6 +28,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import language.SpellCheck;
+import qc.Qc;
 import undo_manager.CaretPosition;
 import util.RegexUtil;
 import util.Settings;
@@ -89,6 +90,11 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewSource.setTaggedText(segmentTag.getSourceText());
 		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		jLabelState.setText(segmentTag.getState().toString());
+		if (segmentTag.getState() != SegmentTag.State.INITIAL) {
+			jLabelValidationError.setText("");
+			ArrayList<String> qcRes = Qc.runQc(getSegmentTag());
+			showQcMsg(qcRes);
+		}
 	}
 
 	public void setTargetText(TaggedText t) {
