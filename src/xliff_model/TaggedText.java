@@ -66,7 +66,7 @@ public class TaggedText {
 		StringBuilder sb = new StringBuilder();
 		for (TaggedTextContent c : content) {
 			if (c instanceof Text) {
-				sb.append(c.toString());
+				sb.append(((Text) c).getContent());
 			}
 		}
 		return sb.toString();
