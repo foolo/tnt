@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
 	public static final Pattern WORDS_PATTERN = Pattern.compile("\\b\\w+\\b", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -25,5 +27,21 @@ public class RegexUtil {
 			}
 		}
 		return null;
+	}
+
+	public static String getPunctuation(String s) {
+		Matcher m = END_PUNCTUATION_PATTERN.matcher(s);
+		if (m.find()) {
+			return m.group(1);
+		}
+		return "";
+	}
+
+	public static String getLeadingWhiteSpace(String s) {
+		Matcher m = LEADING_WHITESPACE_PATTERN.matcher(s);
+		if (m.find()) {
+			return m.group(1);
+		}
+		return "";
 	}
 }

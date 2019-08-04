@@ -19,6 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import language.Language;
 import language.LanguageCollection;
 import language.SpellCheck;
+import qc.Qc;
 import undo_manager.CaretPosition;
 import undo_manager.UndoEventListener;
 import undo_manager.UndoableModel;
@@ -513,6 +514,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			JOptionPane.showMessageDialog(this, "Can not mark empty segment as translated", "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+
+		ArrayList<String> qcRes = Qc.runQc(segmentView.getSegmentTag());
+		segmentView.showQcMsg(qcRes);
 
 		String errMsg = segmentView.getSegmentTag().testEncodeTarget();
 		if (errMsg != null) {

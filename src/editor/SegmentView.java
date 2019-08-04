@@ -55,6 +55,7 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		jLabelValidationError.setText("");
+		jLabelQc.setText("");
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -124,9 +125,28 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void showValidationError(String message) {
-		jLabelValidationError.setText("Tag errors found");
-		String tagIdDetails = "";
-		jLabelValidationError.setToolTipText(tagIdDetails + message);
+		jLabelValidationError.setText("Errors");
+		jLabelValidationError.setToolTipText(message);
+	}
+
+	String qcMessagesToHtml(ArrayList<String> msgs) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<html><body><b>QC Messages</b>");
+		for (String s : msgs) {
+			sb.append("<p>").append(s).append("</p>");
+		}
+		sb.append("</body></html>");
+		return sb.toString();
+	}
+
+	void showQcMsg(ArrayList<String> msgs) {
+		if (msgs.isEmpty()) {
+			jLabelQc.setText("");
+			jLabelQc.setToolTipText(null);
+			return;
+		}
+		jLabelQc.setText("Notices");
+		jLabelQc.setToolTipText(qcMessagesToHtml(msgs));
 	}
 
 	void notifyUndoManager(int caretPos1, int caretPos2) {
@@ -207,11 +227,8 @@ public class SegmentView extends javax.swing.JPanel {
 
 	void applySpellcheck(boolean modified) {
 		int caretLocation = markupViewTarget.getCaret().getDot();
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				SpellCheck.spellCheck(markupViewTarget, caretLocation, modified);
-			}
+		SwingUtilities.invokeLater(() -> {
+			SpellCheck.spellCheck(markupViewTarget, caretLocation, modified);
 		});
 	}
 
@@ -264,6 +281,7 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
+        jLabelQc = new javax.swing.JLabel();
         jLabelId = new javax.swing.JLabel();
 
         jPanel1.setMinimumSize(new java.awt.Dimension(50, 50));
@@ -319,6 +337,9 @@ public class SegmentView extends javax.swing.JPanel {
         jLabelValidationError.setText("jLabel1");
         jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jLabelQc.setForeground(new java.awt.Color(255, 204, 0));
+        jLabelQc.setText("jLabel1");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -327,7 +348,8 @@ public class SegmentView extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelState)
-                    .addComponent(jLabelValidationError))
+                    .addComponent(jLabelValidationError)
+                    .addComponent(jLabelQc))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -337,6 +359,8 @@ public class SegmentView extends javax.swing.JPanel {
                 .addComponent(jLabelState)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelValidationError)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelQc)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -467,6 +491,7 @@ public class SegmentView extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelId;
+    private javax.swing.JLabel jLabelQc;
     private javax.swing.JLabel jLabelState;
     private javax.swing.JLabel jLabelValidationError;
     private javax.swing.JPanel jPanel1;
