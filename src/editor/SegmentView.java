@@ -181,6 +181,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void handleKeyPress(KeyEvent evt, MarkupView markupView) {
+		fileView.scroll_to_segment(this);
 		if (evt.getModifiers() == CTRL_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
@@ -337,11 +338,6 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewTargetMouseReleased(evt);
             }
         });
-        markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                markupViewTargetKeyPressed(evt);
-            }
-        });
         jScrollPane4.setViewportView(markupViewTarget);
 
         jPanel1.add(jScrollPane4);
@@ -486,10 +482,6 @@ public class SegmentView extends javax.swing.JPanel {
 			showTargetPopup(evt);
 		}
     }//GEN-LAST:event_markupViewTargetMouseReleased
-
-    private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
-		fileView.scroll_to_segment(this);
-    }//GEN-LAST:event_markupViewTargetKeyPressed
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;
