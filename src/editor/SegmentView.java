@@ -204,6 +204,9 @@ public class SegmentView extends javax.swing.JPanel {
 				fileView.jumpToPreviousSegment(this);
 			}
 		}
+		if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+			fileView.jumpToNextSegment(this);
+		}
 	}
 
 	MarkupView getMarkupView(Column column) {
