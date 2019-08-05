@@ -22,10 +22,22 @@ public class Qc {
 		}
 	}
 
+	static void checkRepeatedWords(String tt, ArrayList<String> messages) {
+		ArrayList<String> words = RegexUtil.getWords(tt);
+		for (int i = 0; i < words.size() - 1; i++) {
+			String w1 = words.get(i).toLowerCase();
+			String w2 = words.get(i + 1).toLowerCase();
+			if (w1.equals(w2)) {
+				messages.add("Repeated word: '" + w1 + "'");
+			}
+		}
+	}
+
 	static ArrayList<String> runQc(String st, String tt) {
 		ArrayList<String> res = new ArrayList<>();
 		checkPunctuation(st, tt, res);
 		checkLeadingWhitespace(st, tt, res);
+		checkRepeatedWords(tt, res);
 		return res;
 	}
 

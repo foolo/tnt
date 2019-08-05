@@ -7,10 +7,9 @@ import java.util.regex.Pattern;
 
 public class RegexUtil {
 
-	public static final Pattern WORDS_PATTERN = Pattern.compile("\\b\\w+\\b", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern WORD_PATTERN = Pattern.compile("\\b(\\w\\S*\\w|\\w)\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern SPLIT_WORDS_PATTERN = Pattern.compile("\\W*\\s+\\W*", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -21,7 +20,7 @@ public class RegexUtil {
 	}
 
 	public static MatchResult findWordAtPosition(String s, int pos) {
-		Matcher m = WORDS_PATTERN.matcher(s);
+		Matcher m = WORD_PATTERN.matcher(s);
 		while (m.find()) {
 			if (pos >= m.start() && pos < m.end()) {
 				return m.toMatchResult();
@@ -47,6 +46,20 @@ public class RegexUtil {
 	}
 
 	public static int countWords(String s) {
-		return SPLIT_WORDS_PATTERN.split(s).length;
+		int count = 0;
+		Matcher m = WORD_PATTERN.matcher(s);
+		while (m.find()) {
+			count++;
+		}
+		return count;
+	}
+
+	public static ArrayList<String> getWords(String s) {
+		ArrayList<String> res = new ArrayList<>();
+		Matcher m = WORD_PATTERN.matcher(s);
+		while (m.find()) {
+			res.add(m.group(1));
+		}
+		return res;
 	}
 }

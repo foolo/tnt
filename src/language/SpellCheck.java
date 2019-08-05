@@ -34,7 +34,7 @@ public class SpellCheck {
 		ArrayList<Integer> indexes = new ArrayList<>();
 		String text = markupView.getPlainText(indexes);
 		int caretLocationPlain = StringUtil.taggedToPlainIndex(caretLocationTagged, indexes);
-		Matcher m = RegexUtil.WORDS_PATTERN.matcher(text);
+		Matcher m = RegexUtil.WORD_PATTERN.matcher(text);
 		while (m.find()) {
 			String word = m.group();
 			int startPlain = m.start();
