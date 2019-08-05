@@ -68,6 +68,17 @@ public class XliffTag implements UndoableModel {
 		return document;
 	}
 
+	public String getProgress() {
+		int totalWords = 0;
+		int completedWords = 0;
+		for (FileTag f : files) {
+			totalWords += f.countSourceWords(false);
+			completedWords += f.countSourceWords(true);
+		}
+		int percent = 100 * completedWords / totalWords;
+		return completedWords + " of " + totalWords + " words completed (" + percent + "%)";
+	}
+
 	public XliffTag(XliffTag xt) {
 		for (FileTag f : xt.files) {
 			files.add(f.copy());

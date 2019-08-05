@@ -90,4 +90,16 @@ public class UnitTag implements Item {
 		}
 		// todo remove removed segments
 	}
+
+	@Override
+	public int countSourceWords(boolean skipInitialSegments) {
+		int sum = 0;
+		for (SegmentTag st : segments) {
+			if (skipInitialSegments && (st.getState() == SegmentTag.State.INITIAL)) {
+				continue;
+			}
+			sum += st.countSourceWords();
+		}
+		return sum;
+	}
 }

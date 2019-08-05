@@ -10,6 +10,7 @@ public class RegexUtil {
 	public static final Pattern WORDS_PATTERN = Pattern.compile("\\b\\w+\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern SPLIT_WORDS_PATTERN = Pattern.compile("\\W*\\s+\\W*", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -43,5 +44,9 @@ public class RegexUtil {
 			return m.group(1);
 		}
 		return "";
+	}
+
+	public static int countWords(String s) {
+		return SPLIT_WORDS_PATTERN.split(s).length;
 	}
 }

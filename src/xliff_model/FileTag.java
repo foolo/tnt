@@ -87,4 +87,12 @@ public class FileTag {
 			i.encode(errors, skipInitialSegments);
 		}
 	}
+
+	int countSourceWords(boolean skipInitialSegments) {
+		int sum = 0;
+		for (Item i : items) {
+			sum += i.countSourceWords(skipInitialSegments);
+		}
+		return sum;
+	}
 }

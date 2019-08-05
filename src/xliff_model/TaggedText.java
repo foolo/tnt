@@ -17,6 +17,7 @@ public class TaggedText {
 	private static final ArrayList<String> COMPOSITE_TAG_NAMES = new ArrayList<>(Arrays.asList(new String[]{"pc", "mrk"}));
 
 	private final ArrayList<TaggedTextContent> content;
+	private String textContentCache = null;
 
 	static Node createRefNode(Node node) {
 		Node newNode = node.cloneNode(false);
@@ -58,18 +59,26 @@ public class TaggedText {
 		this.content = content;
 	}
 
+	public TaggedText(ArrayList<TaggedTextContent> content, String textContent) {
+		this.content = content;
+	}
+
 	public ArrayList<TaggedTextContent> getContent() {
 		return content;
 	}
 
 	public String getTextContent() {
+		if (textContentCache != null) {
+			return textContentCache;
+		}
 		StringBuilder sb = new StringBuilder();
 		for (TaggedTextContent c : content) {
 			if (c instanceof Text) {
 				sb.append(((Text) c).getContent());
 			}
 		}
-		return sb.toString();
+		textContentCache = sb.toString();
+		return textContentCache;
 	}
 
 	public ArrayList<Tag> getTags() {
@@ -87,13 +96,12 @@ public class TaggedText {
 		for (TaggedTextContent t : content) {
 			newContent.add(t.copy());
 		}
-		return new TaggedText(newContent);
+		return new TaggedText(newContent, textContentCache);
 	}
 
 	public ArrayList<Node> onlyTextToNodes(Document document) {
-		String textContent = getTextContent();
 		ArrayList<Node> result = new ArrayList<>();
-		result.add(document.createTextNode(textContent));
+		result.add(document.createTextNode(getTextContent()));
 		return result;
 	}
 

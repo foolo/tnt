@@ -88,6 +88,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void updateStateLabel(SegmentTag.State state) {
+		Session.getUndoManager().updateProgress();
 		jLabelState.setText(state.toString());
 		if (state == SegmentTag.State.INITIAL) {
 			jLabelState.setForeground(Color.DARK_GRAY);
@@ -119,7 +120,9 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private boolean setStateField(SegmentTag.State state) {
 		boolean res = segmentTag.setState(state);
-		updateStateLabel(segmentTag.getState());
+		if (res) {
+			updateStateLabel(segmentTag.getState());
+		}
 		if (state != SegmentTag.State.INITIAL) {
 			jLabelValidationError.setVisible(false);
 		}

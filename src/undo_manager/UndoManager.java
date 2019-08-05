@@ -40,6 +40,10 @@ public class UndoManager {
 		}
 	}
 
+	public void updateProgress() {
+		listener.updateProgress(currentState.getModel());
+	}
+
 	public void markSaved() {
 		markSnapshot();
 		savedState = undoBuffer.peek();

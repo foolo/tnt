@@ -55,4 +55,13 @@ public class GroupTag implements Item {
 			i.encode(errors, skipInitialSegments);
 		}
 	}
+
+	@Override
+	public int countSourceWords(boolean skipInitialSegments) {
+		int sum = 0;
+		for (Item i : items) {
+			sum += i.countSourceWords(skipInitialSegments);
+		}
+		return sum;
+	}
 }

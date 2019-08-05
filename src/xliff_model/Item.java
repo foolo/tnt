@@ -8,5 +8,7 @@ public interface Item {
 
 	void encode(ArrayList<String> errors, boolean skipInitialSegments);
 
+	int countSourceWords(boolean skipInitialSegments);
+
 	ArrayList<SegmentTag> getSegmentsArray();
 }

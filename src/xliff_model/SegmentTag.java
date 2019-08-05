@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import util.RegexUtil;
 import util.Settings;
 import util.XmlUtil;
 
@@ -20,6 +21,7 @@ public class SegmentTag {
 	private State state;
 	private final String id;
 	private final String sourceLeadingWhitepace;
+	private final Integer sourceWordCount;
 
 	public static final String ATTRIBUTE_STATE = "state";
 
@@ -66,6 +68,7 @@ public class SegmentTag {
 			targetText.trim();
 		}
 		id = Session.generateSegmentId();
+		sourceWordCount = RegexUtil.countWords(sourceText.getTextContent());
 	}
 
 	public SegmentTag(SegmentTag st) {
@@ -77,6 +80,7 @@ public class SegmentTag {
 		this.state = st.state;
 		this.id = st.id;
 		this.sourceLeadingWhitepace = st.sourceLeadingWhitepace;
+		this.sourceWordCount = st.sourceWordCount;
 	}
 
 	public TaggedText getSourceText() {
@@ -183,5 +187,9 @@ public class SegmentTag {
 			encodeContent(targetNode, targetText, errors);
 			node.appendChild(targetNode);
 		}
+	}
+
+	int countSourceWords() {
+		return sourceWordCount;
 	}
 }
