@@ -41,6 +41,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	public MainForm() {
 		initComponents();
 		logWindow = new LogWindow();
+		jLabelProgress.setText(" ");
 	}
 
 	void updateRecentFilesMenu() {
