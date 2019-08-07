@@ -1,8 +1,11 @@
 import os
 import re
+import shutil
 import platform
 from os.path import join
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
+AddOption('--release_version', default="snapshot")
+version = GetOption('release_version')
 
 TARGET_LINUX='linux'
 TARGET_WINDOWS='windows'
@@ -10,6 +13,13 @@ target = platform.system().lower()
 appdir = "tnt.AppDir"
 appdirlib = join(appdir, "lib")
 jredir = appdir + "/jre"
+release_name = "tnt-" + version
+release_file = release_name + {TARGET_LINUX: ".AppImage", TARGET_WINDOWS: ".zip"}[target]
+
+try:
+	shutil.rmtree(appdir)
+except FileNotFoundError:
+	pass
 
 env.Command("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar", None, "mvn -f HunspellJNA/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package")
 env.AlwaysBuild("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
@@ -49,3 +59,12 @@ env.Install(appdir, "languages.txt")
 native_libs = {TARGET_LINUX: "HunspellJNA/native-lib/libhunspell-linux-x86-64.so", TARGET_WINDOWS: "HunspellJNA/native-lib/hunspell-win-x86-64.dll"}
 env.Install(appdirlib, native_libs[target])
 
+def zipdir(target, source, env):
+	if (len(target) != 1) or (len(source) != 1):
+		exit_error("unexpected target/source: " + str(target) + ", " + str(source))
+	zip_name = re.sub("\.zip$", "", str(target[0]))
+	shutil.make_archive(zip_name, 'zip', str(source[0]))
+
+if target == TARGET_WINDOWS:
+	env.Command(release_file, appdir, zipdir)
+	env.AlwaysBuild(release_file)

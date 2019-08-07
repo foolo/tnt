@@ -34,9 +34,9 @@ Before running the build commands under Windows, set the PATH (assuming tools we
 
 	set PATH="%userprofile%\apache-ant-1.10.6\bin;%userprofile%\apache-maven-3.6.1\bin;%userprofile%\jdk-12.0.1\bin";%PATH%
 
-# Create release directory
+# Create release
 
-	scons
+	scons --release_version=VERSION
 
 The application can now be run with ```tnt.AppDir/AppRun``` on Linux or ```tnt.AppDir\runtnt.bat``` on Windows.
 
