@@ -11,7 +11,9 @@ Install JDK 11, Apache Ant and Apache Maven
 
 Add all ```/bin``` directories to PATH
 
-Install scons (e.g. ```sudo apt install scons``` on Ubuntu )
+Install scons (e.g. ```sudo apt install scons``` on Ubuntu)
+
+Scons must be run with Python 3
 
 ## Windows
 
