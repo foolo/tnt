@@ -1,7 +1,21 @@
 #include <windows.h>
 #include <sstream>
+#include <iostream>
+#include <shlwapi.h>
+
+void cdToApplication() {
+	wchar_t path[MAX_PATH];
+	int len = GetModuleFileNameW(NULL, path, MAX_PATH);
+	if (len > 0 && len < MAX_PATH) {
+		path[len-1] = 0;
+		if (PathRemoveFileSpecW(path) != 0) {
+			SetCurrentDirectoryW(path);
+		}
+	}
+}
 
 int main() {
+	cdToApplication();
 	STARTUPINFOW si;
 	PROCESS_INFORMATION pi;
 	ZeroMemory(&si, sizeof(si));
