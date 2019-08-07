@@ -42,7 +42,12 @@ def add_resources(target_path, res_path, pattern=None):
 			relp = os.path.relpath(path, res_path)
 			env.Install(join(target_path, relp), join(path, f))
 
-add_resources(appdir, join("deploy", target))
+if target == TARGET_WINDOWS:
+	SConscript(['deploy/windows_src/SConscript'])
+	env.Install(appdir, "deploy/windows_src/tnt.exe")
+if target == TARGET_LINUX:
+	add_resources(appdir, "deploy/linux")
+
 add_resources(join(appdir, "catalog"),   "OpenXLIFF/catalog")
 add_resources(join(appdir, "xmlfilter"), "OpenXLIFF/xmlfilter")
 add_resources(join(appdir, "srx"),       "OpenXLIFF/srx")
