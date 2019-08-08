@@ -1,4 +1,5 @@
 import os
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
-env.Command("tnt.res", "tnt.rc", "windres $SOURCE --output-format=coff --output=$TARGET")
+env.Replace(CXX = 'x86_64-w64-mingw32-g++')
+env.Command("tnt.res", "tnt.rc", "x86_64-w64-mingw32-windres $SOURCE --output-format=coff --output=$TARGET")
 env.Program('tnt.exe', ["tnt_exe.cpp", "tnt.res"], LIBS=['shlwapi'], LINKFLAGS=['-static', '-s'])

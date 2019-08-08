@@ -7,3 +7,6 @@
 [submodule "HunspellJNA"]
 	path = HunspellJNA
 	url = https://github.com/dren-dk/HunspellJNA.git
+[submodule "tnt-artifacts"]
+	path = tnt-artifacts
+	url = git@github.com:foolo/tnt-artifacts.git

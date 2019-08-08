@@ -1,15 +1,19 @@
 import os
 import re
 import shutil
-import platform
+import subprocess
 from os.path import join
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 AddOption('--release_version', default="snapshot")
 version = GetOption('release_version')
-
 TARGET_LINUX='linux'
 TARGET_WINDOWS='windows'
-target = platform.system().lower()
+AddOption('--target', default=TARGET_LINUX)
+target = GetOption('target')
+
+subprocess.call(["git", "submodule", "init"])
+subprocess.call(["git", "submodule", "update"])
+
 appdir = "tnt.AppDir"
 appdirlib = join(appdir, "lib")
 jredir = appdir + "/jre"
@@ -25,10 +29,8 @@ env.Command("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar", None, "mvn -f H
 env.AlwaysBuild("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
 env.Command("dist/tnt.jar", None, "ant jar")
 env.AlwaysBuild("dist/tnt.jar")
-
-modules = "java.base,java.datatransfer,java.desktop,java.logging,java.prefs,java.xml,java.sql"
-jlink_cmd = "jlink --add-modules " + modules + " --output " + jredir
-env.Command(jredir, None, jlink_cmd)
+jre_artifact = "tnt-artifacts/" + {TARGET_LINUX: "tnt-jre-linux-x64.7z", TARGET_WINDOWS: "tnt-jre-windows-x64.7z"}[target]
+env.Command(jredir, None, "7z x " + jre_artifact + " -o" + appdir)
 
 def exit_error(ex):
 	raise Exception(ex)

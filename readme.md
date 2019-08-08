@@ -15,32 +15,9 @@ Install scons (e.g. ```sudo apt install scons``` on Ubuntu)
 
 Scons must be run with Python 3
 
-## Windows
-
-Download and extract
-
-https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip
-
-http://apache.mirrors.spacedump.net//ant/binaries/apache-ant-1.10.6-bin.zip
-
-http://apache.mirrors.spacedump.net/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.zip
-
-Download and install Python 3 from https://www.python.org/downloads/
-Make sure to check "add Python to PATH" and similar.
-
-Install scons
-
-	pip install scons
-
-Before running the build commands under Windows, set the PATH (assuming tools were extracted under %userprofile%)
-
-	set PATH="%userprofile%\apache-ant-1.10.6\bin;%userprofile%\apache-maven-3.6.1\bin;%userprofile%\jdk-12.0.1\bin";%PATH%
-
 # Create release
 
-	scons --release_version=VERSION
-
-The application can now be run with ```tnt.AppDir/AppRun``` on Linux or ```tnt.AppDir\runtnt.bat``` on Windows.
+	scons --target=TARGET --release_version=VERSION
 
 ## Create Linux AppImage
 
@@ -51,3 +28,10 @@ To create an AppImage, download appimagetool from https://github.com/AppImage/Ap
 # Configure Netbeans
 
 Open the project in Netbeans 11 or later. Under *Project properties > Run*, set *Working Directory* to the tnt.AppDir directory created in previous step.
+
+# Creating JRE artifact
+
+On corresponding platform, run:
+
+	jlink --add-modules java.base,java.datatransfer,java.desktop,java.logging,java.prefs,java.xml,java.sql --output jre
+	7z a tnt-jre-PLATFORM.7z jre
