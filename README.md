@@ -22,6 +22,19 @@ Searching and filtering not yet implemented. Few document formats are supported.
 
 ## Download
 
+### Windows
+
+Download and extract https://github.com/foolo/tnt/releases/download/0.1/tnt-0.1-windows-x64.zip
+
+Run the application by executing ```tnt.exe```
+
+### Linux:
+https://github.com/foolo/tnt/releases/download/0.1/tnt-0.1.AppImage
+
+## Old releases
+
+All releases are located at https://github.com/foolo/tnt/releases
+
 ## Development
 
-The source code is located at https://bitbucket.org/foolo/tnt/src/master/
+The source code is located at https://github.com/foolo/tnt
