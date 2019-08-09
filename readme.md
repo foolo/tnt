@@ -9,6 +9,8 @@
 
 Install JDK 11 and Apache Ant. Add ```/bin``` directories to PATH.
 
+Install mingw-w64. (```sudo apt install g++-mingw-w64-x86-64``` on Ubuntu)
+
 Download appimagetool from https://github.com/AppImage/AppImageKit/releases and make it executable as ```appimagetool``` from PATH.
 
 Install scons (e.g. ```sudo apt install scons``` on Ubuntu). Scons must be run with Python 3.
@@ -21,7 +23,7 @@ Install scons (e.g. ```sudo apt install scons``` on Ubuntu). Scons must be run w
 
 Open the project in Netbeans 11 or later. Under *Project properties > Run*, set *Working Directory* to the tnt.AppDir directory created in previous step.
 
-# Creating artifacts
+# Creating artifacts and resources
 
 ## JRE artifacts
 
@@ -36,3 +38,9 @@ To build ```hunspell-1.6.2-SNAPSHOT.jar``` and ```hunspell-1.6.2-SNAPSHOT-source
 
 	cd HunspellJNA
 	mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package
+
+## Windows icon
+
+Create icon.ico with ImageMagick convert tool:
+
+	convert src/images/Gnome-accessories-character-map_48.png deploy/windows_src/icon.ico
