@@ -25,8 +25,6 @@ try:
 except FileNotFoundError:
 	pass
 
-env.Command("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar", None, "mvn -f HunspellJNA/pom.xml -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package")
-env.AlwaysBuild("HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
 env.Command("dist/tnt.jar", None, "ant jar")
 env.AlwaysBuild("dist/tnt.jar")
 jre_artifact = "tnt-artifacts/" + {TARGET_LINUX: "tnt-jre-linux-x64.7z", TARGET_WINDOWS: "tnt-jre-windows-x64.7z"}[target]
@@ -59,7 +57,7 @@ env.Install(appdirlib, "OpenXLIFF/lib/json.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/jsoup-1.11.3.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/openxliff.jar")
 env.Install(appdirlib, "dist/tnt.jar")
-env.Install(appdirlib, "HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
+env.Install(appdirlib, "tnt-artifacts/hunspell-1.6.2-SNAPSHOT.jar")
 env.Install(appdirlib, "HunspellJNA/lib/jna.jar")
 
 native_libs = {TARGET_LINUX: "HunspellJNA/native-lib/libhunspell-linux-x86-64.so", TARGET_WINDOWS: "HunspellJNA/native-lib/hunspell-win-x86-64.dll"}
