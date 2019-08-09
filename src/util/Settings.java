@@ -15,7 +15,6 @@ public class Settings {
 
 	private static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
 
-	private static final String PACKAGE_DIRECTORY = "package_directory";
 	private static final String INPUT_FILE_DIRECTORY = "input_file_directory";
 	private static final String LAST_OPENED_FILE = "last_opened_file";
 	private static final String MARKUP_VIEW_FONT_NAME = "markup_view_font_name";
@@ -24,16 +23,6 @@ public class Settings {
 	private static final String SHOW_WHITESPACE = "show_whitespace";
 	private static final String WORDLIST = "wordlist";
 	private static final String CUSTOM_SPECIAL_CHARACTERS = "custom_special_characters";
-
-	public static File getPackageDirectory() {
-		File defaultDir = new File(System.getProperty("user.home"), "RainbowPackages");
-		String dir = prefs.get(PACKAGE_DIRECTORY, defaultDir.getAbsolutePath());
-		return new File(dir);
-	}
-
-	public static void setPackageDirectory(File dir) {
-		prefs.put(PACKAGE_DIRECTORY, dir.getAbsolutePath());
-	}
 
 	public static File getInputFileDirectory() {
 		File defaultDir = new File(System.getProperty("user.home"));
