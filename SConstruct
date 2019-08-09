@@ -14,7 +14,7 @@ target = GetOption('target')
 subprocess.call(["git", "submodule", "init"])
 subprocess.call(["git", "submodule", "update"])
 
-appdir = "tnt.AppDir"
+appdir = target + ".AppDir"
 appdirlib = join(appdir, "lib")
 jredir = appdir + "/jre"
 release_name = "tnt-" + version
@@ -73,4 +73,7 @@ def zipdir(target, source, env):
 
 if target == TARGET_WINDOWS:
 	env.Command(release_file, appdir, zipdir)
-	env.AlwaysBuild(release_file)
+if target == TARGET_LINUX:
+	env.Command(release_file, appdir, "appimagetool " + appdir + " " + release_file)
+
+env.AlwaysBuild(release_file)

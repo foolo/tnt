@@ -11,6 +11,8 @@ Install JDK 11, Apache Ant and Apache Maven
 
 Add all ```/bin``` directories to PATH
 
+Download appimagetool from https://github.com/AppImage/AppImageKit/releases and make it executable as ```appimagetool``` from PATH
+
 Install scons (e.g. ```sudo apt install scons``` on Ubuntu)
 
 Scons must be run with Python 3
@@ -18,12 +20,6 @@ Scons must be run with Python 3
 # Create release
 
 	scons --target=TARGET --release_version=VERSION
-
-## Create Linux AppImage
-
-To create an AppImage, download appimagetool from https://github.com/AppImage/AppImageKit/releases and run
-
-	./appimagetool-x86_64.AppImage tnt.AppDir
 
 # Configure Netbeans
 
