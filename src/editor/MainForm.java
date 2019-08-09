@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import language.Language;
 import language.LanguageCollection;
+import language.LanguageTag;
 import language.SpellCheck;
 import qc.Qc;
 import undo_manager.CaretPosition;
@@ -118,11 +119,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	void initializeSpelling(String trgLang) {
 		if (trgLang.isEmpty()) {
-			Log.debug("loadDictionary: languageCode empty, disable spelling");
+			Log.debug("loadDictionary: trgLang empty, disable spelling");
 			return;
 		}
-		String[] code = Language.stringToCode(trgLang);
-		Language l = LanguageCollection.findLanguageWithFallback(code);
+		Language l = LanguageCollection.findLanguageWithFallback(new LanguageTag(trgLang));
 		if (l == null) {
 			JOptionPane.showMessageDialog(this, "Unrecognized target language code: '" + trgLang + "'\nSpellcheck will not be available", "", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -494,7 +494,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			File xliffFile;
 			OpenXliffHandler converter = new OpenXliffHandler();
 			try {
-				xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSourceLanguage(), d.getTargetLanguage());
+				xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSourceLanguage().originalTagStr, d.getTargetLanguage().originalTagStr);
 				load_file(xliffFile, true);
 			}
 			catch (ConversionError ex) {

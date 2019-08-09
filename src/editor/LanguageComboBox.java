@@ -3,6 +3,7 @@ package editor;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import language.Language;
+import language.LanguageTag;
 import util.Log;
 
 public class LanguageComboBox extends JComboBox<String> {
@@ -15,26 +16,26 @@ public class LanguageComboBox extends JComboBox<String> {
 		addItem("Select language");
 		for (Language l : languages) {
 			String spelling = (l.dictionaryPath == null) ? "" : " *";
-			addItem(l.name + " (" + l.getCodeAsString() + ")" + spelling);
+			addItem(l.name + " (" + l.originalTagStr + ")" + spelling);
 		}
 	}
 
-	public String getSelectedLanguageCode() {
+	public Language getSelectedLanguage() {
 		int index = getSelectedIndex();
 		if (index == 0) {
-			return "";
+			return null;
 		}
-		return languages.get(index - 1).getCodeAsString();
+		return languages.get(index - 1);
 	}
 
-	public void setSelectedLanguageCode(String codeStr) {
-		String[] code = Language.stringToCode(codeStr);
+	public void setSelectedLanguage(String tagStr) {
+		LanguageTag tag = new LanguageTag(tagStr);
 		for (int i = 0; i < languages.size(); i++) {
-			if (languages.get(i).matchCode(code)) {
+			if (languages.get(i).tag.equals(tag)) {
 				setSelectedIndex(i + 1);
 				return;
 			}
 		}
-		Log.err("setSelectedLanguageCode: no matching language for: " + codeStr);
+		Log.err("setSelectedLanguage: no matching language for: " + tagStr);
 	}
 }

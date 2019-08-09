@@ -1,6 +1,7 @@
 package editor;
 
 import javax.swing.JOptionPane;
+import language.Language;
 import language.LanguageCollection;
 
 public final class PropertiesDialog extends BaseDialog {
@@ -11,24 +12,24 @@ public final class PropertiesDialog extends BaseDialog {
 		initButtons(jButtonOk, jButtonCancel);
 		sourceLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
 		targetLanguageComboBox.setLanguages(LanguageCollection.getLanguages());
-		sourceLanguageComboBox.setSelectedLanguageCode(Session.getProperties().getSrcLang());
-		targetLanguageComboBox.setSelectedLanguageCode(Session.getProperties().getTrgLang());
+		sourceLanguageComboBox.setSelectedLanguage(Session.getProperties().getSrcLang());
+		targetLanguageComboBox.setSelectedLanguage(Session.getProperties().getTrgLang());
 		update();
 	}
 
-	String getSourceLanguage() {
-		return sourceLanguageComboBox.getSelectedLanguageCode();
+	Language getSourceLanguage() {
+		return sourceLanguageComboBox.getSelectedLanguage();
 	}
 
-	String getTargetLanguage() {
-		return targetLanguageComboBox.getSelectedLanguageCode();
+	Language getTargetLanguage() {
+		return targetLanguageComboBox.getSelectedLanguage();
 	}
 
 	String preValidateInput() {
-		if (sourceLanguageComboBox.getSelectedLanguageCode().isEmpty()) {
+		if (sourceLanguageComboBox.getSelectedLanguage() == null) {
 			return "Please select a source language.";
 		}
-		if (targetLanguageComboBox.getSelectedLanguageCode().isEmpty()) {
+		if (targetLanguageComboBox.getSelectedLanguage() == null) {
 			return "Please select a target language.";
 		}
 		return null;
@@ -155,8 +156,8 @@ public final class PropertiesDialog extends BaseDialog {
 			JOptionPane.showMessageDialog(this, preValidateResult, "", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		Session.getProperties().setSrcLang(sourceLanguageComboBox.getSelectedLanguageCode());
-		Session.getProperties().setTrgLang(targetLanguageComboBox.getSelectedLanguageCode());
+		Session.getProperties().setSrcLang(sourceLanguageComboBox.getSelectedLanguage().originalTagStr);
+		Session.getProperties().setTrgLang(targetLanguageComboBox.getSelectedLanguage().originalTagStr);
 		result = true;
 		setVisible(false);
     }//GEN-LAST:event_jButtonOkActionPerformed

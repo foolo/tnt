@@ -1,6 +1,7 @@
 package editor;
 
 import java.awt.Font;
+import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.xml.parsers.DocumentBuilder;
@@ -38,6 +39,7 @@ public class PreferencesForm extends BaseDialog {
 		addSampleText();
 
 		jCheckBoxShowWhitespace.setSelected(Settings.getShowWhitespace());
+		jTextFieldDictionariesLocation.setText(Settings.getDictionariesLocation());
 	}
 
 	final void addSampleText() {
@@ -91,6 +93,9 @@ public class PreferencesForm extends BaseDialog {
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaWordlist = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        jTextFieldDictionariesLocation = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -177,7 +182,7 @@ public class PreferencesForm extends BaseDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jCheckBoxShowWhitespace)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(161, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,16 +227,27 @@ public class PreferencesForm extends BaseDialog {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        jLabel3.setText("Dictionary location");
+
+        jTextFieldDictionariesLocation.setText("jTextFieldDictionaryLocation");
+
+        jButton3.setText("Choose...");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -239,13 +255,26 @@ public class PreferencesForm extends BaseDialog {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jTextFieldDictionariesLocation))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldDictionariesLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -271,7 +300,7 @@ public class PreferencesForm extends BaseDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTabbedPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -292,6 +321,7 @@ public class PreferencesForm extends BaseDialog {
 		Settings.setEditorFont(fontName, size);
 		Settings.setShowWhitespace(jCheckBoxShowWhitespace.isSelected());
 		Settings.setWordlistData(jTextAreaWordlist.getText());
+		Settings.setDictionariesLocation(jTextFieldDictionariesLocation.getText());
 		result = true;
 		setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -304,13 +334,25 @@ public class PreferencesForm extends BaseDialog {
 		updateFontPreview();
     }//GEN-LAST:event_formWindowActivated
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+		JFileChooser fc = new JFileChooser(Settings.getDictionariesLocation());
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		int returnVal = fc.showOpenDialog(this);
+		if (returnVal != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+		jTextFieldDictionariesLocation.setText(fc.getSelectedFile().getAbsolutePath());
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBoxShowWhitespace;
     private javax.swing.JComboBox<String> jComboBoxFont;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -321,6 +363,7 @@ public class PreferencesForm extends BaseDialog {
     private javax.swing.JSpinner jSpinnerFontSize;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextAreaWordlist;
+    private javax.swing.JTextField jTextFieldDictionariesLocation;
     private editor.MarkupView markupView1;
     // End of variables declaration//GEN-END:variables
 }

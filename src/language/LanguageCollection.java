@@ -1,89 +1,37 @@
 package language;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import util.Log;
 
 public class LanguageCollection {
 
 	static ArrayList<Language> languages = new ArrayList<>();
-	static String LANGUAGE_LIST_FILE_VALUE_DELIMITER = ";";
-	static String LANGUAGE_LIST_FILENAME = "languages.txt";
 
 	public static ArrayList<Language> getLanguages() {
 		return languages;
 	}
 
-	static Language decodeLine(String s, int lineNumber) {
-		String[] parts = s.split(LANGUAGE_LIST_FILE_VALUE_DELIMITER, -1);
-		if (parts.length != 3) {
-			return null;
-		}
-		String name = parts[0];
-		String code = parts[1];
-		String path = parts[2];
-		if (path.isEmpty()) {
-			path = null;
-		}
-		return new Language(name, code, path);
-	}
-
-	static Language findLanguage(String[] code) {
+	static Language findLanguage(ArrayList<String> subtags) {
 		for (Language l : languages) {
-			if (l.matchCode(code)) {
+			if (l.tag.equals(subtags)) {
 				return l;
 			}
 		}
 		return null;
 	}
 
-	public static Language findLanguageWithFallback(String[] code) {
-		while (code.length > 0) {
-			Language l = findLanguage(code);
+	public static Language findLanguageWithFallback(ArrayList<String> subtags) {
+		while (subtags.size() > 0) {
+			Language l = findLanguage(subtags);
 			if (l != null) {
 				return l;
 			}
-			code = Arrays.copyOf(code, code.length - 1);
+			subtags.remove(subtags.size() - 1);
 		}
 		return null;
 	}
 
-	public static void loadLanguages() throws IOException {
-		File file = new File(LANGUAGE_LIST_FILENAME);
-
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		int lineNumber = 0;
-		while (br.ready()) {
-			lineNumber++;
-			String line = br.readLine();
-			if (line.trim().startsWith("#")) {
-				continue;
-			}
-			Language decodedLanguage = decodeLine(line, lineNumber);
-			if (decodedLanguage == null) {
-				Log.err("decodeLine: " + file + " (line " + lineNumber + "): Invalid format: " + line);
-				continue;
-			}
-			Language l = findLanguage(decodedLanguage.code);
-			if (l == null) {
-				languages.add(decodedLanguage);
-				Log.debug("Added external language " + decodedLanguage + " from " + file);
-			}
-			else {
-				if (decodedLanguage.dictionaryPath != null) {
-					l.dictionaryPath = decodedLanguage.dictionaryPath;
-					Log.debug("Added spelling dictionary for " + l + " (path: " + l.dictionaryPath + ")");
-				}
-			}
-		}
-	}
-
-	private static void addLanguage(String name, String code) {
-		languages.add(new Language(name, code, null));
+	private static void addLanguage(String name, String tag) {
+		languages.add(new Language(name, tag, null));
 	}
 
 	static {

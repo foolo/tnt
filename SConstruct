@@ -59,7 +59,6 @@ env.Install(appdirlib, "OpenXLIFF/lib/openxliff.jar")
 env.Install(appdirlib, "dist/tnt.jar")
 env.Install(appdirlib, "HunspellJNA/build/jar/hunspell-1.6.2-SNAPSHOT.jar")
 env.Install(appdirlib, "HunspellJNA/lib/jna.jar")
-env.Install(appdir, "languages.txt")
 
 native_libs = {TARGET_LINUX: "HunspellJNA/native-lib/libhunspell-linux-x86-64.so", TARGET_WINDOWS: "HunspellJNA/native-lib/hunspell-win-x86-64.dll"}
 env.Install(appdirlib, native_libs[target])
