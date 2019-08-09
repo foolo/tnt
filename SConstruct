@@ -51,7 +51,6 @@ if target == TARGET_LINUX:
 add_resources(join(appdir, "catalog"),   "OpenXLIFF/catalog")
 add_resources(join(appdir, "xmlfilter"), "OpenXLIFF/xmlfilter")
 add_resources(join(appdir, "srx"),       "OpenXLIFF/srx")
-add_resources(join(appdir, "dictionaries"), "dictionaries", "(.dic|.aff)$")
 env.Install(appdirlib, "OpenXLIFF/lib/dtd.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/json.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/jsoup-1.11.3.jar")
