@@ -43,8 +43,7 @@ def add_resources(target_path, res_path, pattern=None):
 			env.Install(join(target_path, relp), join(path, f))
 
 if target == TARGET_WINDOWS:
-	SConscript(['deploy/windows_src/SConscript'])
-	env.Install(appdir, "deploy/windows_src/tnt.exe")
+	env.Install(appdir, "tnt-artifacts/tnt.exe")
 if target == TARGET_LINUX:
 	add_resources(appdir, "deploy/linux")
 

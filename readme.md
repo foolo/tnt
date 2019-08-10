@@ -9,8 +9,6 @@
 
 Install JDK 11 and Apache Ant. Add ```/bin``` directories to PATH.
 
-Install mingw-w64. (```sudo apt install g++-mingw-w64-x86-64``` on Ubuntu)
-
 Download appimagetool from https://github.com/AppImage/AppImageKit/releases and make it executable as ```appimagetool``` from PATH.
 
 Install scons (e.g. ```sudo apt install scons``` on Ubuntu). Scons must be run with Python 3.
@@ -44,3 +42,12 @@ To build ```hunspell-1.6.2-SNAPSHOT.jar``` and ```hunspell-1.6.2-SNAPSHOT-source
 Create icon.ico with ImageMagick convert tool:
 
 	convert src/images/Gnome-accessories-character-map_48.png deploy/windows_src/icon.ico
+
+## tnt.exe
+
+Install mingw-w64 (```sudo apt install g++-mingw-w64-x86-64``` on Ubuntu)
+
+Build tnt.exe:
+
+	cd deploy/windows_src
+	scons --file SConscript
