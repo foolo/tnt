@@ -69,6 +69,10 @@ public class SpellCheck {
 		currentDictionary = Hunspell.getInstance().getDictionary(l.dictionaryPath);
 	}
 
+	public static void unloadDictionary() {
+		currentDictionary = null;
+	}
+
 	public static boolean isMisspelled(String word) {
 		if (currentDictionary == null) {
 			return false;

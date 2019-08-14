@@ -118,6 +118,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	void initializeSpelling(String trgLang) {
+		SpellCheck.unloadDictionary();
+		for (SegmentView segmentView : getSegmentViews()) {
+			segmentView.clearSpellcheck();
+		}
 		if (trgLang.isEmpty()) {
 			Log.debug("loadDictionary: trgLang empty, disable spelling");
 			return;
@@ -137,9 +141,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		Log.debug("Using spelling language " + l + " for target language " + trgLang);
 		try {
 			SpellCheck.loadDictionary(l);
-			for (SegmentView segmentView : getSegmentViews()) {
-				segmentView.clearSpellcheck();
-			}
 		}
 		catch (IOException ex) {
 			JOptionPane.showMessageDialog(this, "Could not load dictionary for target language '" + l + "'\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
