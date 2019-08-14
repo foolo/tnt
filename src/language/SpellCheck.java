@@ -70,6 +70,9 @@ public class SpellCheck {
 	}
 
 	public static boolean isMisspelled(String word) {
+		if (currentDictionary == null) {
+			return false;
+		}
 		if (Settings.getWordList().contains(word)) {
 			return false;
 		}
