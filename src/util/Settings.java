@@ -23,7 +23,6 @@ public class Settings {
 	private static final String SHOW_WHITESPACE = "show_whitespace";
 	private static final String WORDLIST = "wordlist";
 	private static final String CUSTOM_SPECIAL_CHARACTERS = "custom_special_characters";
-	private static final String DICTIONARIES_LOCATION = "dictionaries_directory";
 
 	public static File getInputFileDirectory() {
 		File defaultDir = new File(System.getProperty("user.home"));
@@ -184,17 +183,5 @@ public class Settings {
 
 	public static void setCustomSpecialCharacters(String s) {
 		prefs.put(CUSTOM_SPECIAL_CHARACTERS, s);
-	}
-
-	public static String getDictionariesLocation() {
-		String path = prefs.get(DICTIONARIES_LOCATION, null);
-		if (path == null || path.isEmpty()) {
-			return null;
-		}
-		return path;
-	}
-
-	public static void setDictionariesLocation(String s) {
-		prefs.put(DICTIONARIES_LOCATION, s);
 	}
 }

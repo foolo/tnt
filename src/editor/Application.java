@@ -33,11 +33,7 @@ public class Application {
 	}
 
 	static void loadDictionaries() {
-		String dir = Settings.getDictionariesLocation();
-		if (dir == null) {
-			Log.debug("no dictionary directory set, no dictionary search will be performed");
-			return;
-		}
+		String dir = "dictionaries";
 		File f = new File(dir);
 		if (f.exists() == false) {
 			JOptionPane.showMessageDialog(null, "Dictionaries path '" + dir + "' not found.\nSpellcheck will not be available.", "", JOptionPane.ERROR_MESSAGE);
