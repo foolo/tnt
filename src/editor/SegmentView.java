@@ -2,6 +2,7 @@ package editor;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -10,6 +11,9 @@ import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -30,7 +34,9 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import language.SpellCheck;
 import qc.Qc;
+import tools.SearchEngineInfo;
 import undo_manager.CaretPosition;
+import util.Log;
 import util.RegexUtil;
 import util.Settings;
 import util.StringUtil;
@@ -319,6 +325,14 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewSourceFocusGained(evt);
             }
         });
+        markupViewSource.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                markupViewSourceMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                markupViewSourceMouseReleased(evt);
+            }
+        });
         jScrollPane3.setViewportView(markupViewSource);
 
         jPanel1.add(jScrollPane3);
@@ -439,29 +453,40 @@ public class SegmentView extends javax.swing.JPanel {
 		applySpellcheck(false);
     }//GEN-LAST:event_markupViewTargetFocusLost
 
-	void showTargetPopup(MouseEvent evt) {
-		ArrayList<Integer> indexes = new ArrayList<>();
-		String plainText = markupViewTarget.getPlainText(indexes);
-		int textPositionTagged = markupViewTarget.viewToModel2D(evt.getPoint());
-		int textPositionPlain = StringUtil.taggedToPlainIndex(textPositionTagged, indexes);
-		MatchResult matchResult = RegexUtil.findWordAtPosition(plainText, textPositionPlain);
-		if (matchResult == null) {
-			return;
+	void addSearchEngineMenuItems(JPopupMenu popupMenu, String word) {
+		ArrayList<SearchEngineInfo> searchEngines = Settings.getSearchEngines();
+		for (SearchEngineInfo s : searchEngines) {
+			String title = "Search " + s.name + " for \"" + word + "\"";
+			JMenuItem menuItem = new JMenuItem(title);
+			menuItem.addActionListener((ActionEvent e) -> {
+				String url = s.getUrl(word);
+				if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+					try {
+						Desktop.getDesktop().browse(new URI(url));
+					}
+					catch (URISyntaxException | IOException ex) {
+						Log.err(ex);
+					}
+				}
+				else {
+					Log.err("addSearchEngineMenuItems: desktop not supported");
+				}
+			});
+			popupMenu.add(menuItem);
 		}
-		String word = matchResult.group();
+	}
+
+	void addSpellCheckMenuItems(JPopupMenu popupMenu, String word, int startTagged, int endTagged) {
 		if (SpellCheck.isMisspelled(word) == false) {
 			return;
 		}
 		List<String> suggestions = SpellCheck.getSuggestions(word);
-		JPopupMenu popupMenu = new JPopupMenu();
 		if (suggestions.isEmpty()) {
 			popupMenu.add(new JMenuItem("(No suggestions)"));
 		}
 		for (String s : suggestions) {
 			JMenuItem menuItem = new JMenuItem(s);
 			menuItem.addActionListener((ActionEvent e) -> {
-				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), indexes);
-				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), indexes);
 				Session.getUndoManager().markSnapshot();
 				markupViewTarget.replaceTaggedText(startTagged, endTagged, s);
 				Session.getUndoManager().markSnapshot();
@@ -474,7 +499,31 @@ public class SegmentView extends javax.swing.JPanel {
 			Settings.addWordToWordlist(word);
 		});
 		popupMenu.add(menuItem);
+
+	}
+
+	void showTargetPopup(MouseEvent evt) {
+		ArrayList<Integer> indexes = new ArrayList<>();
+		String plainText = markupViewTarget.getPlainText(indexes);
+		int textPositionTagged = markupViewTarget.viewToModel2D(evt.getPoint());
+		int textPositionPlain = StringUtil.taggedToPlainIndex(textPositionTagged, indexes);
+		MatchResult matchResult = RegexUtil.findWordAtPosition(plainText, textPositionPlain);
+		if (matchResult == null) {
+			return;
+		}
+		String word = matchResult.group();
+		int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), indexes);
+		int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), indexes);
+
+		JPopupMenu popupMenu = new JPopupMenu();
+		addSpellCheckMenuItems(popupMenu, word, startTagged, endTagged);
+		popupMenu.addSeparator();
+		addSearchEngineMenuItems(popupMenu, word);
 		popupMenu.show(markupViewTarget, evt.getX(), evt.getY());
+	}
+
+	void showSourcePopup(MouseEvent evt) {
+
 	}
 
     private void markupViewTargetMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewTargetMousePressed
@@ -488,6 +537,14 @@ public class SegmentView extends javax.swing.JPanel {
 			showTargetPopup(evt);
 		}
     }//GEN-LAST:event_markupViewTargetMouseReleased
+
+    private void markupViewSourceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewSourceMousePressed
+		// TODO add your handling code here:
+    }//GEN-LAST:event_markupViewSourceMousePressed
+
+    private void markupViewSourceMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewSourceMouseReleased
+		// TODO add your handling code here:
+    }//GEN-LAST:event_markupViewSourceMouseReleased
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;

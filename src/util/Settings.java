@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
+import tools.SearchEngineInfo;
 
 public class Settings {
 
@@ -24,6 +26,7 @@ public class Settings {
 	private static final String WORDLIST = "wordlist";
 	private static final String CUSTOM_SPECIAL_CHARACTERS = "custom_special_characters";
 	private static final String DICTIONARIES_LOCATION = "dictionaries_directory";
+	private static final String SEARCH_ENGINES = "search_engines";
 
 	public static File getInputFileDirectory() {
 		File defaultDir = new File(System.getProperty("user.home"));
@@ -197,4 +200,33 @@ public class Settings {
 	public static void setDictionariesLocation(String s) {
 		prefs.put(DICTIONARIES_LOCATION, s);
 	}
+
+
+	static final ArrayList<SearchEngineInfo> DEFAULT_SEARCH_ENGINES = new ArrayList<>();
+
+	static {
+		DEFAULT_SEARCH_ENGINES.add(new SearchEngineInfo("DuckDuckGo", "https://duckduckgo.com/?q={WORD}&t=h_&ia=web"));
+	}
+
+	public static ArrayList<SearchEngineInfo> getSearchEngines() {
+		ArrayList<SearchEngineInfo> res = new ArrayList<>();
+		String data = prefs.get(SEARCH_ENGINES, null);
+		if (data == null) {
+			return DEFAULT_SEARCH_ENGINES;
+		}
+		String[] lines = data.split("\n");
+		for (String line : lines) {
+			if (line.isEmpty() == false) {
+				String[] parts = line.split("\t");
+				if (parts.length == 2) {
+					res.add(new SearchEngineInfo(parts[0], parts[1]));
+				}
+				else {
+					Log.err("getSearchEngines: unexpected length of parts: " + Arrays.toString(parts));
+				}
+			}
+		}
+		return res;
+	}
+
 }

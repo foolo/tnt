@@ -1,6 +1,8 @@
 package editor;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import javax.swing.AbstractListModel;
 import javax.swing.JFileChooser;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -9,11 +11,27 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import tools.SearchEngineInfo;
 import util.Log;
 import util.Settings;
 import xliff_model.Tag;
 
 public class PreferencesForm extends BaseDialog {
+
+	class SearchEngineModel extends AbstractListModel<SearchEngineInfo> {
+
+		ArrayList<SearchEngineInfo> searchEngines;
+
+		@Override
+		public int getSize() {
+			return searchEngines.size();
+		}
+
+		@Override
+		public SearchEngineInfo getElementAt(int index) {
+			return searchEngines.get(index);
+		}
+	}
 
 	public PreferencesForm(java.awt.Frame parent) {
 		super(parent);
@@ -40,6 +58,10 @@ public class PreferencesForm extends BaseDialog {
 
 		jCheckBoxShowWhitespace.setSelected(Settings.getShowWhitespace());
 		jTextFieldDictionariesLocation.setText(Settings.getDictionariesLocation());
+
+		SearchEngineModel searchEngineModel = new SearchEngineModel();
+		searchEngineModel.searchEngines = Settings.getSearchEngines();
+		jList1.setModel(searchEngineModel);
 	}
 
 	final void addSampleText() {
@@ -96,6 +118,9 @@ public class PreferencesForm extends BaseDialog {
         jLabel3 = new javax.swing.JLabel();
         jTextFieldDictionariesLocation = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -281,6 +306,27 @@ public class PreferencesForm extends BaseDialog {
 
         jTabbedPane1.addTab("Spellcheck", jPanel4);
 
+        jScrollPane3.setViewportView(jList1);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(253, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Search engines", jPanel6);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -353,13 +399,16 @@ public class PreferencesForm extends BaseDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JList<SearchEngineInfo> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSpinner jSpinnerFontSize;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextAreaWordlist;

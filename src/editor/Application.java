@@ -64,7 +64,7 @@ public class Application {
 			@Override
 			public void run() {
 				Log.initializeLogger();
-				loadDictionaries();
+				//loadDictionaries();
 				ToolTipManager.sharedInstance().setInitialDelay(500);
 				ToolTipManager.sharedInstance().setDismissDelay(60000);
 				MainForm mainForm = new MainForm();
