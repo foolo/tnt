@@ -11,7 +11,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCreatePackage">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Create XLIFF package"/>
+                <Property name="text" type="java.lang.String" value="New project..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemCreatePackageActionPerformed"/>
@@ -19,7 +19,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemOpen">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Open XLIFF"/>
+                <Property name="text" type="java.lang.String" value="Open project..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemOpenActionPerformed"/>
@@ -66,7 +66,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemProperties">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Properties..."/>
+                <Property name="text" type="java.lang.String" value="Project properties"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemPropertiesActionPerformed"/>
@@ -92,7 +92,7 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Ctrl+U"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Insert special character"/>
+                <Property name="text" type="java.lang.String" value="Insert special character..."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemAddSpecialCharActionPerformed"/>

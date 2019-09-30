@@ -299,7 +299,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenu1.setText("File");
 
-        jMenuItemCreatePackage.setText("Create XLIFF package");
+        jMenuItemCreatePackage.setText("New project...");
         jMenuItemCreatePackage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemCreatePackageActionPerformed(evt);
@@ -307,7 +307,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         });
         jMenu1.add(jMenuItemCreatePackage);
 
-        jMenuItemOpen.setText("Open XLIFF");
+        jMenuItemOpen.setText("Open project...");
         jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemOpenActionPerformed(evt);
@@ -347,7 +347,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         });
         jMenu1.add(jMenuItemExport);
 
-        jMenuItemProperties.setText("Properties...");
+        jMenuItemProperties.setText("Project properties");
         jMenuItemProperties.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemPropertiesActionPerformed(evt);
@@ -368,7 +368,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenu4.add(jMenuItemPreferences);
 
         jMenuItemAddSpecialChar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemAddSpecialChar.setText("Insert special character");
+        jMenuItemAddSpecialChar.setText("Insert special character...");
         jMenuItemAddSpecialChar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemAddSpecialCharActionPerformed(evt);
