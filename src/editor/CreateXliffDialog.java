@@ -84,6 +84,7 @@ public final class CreateXliffDialog extends BaseDialog {
         targetLanguageComboBox = new editor.LanguageComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("New project");
 
         jLabel1.setText("Input file");
 

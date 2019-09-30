@@ -60,7 +60,7 @@ public final class PropertiesDialog extends BaseDialog {
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Properties");
+        setTitle("Project properties");
         setResizable(false);
 
         jButtonOk.setText("OK");

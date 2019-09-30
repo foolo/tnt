@@ -189,6 +189,7 @@ public class SpecialCharacterDialog extends BaseDialog {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Insert special character");
         setResizable(false);
 
         jButtonOk.setText("OK");
