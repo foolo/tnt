@@ -48,7 +48,7 @@ public class Settings {
 	}
 
 	public static int getEditorFontSize() {
-		return prefs.getInt(MARKUP_VIEW_FONT_SIZE, 14);
+		return prefs.getInt(MARKUP_VIEW_FONT_SIZE, 16);
 	}
 
 	public static void setEditorFont(String name, int size) {
