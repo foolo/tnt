@@ -22,7 +22,7 @@ int main() {
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 	LPCWSTR cmd = L"jre\\bin\\java.exe";
-	WCHAR args[] = L"jre\\bin\\java.exe --class-path \"lib/*\" editor.Application";
+	WCHAR args[] = L"jre\\bin\\java.exe --class-path \"lib/*\" tnt.editor.Application";
 	if (CreateProcessW(cmd, args, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi) == 0) {
 		std::wstringstream ss;
 		ss << "Could not run " << cmd << std::endl;
