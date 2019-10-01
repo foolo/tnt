@@ -513,7 +513,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		dialog.run(() -> {
 			OpenXliffHandler converter = new OpenXliffHandler();
 			try {
-
+				save_file(); // save file first in case export crashes/hangs
 				String xliffData = save_to_string();
 				File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
 				JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
