@@ -1,5 +1,6 @@
 package tnt.editor;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -38,6 +39,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	private final LogWindow logWindow;
 
 	private final ArrayList<FileView> fileViews = new ArrayList<>();
+
+	static final Dimension DEFAULT_DIALOG_SIZE = new Dimension(850, 550);
 
 	public MainForm() {
 		initComponents();
@@ -439,6 +442,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
+		fc.setPreferredSize(DEFAULT_DIALOG_SIZE);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLIFF files", "xlf");
 		fc.addChoosableFileFilter(filter);
 		fc.setFileFilter(filter);

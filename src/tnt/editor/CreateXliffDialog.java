@@ -187,6 +187,7 @@ public final class CreateXliffDialog extends BaseDialog {
 
     private void jButtonChooseInputFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseInputFilesActionPerformed
 		JFileChooser fc = new JFileChooser(Settings.getInputFileDirectory());
+		fc.setPreferredSize(MainForm.DEFAULT_DIALOG_SIZE);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt");
 		fc.addChoosableFileFilter(filter);
 		fc.setFileFilter(filter);
