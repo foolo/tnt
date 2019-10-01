@@ -124,6 +124,7 @@ public class SpecialCharacterDialog extends BaseDialog {
 		jTextFieldCodePoint.setText("");
 		characterTableCommon.addEnterAction(enterAction);
 		characterTableRecent.addEnterAction(enterAction);
+		characterTableRecent.grabFocus();
 	}
 
 	Action enterAction = new AbstractAction() {
