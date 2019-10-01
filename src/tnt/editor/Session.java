@@ -1,18 +1,18 @@
-package editor;
+package tnt.editor;
 
 import java.io.File;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import undo_manager.CaretPosition;
-import undo_manager.UndoEventListener;
-import undo_manager.UndoManager;
-import undo_manager.UndoableState;
-import util.Log;
-import util.XmlUtil;
-import xliff_model.XliffTag;
-import xliff_model.exceptions.LoadException;
-import xliff_model.exceptions.ParseException;
-import xliff_model.exceptions.XliffVersionException;
+import tnt.undo_manager.CaretPosition;
+import tnt.undo_manager.UndoEventListener;
+import tnt.undo_manager.UndoManager;
+import tnt.undo_manager.UndoableState;
+import tnt.util.Log;
+import tnt.util.XmlUtil;
+import tnt.xliff_model.XliffTag;
+import tnt.xliff_model.exceptions.LoadException;
+import tnt.xliff_model.exceptions.ParseException;
+import tnt.xliff_model.exceptions.XliffVersionException;
 
 public class Session {
 

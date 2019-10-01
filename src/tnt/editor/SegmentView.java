@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -28,14 +28,14 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import language.SpellCheck;
-import qc.Qc;
-import undo_manager.CaretPosition;
-import util.RegexUtil;
-import util.Settings;
-import util.StringUtil;
-import xliff_model.SegmentTag;
-import xliff_model.TaggedText;
+import tnt.language.SpellCheck;
+import tnt.qc.Qc;
+import tnt.undo_manager.CaretPosition;
+import tnt.util.RegexUtil;
+import tnt.util.Settings;
+import tnt.util.StringUtil;
+import tnt.xliff_model.SegmentTag;
+import tnt.xliff_model.TaggedText;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -300,9 +300,9 @@ public class SegmentView extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        markupViewSource = new editor.MarkupView(this);
+        markupViewSource = new tnt.editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
-        markupViewTarget = new editor.EditableMarkupView(this);
+        markupViewTarget = new tnt.editor.EditableMarkupView(this);
         jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
@@ -354,11 +354,11 @@ public class SegmentView extends javax.swing.JPanel {
         jLabelState.setText("jLabel1");
 
         jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
-        jLabelValidationError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dialog-error.png"))); // NOI18N
+        jLabelValidationError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tnt/images/dialog-error.png"))); // NOI18N
         jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabelQc.setForeground(new java.awt.Color(255, 204, 0));
-        jLabelQc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/dialog-information.png"))); // NOI18N
+        jLabelQc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tnt/images/dialog-information.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -516,7 +516,7 @@ public class SegmentView extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private editor.MarkupView markupViewSource;
-    private editor.EditableMarkupView markupViewTarget;
+    private tnt.editor.MarkupView markupViewSource;
+    private tnt.editor.EditableMarkupView markupViewTarget;
     // End of variables declaration//GEN-END:variables
 }

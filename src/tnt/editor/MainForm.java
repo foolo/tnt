@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,30 +8,30 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
-import conversion.OpenXliffHandler;
-import conversion.ConversionError;
-import conversion.OpenXliffValidator;
+import tnt.conversion.OpenXliffHandler;
+import tnt.conversion.ConversionError;
+import tnt.conversion.OpenXliffValidator;
 import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import language.Language;
-import language.LanguageCollection;
-import language.LanguageTag;
-import language.SpellCheck;
-import qc.Qc;
-import undo_manager.CaretPosition;
-import undo_manager.UndoEventListener;
-import undo_manager.UndoableModel;
-import util.Log;
-import util.Settings;
-import util.XmlUtil;
-import xliff_model.FileTag;
-import xliff_model.SegmentTag;
-import xliff_model.XliffTag;
-import xliff_model.exceptions.LoadException;
-import xliff_model.exceptions.SaveException;
+import tnt.language.Language;
+import tnt.language.LanguageCollection;
+import tnt.language.LanguageTag;
+import tnt.language.SpellCheck;
+import tnt.qc.Qc;
+import tnt.undo_manager.CaretPosition;
+import tnt.undo_manager.UndoEventListener;
+import tnt.undo_manager.UndoableModel;
+import tnt.util.Log;
+import tnt.util.Settings;
+import tnt.util.XmlUtil;
+import tnt.xliff_model.FileTag;
+import tnt.xliff_model.SegmentTag;
+import tnt.xliff_model.XliffTag;
+import tnt.xliff_model.exceptions.LoadException;
+import tnt.xliff_model.exceptions.SaveException;
 
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 

@@ -1,8 +1,8 @@
-package language;
+package tnt.language;
 
 import dk.dren.hunspell.Hunspell;
-import editor.MarkupView;
-import editor.UnderlinerEditorKit;
+import tnt.editor.MarkupView;
+import tnt.editor.UnderlinerEditorKit;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import java.util.regex.Matcher;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
-import util.RegexUtil;
-import util.Settings;
-import util.StringUtil;
+import tnt.util.RegexUtil;
+import tnt.util.Settings;
+import tnt.util.StringUtil;
 
 public class SpellCheck {
 

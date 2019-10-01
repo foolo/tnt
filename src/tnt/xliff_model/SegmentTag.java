@@ -1,15 +1,15 @@
-package xliff_model;
+package tnt.xliff_model;
 
-import editor.Session;
-import xliff_model.exceptions.EncodeException;
-import xliff_model.exceptions.ParseException;
+import tnt.editor.Session;
+import tnt.xliff_model.exceptions.EncodeException;
+import tnt.xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import util.RegexUtil;
-import util.Settings;
-import util.XmlUtil;
+import tnt.util.RegexUtil;
+import tnt.util.Settings;
+import tnt.util.XmlUtil;
 
 public class SegmentTag {
 

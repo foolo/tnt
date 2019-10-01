@@ -1,14 +1,14 @@
-package editor;
+package tnt.editor;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
-import util.Log;
-import xliff_model.Tag;
-import xliff_model.TaggedText;
-import xliff_model.TaggedTextContent;
-import xliff_model.Text;
+import tnt.util.Log;
+import tnt.xliff_model.Tag;
+import tnt.xliff_model.TaggedText;
+import tnt.xliff_model.TaggedTextContent;
+import tnt.xliff_model.Text;
 
 public class EditableMarkupView extends MarkupView {
 

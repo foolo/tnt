@@ -1,8 +1,8 @@
-package editor;
+package tnt.editor;
 
 import javax.swing.JOptionPane;
-import language.Language;
-import language.LanguageCollection;
+import tnt.language.Language;
+import tnt.language.LanguageCollection;
 
 public final class PropertiesDialog extends BaseDialog {
 
@@ -53,8 +53,8 @@ public final class PropertiesDialog extends BaseDialog {
         jButtonOk = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jLabelError = new javax.swing.JLabel();
-        sourceLanguageComboBox = new editor.LanguageComboBox();
-        targetLanguageComboBox = new editor.LanguageComboBox();
+        sourceLanguageComboBox = new tnt.editor.LanguageComboBox();
+        targetLanguageComboBox = new tnt.editor.LanguageComboBox();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -177,7 +177,7 @@ public final class PropertiesDialog extends BaseDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelError;
-    private editor.LanguageComboBox sourceLanguageComboBox;
-    private editor.LanguageComboBox targetLanguageComboBox;
+    private tnt.editor.LanguageComboBox sourceLanguageComboBox;
+    private tnt.editor.LanguageComboBox targetLanguageComboBox;
     // End of variables declaration//GEN-END:variables
 }

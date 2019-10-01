@@ -1,4 +1,4 @@
-package util;
+package tnt.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +16,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import xliff_model.exceptions.LoadException;
-import xliff_model.exceptions.ParseException;
-import xliff_model.exceptions.SaveException;
+import tnt.xliff_model.exceptions.LoadException;
+import tnt.xliff_model.exceptions.ParseException;
+import tnt.xliff_model.exceptions.SaveException;
 
 public class XmlUtil {
 

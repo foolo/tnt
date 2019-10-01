@@ -139,7 +139,7 @@
         <Property name="text" type="java.lang.String" value="Target language:"/>
       </Properties>
     </Component>
-    <Component class="editor.LanguageComboBox" name="sourceLanguageComboBox">
+    <Component class="tnt.editor.LanguageComboBox" name="sourceLanguageComboBox">
       <Properties>
         <Property name="maximumRowCount" type="int" value="30"/>
       </Properties>
@@ -147,7 +147,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sourceLanguageComboBoxActionPerformed"/>
       </Events>
     </Component>
-    <Component class="editor.LanguageComboBox" name="targetLanguageComboBox">
+    <Component class="tnt.editor.LanguageComboBox" name="targetLanguageComboBox">
       <Properties>
         <Property name="maximumRowCount" type="int" value="30"/>
       </Properties>

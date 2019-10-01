@@ -205,7 +205,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="editor.MarkupView" name="markupView1">
+                    <Component class="tnt.editor.MarkupView" name="markupView1">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                       </Properties>

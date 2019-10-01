@@ -1,4 +1,4 @@
-package util;
+package tnt.util;
 
 import java.awt.Font;
 import java.io.ByteArrayInputStream;

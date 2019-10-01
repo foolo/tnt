@@ -1,8 +1,8 @@
-package language;
+package tnt.language;
 
 import java.util.ArrayList;
 import java.util.Map;
-import util.Log;
+import tnt.util.Log;
 
 public class DictionaryMapper {
 

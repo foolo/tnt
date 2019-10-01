@@ -1,12 +1,12 @@
-package editor;
+package tnt.editor;
 
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import language.Language;
-import language.LanguageCollection;
-import util.Settings;
+import tnt.language.Language;
+import tnt.language.LanguageCollection;
+import tnt.util.Settings;
 
 public final class CreateXliffDialog extends BaseDialog {
 
@@ -80,8 +80,8 @@ public final class CreateXliffDialog extends BaseDialog {
         jTextFieldInputFile = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        sourceLanguageComboBox = new editor.LanguageComboBox();
-        targetLanguageComboBox = new editor.LanguageComboBox();
+        sourceLanguageComboBox = new tnt.editor.LanguageComboBox();
+        targetLanguageComboBox = new tnt.editor.LanguageComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New project");
@@ -235,7 +235,7 @@ public final class CreateXliffDialog extends BaseDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelError;
     private javax.swing.JTextField jTextFieldInputFile;
-    private editor.LanguageComboBox sourceLanguageComboBox;
-    private editor.LanguageComboBox targetLanguageComboBox;
+    private tnt.editor.LanguageComboBox sourceLanguageComboBox;
+    private tnt.editor.LanguageComboBox targetLanguageComboBox;
     // End of variables declaration//GEN-END:variables
 }

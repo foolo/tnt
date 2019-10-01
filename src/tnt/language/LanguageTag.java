@@ -1,4 +1,4 @@
-package language;
+package tnt.language;
 
 import java.util.ArrayList;
 import java.util.List;

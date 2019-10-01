@@ -1,4 +1,4 @@
-package conversion;
+package tnt.conversion;
 
 public class ConversionError extends Exception {
 

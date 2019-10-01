@@ -1,8 +1,8 @@
-package qc;
+package tnt.qc;
 
 import java.util.ArrayList;
-import util.RegexUtil;
-import xliff_model.SegmentTag;
+import tnt.util.RegexUtil;
+import tnt.xliff_model.SegmentTag;
 
 public class Qc {
 

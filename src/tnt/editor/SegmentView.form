@@ -61,7 +61,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="editor.MarkupView" name="markupViewSource">
+            <Component class="tnt.editor.MarkupView" name="markupViewSource">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
               </Properties>
@@ -69,7 +69,7 @@
                 <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="markupViewSourceFocusGained"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new editor.MarkupView(this)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new tnt.editor.MarkupView(this)"/>
               </AuxValues>
             </Component>
           </SubComponents>
@@ -81,7 +81,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="editor.EditableMarkupView" name="markupViewTarget">
+            <Component class="tnt.editor.EditableMarkupView" name="markupViewTarget">
               <Events>
                 <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="markupViewTargetCaretUpdate"/>
                 <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="markupViewTargetFocusGained"/>
@@ -90,7 +90,7 @@
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="markupViewTargetMouseReleased"/>
               </Events>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new editor.EditableMarkupView(this)"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new tnt.editor.EditableMarkupView(this)"/>
               </AuxValues>
             </Component>
           </SubComponents>
@@ -151,7 +151,7 @@
               <Color blue="0" green="0" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/dialog-error.png"/>
+              <Image iconType="3" name="/tnt/images/dialog-error.png"/>
             </Property>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
               <Color id="Default Cursor"/>
@@ -164,7 +164,7 @@
               <Color blue="0" green="cc" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/images/dialog-information.png"/>
+              <Image iconType="3" name="/tnt/images/dialog-information.png"/>
             </Property>
           </Properties>
         </Component>

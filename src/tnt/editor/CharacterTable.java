@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Font;
 import java.awt.event.KeyEvent;

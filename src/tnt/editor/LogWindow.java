@@ -1,8 +1,8 @@
-package editor;
+package tnt.editor;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-import util.Log;
+import tnt.util.Log;
 
 public class LogWindow extends javax.swing.JFrame {
 

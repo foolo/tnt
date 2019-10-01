@@ -1,12 +1,12 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import xliff_model.TaggedText;
-import xliff_model.Tag;
+import tnt.xliff_model.TaggedText;
+import tnt.xliff_model.Tag;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.regex.MatchResult;
@@ -17,10 +17,10 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
-import util.Log;
-import util.StringUtil;
-import xliff_model.TaggedTextContent;
-import xliff_model.Text;
+import tnt.util.Log;
+import tnt.util.StringUtil;
+import tnt.xliff_model.TaggedTextContent;
+import tnt.xliff_model.Text;
 
 public class MarkupView extends JTextPane {
 

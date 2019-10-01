@@ -1,4 +1,4 @@
-package xliff_model.exceptions;
+package tnt.xliff_model.exceptions;
 
 public class ParseException extends Exception {
 

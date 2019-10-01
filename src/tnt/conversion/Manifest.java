@@ -1,12 +1,12 @@
-package conversion;
+package tnt.conversion;
 
 import java.io.File;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import util.NodeArray;
-import xliff_model.exceptions.ParseException;
+import tnt.util.NodeArray;
+import tnt.xliff_model.exceptions.ParseException;
 
 public class Manifest {
 

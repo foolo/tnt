@@ -1,4 +1,4 @@
-package xliff_model;
+package tnt.xliff_model;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

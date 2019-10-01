@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -9,8 +9,8 @@ import javax.swing.plaf.UIResource;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
-import util.Log;
-import xliff_model.TaggedText;
+import tnt.util.Log;
+import tnt.xliff_model.TaggedText;
 
 class TaggedTextTransferable implements Transferable, UIResource {
 

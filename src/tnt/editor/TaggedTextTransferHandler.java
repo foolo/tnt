@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -12,15 +12,15 @@ import javax.swing.TransferHandler;
 import javax.swing.plaf.UIResource;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
-import util.Log;
-import xliff_model.TaggedText;
+import tnt.util.Log;
+import tnt.xliff_model.TaggedText;
 
 public class TaggedTextTransferHandler extends TransferHandler implements UIResource {
 
 	protected DataFlavor getImportFlavor(DataFlavor[] flavors, String preferredContentType) {
 		for (DataFlavor flavor : flavors) {
 			String mime = flavor.getMimeType();
-			if (mime.startsWith(DataFlavor.javaJVMLocalObjectMimeType) && flavor.getRepresentationClass() == xliff_model.TaggedText.class) {
+			if (mime.startsWith(DataFlavor.javaJVMLocalObjectMimeType) && flavor.getRepresentationClass() == tnt.xliff_model.TaggedText.class) {
 				return flavor;
 			}
 			else if (mime.startsWith(preferredContentType)) {

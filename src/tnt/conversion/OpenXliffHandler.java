@@ -1,4 +1,4 @@
-package conversion;
+package tnt.conversion;
 
 import com.maxprograms.converters.Constants;
 import com.maxprograms.converters.Convert;
@@ -7,7 +7,7 @@ import com.maxprograms.converters.FileFormats;
 import com.maxprograms.converters.Merge;
 import com.maxprograms.converters.Utils;
 import com.maxprograms.xliff2.ToXliff2;
-import editor.Session;
+import tnt.editor.Session;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +17,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Hashtable;
 import java.util.Vector;
-import util.Log;
-import xliff_model.XliffTag;
+import tnt.util.Log;
+import tnt.xliff_model.XliffTag;
 
 public class OpenXliffHandler {
 

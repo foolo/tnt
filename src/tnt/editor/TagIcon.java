@@ -1,6 +1,6 @@
-package editor;
+package tnt.editor;
 
-import xliff_model.Tag;
+import tnt.xliff_model.Tag;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;

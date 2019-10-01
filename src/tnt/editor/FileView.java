@@ -1,10 +1,10 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import xliff_model.FileTag;
-import xliff_model.SegmentTag;
+import tnt.xliff_model.FileTag;
+import tnt.xliff_model.SegmentTag;
 
 public class FileView extends javax.swing.JPanel {
 

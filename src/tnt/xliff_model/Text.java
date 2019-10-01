@@ -1,4 +1,4 @@
-package xliff_model;
+package tnt.xliff_model;
 
 public class Text implements TaggedTextContent {
 

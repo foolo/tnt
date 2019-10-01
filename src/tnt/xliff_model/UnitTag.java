@@ -1,12 +1,12 @@
-package xliff_model;
+package tnt.xliff_model;
 
-import xliff_model.exceptions.ParseException;
+import tnt.xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import util.Log;
-import util.NodeArray;
+import tnt.util.Log;
+import tnt.util.NodeArray;
 
 public class UnitTag implements Item {
 

@@ -1,4 +1,4 @@
-package undo_manager;
+package tnt.undo_manager;
 
 public interface UndoableModel {
 

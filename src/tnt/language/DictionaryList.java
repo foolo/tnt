@@ -1,9 +1,9 @@
-package language;
+package tnt.language;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import util.Log;
+import tnt.util.Log;
 
 public class DictionaryList {
 

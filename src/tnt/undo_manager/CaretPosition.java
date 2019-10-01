@@ -1,6 +1,6 @@
-package undo_manager;
+package tnt.undo_manager;
 
-import editor.SegmentView;
+import tnt.editor.SegmentView;
 
 public class CaretPosition {
 

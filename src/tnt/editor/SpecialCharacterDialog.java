@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,7 +13,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
-import util.Settings;
+import tnt.util.Settings;
 
 public class SpecialCharacterDialog extends BaseDialog {
 
@@ -182,9 +182,9 @@ public class SpecialCharacterDialog extends BaseDialog {
         jTextAreaCharName = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        characterTableRecent = new editor.CharacterTable();
+        characterTableRecent = new tnt.editor.CharacterTable();
         jScrollPane5 = new javax.swing.JScrollPane();
-        characterTableCommon = new editor.CharacterTable();
+        characterTableCommon = new tnt.editor.CharacterTable();
         jTextFieldCodePoint = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
 
@@ -442,8 +442,8 @@ public class SpecialCharacterDialog extends BaseDialog {
     }//GEN-LAST:event_characterTableRecentMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private editor.CharacterTable characterTableCommon;
-    private editor.CharacterTable characterTableRecent;
+    private tnt.editor.CharacterTable characterTableCommon;
+    private tnt.editor.CharacterTable characterTableRecent;
     private javax.swing.JButton jButtonAdd;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;

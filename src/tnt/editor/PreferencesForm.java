@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Font;
 import javax.swing.event.ChangeEvent;
@@ -8,9 +8,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import util.Log;
-import util.Settings;
-import xliff_model.Tag;
+import tnt.util.Log;
+import tnt.util.Settings;
+import tnt.xliff_model.Tag;
 
 public class PreferencesForm extends BaseDialog {
 
@@ -84,7 +84,7 @@ public class PreferencesForm extends BaseDialog {
         jLabel1 = new javax.swing.JLabel();
         jComboBoxFont = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        markupView1 = new editor.MarkupView();
+        markupView1 = new tnt.editor.MarkupView();
         jPanel1 = new javax.swing.JPanel();
         jCheckBoxShowWhitespace = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
@@ -322,6 +322,6 @@ public class PreferencesForm extends BaseDialog {
     private javax.swing.JSpinner jSpinnerFontSize;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextArea jTextAreaWordlist;
-    private editor.MarkupView markupView1;
+    private tnt.editor.MarkupView markupView1;
     // End of variables declaration//GEN-END:variables
 }

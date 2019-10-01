@@ -1,10 +1,10 @@
-package editor;
+package tnt.editor;
 
 import java.util.ArrayList;
 import javax.swing.JComboBox;
-import language.Language;
-import language.LanguageTag;
-import util.Log;
+import tnt.language.Language;
+import tnt.language.LanguageTag;
+import tnt.util.Log;
 
 public class LanguageComboBox extends JComboBox<String> {
 

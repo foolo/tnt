@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import javax.swing.SwingUtilities;
 

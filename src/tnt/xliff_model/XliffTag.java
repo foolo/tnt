@@ -1,15 +1,15 @@
-package xliff_model;
+package tnt.xliff_model;
 
 import java.io.File;
-import xliff_model.exceptions.ParseException;
+import tnt.xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import undo_manager.UndoableModel;
-import util.Log;
-import util.NodeArray;
-import xliff_model.exceptions.XliffVersionException;
+import tnt.undo_manager.UndoableModel;
+import tnt.util.Log;
+import tnt.util.NodeArray;
+import tnt.xliff_model.exceptions.XliffVersionException;
 
 public class XliffTag implements UndoableModel {
 

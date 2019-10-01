@@ -1,4 +1,4 @@
-package language;
+package tnt.language;
 
 public class Language {
 

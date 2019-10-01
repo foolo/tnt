@@ -1,8 +1,8 @@
-package conversion;
+package tnt.conversion;
 
 import java.util.ArrayList;
-import xliff_model.SegmentTag;
-import xliff_model.Tag;
+import tnt.xliff_model.SegmentTag;
+import tnt.xliff_model.Tag;
 
 public class OpenXliffValidator {
 

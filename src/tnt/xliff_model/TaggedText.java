@@ -1,15 +1,15 @@
-package xliff_model;
+package tnt.xliff_model;
 
-import xliff_model.exceptions.EncodeException;
+import tnt.xliff_model.exceptions.EncodeException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import util.Log;
-import util.NodeArray;
-import util.XmlUtil;
+import tnt.util.Log;
+import tnt.util.NodeArray;
+import tnt.util.XmlUtil;
 
 public class TaggedText {
 

@@ -1,4 +1,4 @@
-package editor;
+package tnt.editor;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -9,10 +9,10 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import language.DictionaryList;
-import language.DictionaryMapper;
-import util.Log;
-import util.Settings;
+import tnt.language.DictionaryList;
+import tnt.language.DictionaryMapper;
+import tnt.util.Log;
+import tnt.util.Settings;
 
 public class Application {
 
@@ -65,8 +65,8 @@ public class Application {
 				ToolTipManager.sharedInstance().setDismissDelay(60000);
 				MainForm mainForm = new MainForm();
 				ArrayList<Image> images = new ArrayList<>();
-				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_48.png")));
-				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/images/Gnome-accessories-character-map_64.png")));
+				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/tnt/images/Gnome-accessories-character-map_48.png")));
+				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/tnt/images/Gnome-accessories-character-map_64.png")));
 				mainForm.setIconImages(images);
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
