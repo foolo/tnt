@@ -33,7 +33,7 @@ class TaggedTextTransferable implements Transferable, UIResource {
 
 	static {
 		ArrayList<DataFlavor> f = new ArrayList<>();
-		taggedTextFlavor = createFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=xliff_model.TaggedText");
+		taggedTextFlavor = createFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=" + TaggedText.class.getCanonicalName());
 		if (taggedTextFlavor != null) {
 			f.add(taggedTextFlavor);
 		}
