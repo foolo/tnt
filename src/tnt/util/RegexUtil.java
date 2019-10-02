@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
 	public static final Pattern WORD_PATTERN = Pattern.compile("\\b(\\w\\S*\\w|\\w)\\b", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 
@@ -19,8 +20,8 @@ public class RegexUtil {
 		return matches;
 	}
 
-	public static MatchResult findWordAtPosition(String s, int pos) {
-		Matcher m = WORD_PATTERN.matcher(s);
+	public static MatchResult findSpellingUnitAtPosition(String s, int pos) {
+		Matcher m = SPELLING_UNIT_PATTERN.matcher(s);
 		while (m.find()) {
 			if (pos >= m.start() && pos < m.end()) {
 				return m.toMatchResult();

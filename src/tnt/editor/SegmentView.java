@@ -444,7 +444,7 @@ public class SegmentView extends javax.swing.JPanel {
 		String plainText = markupViewTarget.getPlainText(indexes);
 		int textPositionTagged = markupViewTarget.viewToModel2D(evt.getPoint());
 		int textPositionPlain = StringUtil.taggedToPlainIndex(textPositionTagged, indexes);
-		MatchResult matchResult = RegexUtil.findWordAtPosition(plainText, textPositionPlain);
+		MatchResult matchResult = RegexUtil.findSpellingUnitAtPosition(plainText, textPositionPlain);
 		if (matchResult == null) {
 			return;
 		}
