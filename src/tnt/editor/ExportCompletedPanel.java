@@ -1,9 +1,7 @@
 package tnt.editor;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
-import javax.swing.JOptionPane;
+import tnt.util.FileUtil;
 
 public class ExportCompletedPanel extends javax.swing.JPanel {
 
@@ -14,17 +12,6 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
 		jTextFieldOutputDir.setText(outputFile.getAbsolutePath());
 		jTextFieldOutputDir.setBackground(null);
 		this.outputFile = outputFile;
-	}
-
-	void desktopOpen(File f) {
-		try {
-			if (Desktop.isDesktopSupported()) {
-				Desktop.getDesktop().open(f);
-			}
-		}
-		catch (IOException ex) {
-			JOptionPane.showMessageDialog(this, "Could not open direcory: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,11 +82,11 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonLocateInBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLocateInBrowserActionPerformed
-		desktopOpen(outputFile.getParentFile());
+		FileUtil.desktopOpen(this, outputFile.getParentFile());
     }//GEN-LAST:event_jButtonLocateInBrowserActionPerformed
 
     private void jButtonOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenFileActionPerformed
-		desktopOpen(outputFile);
+		FileUtil.desktopOpen(this, outputFile);
     }//GEN-LAST:event_jButtonOpenFileActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

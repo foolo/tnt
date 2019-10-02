@@ -25,6 +25,7 @@ import tnt.qc.Qc;
 import tnt.undo_manager.CaretPosition;
 import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoableModel;
+import tnt.util.FileUtil;
 import tnt.util.Log;
 import tnt.util.Settings;
 import tnt.util.XmlUtil;
@@ -260,6 +261,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemClearRecentFiles = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenuItemExport = new javax.swing.JMenuItem();
+        jMenuItemLocateInFileBrowser = new javax.swing.JMenuItem();
         jMenuItemProperties = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         jMenuItemPreferences = new javax.swing.JMenuItem();
@@ -349,6 +351,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu1.add(jMenuItemExport);
+
+        jMenuItemLocateInFileBrowser.setText("Locate in file browser");
+        jMenuItemLocateInFileBrowser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemLocateInFileBrowserActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemLocateInFileBrowser);
 
         jMenuItemProperties.setText("Project properties");
         jMenuItemProperties.addActionListener(new java.awt.event.ActionListener() {
@@ -633,6 +643,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemAddSpecialCharActionPerformed
 
+    private void jMenuItemLocateInFileBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLocateInFileBrowserActionPerformed
+		File dir = getXliffTag().getFile().getParentFile();
+		FileUtil.desktopOpen(this, dir);
+    }//GEN-LAST:event_jMenuItemLocateInFileBrowserActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JMenu jMenu1;
@@ -645,6 +660,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
+    private javax.swing.JMenuItem jMenuItemLocateInFileBrowser;
     private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemMarkTranslated;
     private javax.swing.JMenuItem jMenuItemOpen;

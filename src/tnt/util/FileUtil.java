@@ -1,9 +1,13 @@
 package tnt.util;
 
+import java.awt.Component;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import javax.swing.JOptionPane;
 
 public class FileUtil {
 
@@ -29,6 +33,17 @@ public class FileUtil {
 		}
 		catch (CopyException ex) {
 			throw new IOException(ex.getMessage());
+		}
+	}
+
+	public static void desktopOpen(Component parent, File f) {
+		try {
+			if (Desktop.isDesktopSupported()) {
+				Desktop.getDesktop().open(f);
+			}
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(parent, "Could not open direcory: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }
