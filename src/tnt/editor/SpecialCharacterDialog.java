@@ -204,7 +204,7 @@ public class SpecialCharacterDialog extends BaseDialog {
 
         jLabel1.setText("Common characters");
 
-        jLabel2.setText("Custom characters");
+        jLabel2.setText("Custom/recent characters");
 
         jButtonAdd.setText("Add...");
         jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
