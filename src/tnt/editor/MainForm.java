@@ -302,7 +302,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
                 .addComponent(jLabelProgress))
         );
 
-        jMenu1.setText("File");
+        jMenu1.setText("Project");
 
         jMenuItemCreatePackage.setText("New project...");
         jMenuItemCreatePackage.addActionListener(new java.awt.event.ActionListener() {
@@ -320,9 +320,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         });
         jMenu1.add(jMenuItemOpen);
 
-        jMenuRecentFiles.setText("Recent files");
+        jMenuRecentFiles.setText("Recent projects");
 
-        jMenuItemClearRecentFiles.setText("Clear recent files");
+        jMenuItemClearRecentFiles.setText("Clear recent projects");
         jMenuItemClearRecentFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemClearRecentFilesActionPerformed(evt);

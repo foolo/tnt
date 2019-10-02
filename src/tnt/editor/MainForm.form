@@ -6,7 +6,7 @@
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="jMenu1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="File"/>
+            <Property name="text" type="java.lang.String" value="Project"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemCreatePackage">
@@ -27,12 +27,12 @@
             </MenuItem>
             <Menu class="javax.swing.JMenu" name="jMenuRecentFiles">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Recent files"/>
+                <Property name="text" type="java.lang.String" value="Recent projects"/>
               </Properties>
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="jMenuItemClearRecentFiles">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Clear recent files"/>
+                    <Property name="text" type="java.lang.String" value="Clear recent projects"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemClearRecentFilesActionPerformed"/>
