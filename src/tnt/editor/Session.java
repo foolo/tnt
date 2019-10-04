@@ -3,7 +3,7 @@ package tnt.editor;
 import java.io.File;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import tnt.undo_manager.CaretPosition;
+import tnt.undo_manager.UndoPosition;
 import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoManager;
 import tnt.undo_manager.UndoableState;
@@ -119,7 +119,7 @@ public class Session {
 
 	public Session(XliffTag xliffTag, UndoEventListener undoEventListener) {
 		undoManager = new UndoManager();
-		CaretPosition pos = new CaretPosition(null, 0);
+		UndoPosition pos = new UndoPosition(null, 0);
 		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), undoEventListener);
 		properties = new Properties(xliffTag.getDocument());
 	}

@@ -3,8 +3,8 @@ package tnt.undo_manager;
 public class UndoableState {
 
 	private final UndoableModel model;
-	private CaretPosition startPosition = null;
-	private CaretPosition endPosition = null;
+	private UndoPosition startPosition = null;
+	private UndoPosition endPosition = null;
 	private boolean modified = false;
 	private final UndoManager undoManager;
 
@@ -13,7 +13,7 @@ public class UndoableState {
 		this.undoManager = undoManager;
 	}
 
-	public UndoableState(UndoableModel model, CaretPosition startPosition, CaretPosition endPosition, UndoManager undoManager) {
+	public UndoableState(UndoableModel model, UndoPosition startPosition, UndoPosition endPosition, UndoManager undoManager) {
 		this.model = model;
 		this.startPosition = startPosition;
 		this.endPosition = endPosition;
@@ -28,7 +28,7 @@ public class UndoableState {
 		return new UndoableState(model.copy(), startPosition, endPosition, undoManager);
 	}
 
-	public void setModified(CaretPosition position1, CaretPosition position2) {
+	public void setModified(UndoPosition position1, UndoPosition position2) {
 		if (!modified) {
 			startPosition = position1;
 			modified = true;
@@ -36,15 +36,15 @@ public class UndoableState {
 		this.endPosition = position2;
 	}
 
-	public void setEndPosition(CaretPosition position) {
+	public void setEndPosition(UndoPosition position) {
 		this.endPosition = position;
 	}
 
-	public CaretPosition getEndPosition() {
+	public UndoPosition getEndPosition() {
 		return endPosition;
 	}
 
-	public CaretPosition getStartPosition() {
+	public UndoPosition getStartPosition() {
 		return startPosition;
 	}
 

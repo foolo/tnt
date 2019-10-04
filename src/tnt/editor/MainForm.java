@@ -22,7 +22,7 @@ import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
-import tnt.undo_manager.CaretPosition;
+import tnt.undo_manager.UndoPosition;
 import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoableModel;
 import tnt.util.FileUtil;
@@ -220,7 +220,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	}
 
 	@Override
-	public void notify_undo(UndoableModel model, CaretPosition newEditingPosition) {
+	public void notify_undo(UndoableModel model, UndoPosition newEditingPosition) {
 		XliffTag xliffTag = (XliffTag) model;
 		for (int i = 0; i < fileViews.size(); i++) {
 			fileViews.get(i).update_model(xliffTag.getFiles().get(i));

@@ -30,7 +30,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
-import tnt.undo_manager.CaretPosition;
+import tnt.undo_manager.UndoPosition;
 import tnt.util.RegexUtil;
 import tnt.util.Settings;
 import tnt.util.StringUtil;
@@ -171,8 +171,8 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void notifyUndoManager(int caretPos1, int caretPos2) {
-		CaretPosition pos1 = new CaretPosition(this, caretPos1);
-		CaretPosition pos2 = new CaretPosition(this, caretPos2);
+		UndoPosition pos1 = new UndoPosition(this, caretPos1);
+		UndoPosition pos2 = new UndoPosition(this, caretPos2);
 		Session.getUndoManager().getCurrentState().setModified(pos1, pos2);
 	}
 

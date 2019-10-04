@@ -22,7 +22,7 @@ public class UndoManager {
 
 	public void resetUndoBuffer() {
 		undoBuffer.clear();
-		CaretPosition pos = new CaretPosition(null, 0);
+		UndoPosition pos = new UndoPosition(null, 0);
 		currentState = new UndoableState(currentState.getModel(), pos, pos, this);
 		push_snapshot();
 		markSaved();
@@ -53,7 +53,7 @@ public class UndoManager {
 		return (savedState != undoBuffer.peek()) || currentState.isModified();
 	}
 
-	private void setNewState(CaretPosition newEditingPosition) {
+	private void setNewState(UndoPosition newEditingPosition) {
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
 		listener.notify_undo(currentState.getModel(), newEditingPosition);
 	}
@@ -63,7 +63,7 @@ public class UndoManager {
 			return;
 		}
 
-		CaretPosition newEditingPosition = null;
+		UndoPosition newEditingPosition = null;
 
 		if (currentState.isModified() == false) {
 			newEditingPosition = undoBuffer.peek().getStartPosition();
