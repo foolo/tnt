@@ -9,7 +9,6 @@ import tnt.xliff_model.TaggedText;
 import tnt.xliff_model.Tag;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.regex.MatchResult;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
@@ -17,8 +16,8 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
+import tnt.editor.search.EditorRange;
 import tnt.util.Log;
-import tnt.util.StringUtil;
 import tnt.xliff_model.TaggedTextContent;
 import tnt.xliff_model.Text;
 
@@ -34,6 +33,11 @@ public class MarkupView extends JTextPane {
 	public MarkupView(SegmentView segmentView) {
 		this.segmentView = segmentView;
 		setTransferHandler(new TaggedTextTransferHandler());
+		init();
+	}
+
+	private void init() {
+		((DefaultHighlighter) getHighlighter()).setDrawsLayeredHighlights(false);
 	}
 
 	public SegmentView getSegmentView() {
@@ -187,17 +191,12 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
-	void applyHighlighting(ArrayList<MatchResult> matchResults, ArrayList<Integer> plainToTaggedIndexes) {
-		getHighlighter().removeAllHighlights();
-		for (MatchResult matchResult : matchResults) {
-			try {
-				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), plainToTaggedIndexes);
-				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), plainToTaggedIndexes);
-				getHighlighter().addHighlight(startTagged, endTagged, FILTER_MATCH_HIGHLIGHT_PAINTER);
-			}
-			catch (BadLocationException ex) {
-				Log.err(ex);
-			}
+	void applyHighlighting(EditorRange range) {
+		try {
+			getHighlighter().addHighlight(range.start, range.end, FILTER_MATCH_HIGHLIGHT_PAINTER);
+		}
+		catch (BadLocationException ex) {
+			Log.err(ex);
 		}
 	}
 

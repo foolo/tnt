@@ -1,5 +1,6 @@
 package tnt.editor;
 
+import tnt.editor.search.MatchLocation;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,10 +28,13 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.DocumentFilter;
+import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
 import tnt.undo_manager.UndoPosition;
+import tnt.util.Log;
 import tnt.util.RegexUtil;
 import tnt.util.Settings;
 import tnt.util.StringUtil;
@@ -265,22 +269,51 @@ public class SegmentView extends javax.swing.JPanel {
 		return RegexUtil.matchAll(m);
 	}
 
-	void applyFilter(String sourceTerm, String targetTerm, int flags) {
+	ArrayList<EditorRange> toEditorRange(ArrayList<MatchResult> matchResults, ArrayList<Integer> plainToTaggedIndexes) {
+		ArrayList<EditorRange> res = new ArrayList<>();
+		for (MatchResult matchResult : matchResults) {
+			int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), plainToTaggedIndexes);
+			int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), plainToTaggedIndexes);
+			res.add(new EditorRange(startTagged, endTagged));
+		}
+		return res;
+	}
+
+	void findMatches(String term, int flags, int segmentIndex, ArrayList<MatchLocation> searchResultsOut) {
 		ArrayList<Integer> sourceIndexes = new ArrayList<>();
 		ArrayList<Integer> targetIndexes = new ArrayList<>();
 		String sourceText = markupViewSource.getPlainText(sourceIndexes);
 		String targetText = markupViewTarget.getPlainText(targetIndexes);
-		ArrayList<MatchResult> sourceMatchResults = findMatches(sourceTerm, sourceText, flags);
-		ArrayList<MatchResult> targetMatchResults = findMatches(targetTerm, targetText, flags);
-		boolean sourceMatch = sourceTerm.isEmpty() || (sourceMatchResults.isEmpty() == false);
-		boolean targetMatch = targetTerm.isEmpty() || (targetMatchResults.isEmpty() == false);
-		if (sourceMatch && targetMatch) {
-			markupViewSource.applyHighlighting(sourceMatchResults, sourceIndexes);
-			markupViewTarget.applyHighlighting(targetMatchResults, targetIndexes);
-			setVisible(true);
+		ArrayList<MatchResult> sourceMatchResults = findMatches(term, sourceText, flags);
+		ArrayList<MatchResult> targetMatchResults = findMatches(term, targetText, flags);
+		ArrayList<EditorRange> sourceEditorRanges = toEditorRange(sourceMatchResults, sourceIndexes);
+		ArrayList<EditorRange> targeteEditorRanges = toEditorRange(targetMatchResults, targetIndexes);
+		for (EditorRange range : sourceEditorRanges) {
+			searchResultsOut.add(new MatchLocation(segmentIndex, 0, range));
 		}
-		else {
-			setVisible(false);
+		for (EditorRange range : targeteEditorRanges) {
+			searchResultsOut.add(new MatchLocation(segmentIndex, 1, range));
+		}
+	}
+
+	void clearHighlighting() {
+		markupViewSource.getHighlighter().removeAllHighlights();
+		markupViewTarget.getHighlighter().removeAllHighlights();
+	}
+
+	void applyHighlighting(int column, EditorRange range) {
+		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
+		mv.applyHighlighting(range);
+	}
+
+	void select(int column, EditorRange range) {
+		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
+		DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(mv.getSelectionColor());
+		try {
+			mv.getHighlighter().addHighlight(range.start, range.end, painter);
+		}
+		catch (BadLocationException ex) {
+			Log.err(ex);
 		}
 	}
 
@@ -292,6 +325,10 @@ public class SegmentView extends javax.swing.JPanel {
 			setPreferredSize(d);
 		}
 		fileView.validate();
+	}
+
+	void reportCaretPosition(int column, int textPos) {
+		fileView.lastCaretPosition = new FileView.CaretPosition(this, column, textPos);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -314,6 +351,11 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
         markupViewSource.setEditable(false);
+        markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                markupViewSourceCaretUpdate(evt);
+            }
+        });
         markupViewSource.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 markupViewSourceFocusGained(evt);
@@ -425,6 +467,7 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
+		reportCaretPosition(1, markupViewTarget.getCaret().getDot());
 		if (modifiedFlag == false) {
 			Session.getUndoManager().markSnapshot();
 		}
@@ -488,6 +531,10 @@ public class SegmentView extends javax.swing.JPanel {
 			showTargetPopup(evt);
 		}
     }//GEN-LAST:event_markupViewTargetMouseReleased
+
+    private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
+		reportCaretPosition(0, markupViewSource.getCaret().getDot());
+    }//GEN-LAST:event_markupViewSourceCaretUpdate
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;

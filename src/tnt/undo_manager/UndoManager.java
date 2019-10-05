@@ -20,14 +20,6 @@ public class UndoManager {
 		markSaved();
 	}
 
-	public void resetUndoBuffer() {
-		undoBuffer.clear();
-		UndoPosition pos = new UndoPosition(null, 0);
-		currentState = new UndoableState(currentState.getModel(), pos, pos, this);
-		push_snapshot();
-		markSaved();
-	}
-
 	final void push_snapshot() {
 		undoBuffer.push(currentState.copy());
 		currentState.clearModified();
