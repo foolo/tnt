@@ -328,7 +328,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void reportCaretPosition(int column, int textPos) {
-		fileView.lastCaretPosition = new FileView.CaretPosition(this, column, textPos);
+		fileView.setLastCaretPosition(this, column, textPos);
 	}
 
 	@SuppressWarnings("unchecked")
