@@ -1,6 +1,5 @@
 package tnt.editor;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,6 +13,7 @@ import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
+import javax.swing.text.Highlighter;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 import tnt.editor.search.EditorRange;
@@ -24,8 +24,6 @@ import tnt.xliff_model.Text;
 public class MarkupView extends JTextPane {
 
 	private SegmentView segmentView;
-
-	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 
 	public MarkupView() {
 	}
@@ -191,9 +189,9 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
-	void applyHighlighting(EditorRange range) {
+	void applyHighlighting(EditorRange range, Highlighter.HighlightPainter highlightPainter) {
 		try {
-			getHighlighter().addHighlight(range.start, range.end, FILTER_MATCH_HIGHLIGHT_PAINTER);
+			getHighlighter().addHighlight(range.start, range.end, highlightPainter);
 		}
 		catch (BadLocationException ex) {
 			Log.err(ex);

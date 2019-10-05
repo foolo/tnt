@@ -34,7 +34,6 @@ import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
 import tnt.undo_manager.UndoPosition;
-import tnt.util.Log;
 import tnt.util.RegexUtil;
 import tnt.util.Settings;
 import tnt.util.StringUtil;
@@ -53,6 +52,7 @@ public class SegmentView extends javax.swing.JPanel {
 	private int minHeight = 0;
 	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
 	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
+	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 
 	SegmentView(FileView fileView, String segmentId) {
 		initComponents();
@@ -303,18 +303,13 @@ public class SegmentView extends javax.swing.JPanel {
 
 	void applyHighlighting(int column, EditorRange range) {
 		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
-		mv.applyHighlighting(range);
+		mv.applyHighlighting(range, FILTER_MATCH_HIGHLIGHT_PAINTER);
 	}
 
 	void select(int column, EditorRange range) {
 		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
 		DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(mv.getSelectionColor());
-		try {
-			mv.getHighlighter().addHighlight(range.start, range.end, painter);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
+		mv.applyHighlighting(range, painter);
 	}
 
 	void updateHeight() {

@@ -71,7 +71,7 @@ public class SearchBar extends javax.swing.JPanel {
 		if (currentMatchLocation == null) {
 			return;
 		}
-		fileView.clearSelection(currentMatchLocation.segmentIndex, matchLocations);
+		fileView.clearSelection(currentMatchLocation);
 	}
 
 	void searchAndHighlight() {

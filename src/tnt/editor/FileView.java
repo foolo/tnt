@@ -145,14 +145,9 @@ public class FileView extends javax.swing.JPanel {
 		scroll_to_segment(segmentView);
 	}
 
-	public void clearSelection(int segmentIndex, ArrayList<MatchLocation> matchLocations) {
-		SegmentView segmentView = getSegmentView(segmentIndex);
-		segmentView.clearHighlighting();
-		for (MatchLocation ml : matchLocations) {
-			if (ml.segmentIndex == segmentIndex) {
-				segmentView.applyHighlighting(ml.column, ml.range);
-			}
-		}
+	public void clearSelection(MatchLocation ml) {
+		SegmentView segmentView = getSegmentView(ml.segmentIndex);
+		segmentView.applyHighlighting(ml.column, ml.range);
 	}
 
 	public ArrayList<MatchLocation> findMatches(String term, int flags) {
