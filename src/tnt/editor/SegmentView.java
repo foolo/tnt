@@ -301,12 +301,12 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.getHighlighter().removeAllHighlights();
 	}
 
-	void applyHighlighting(int column, EditorRange range) {
+	void highlightMatch(int column, EditorRange range) {
 		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
 		mv.applyHighlighting(range, FILTER_MATCH_HIGHLIGHT_PAINTER);
 	}
 
-	void select(int column, EditorRange range) {
+	void highlightSelection(int column, EditorRange range) {
 		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
 		DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(mv.getSelectionColor());
 		mv.applyHighlighting(range, painter);

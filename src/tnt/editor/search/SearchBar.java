@@ -57,13 +57,13 @@ public class SearchBar extends javax.swing.JPanel {
 		jLabelCurrentMatchIndex.setText(currentMatchIndex + 1 + " of " + matchLocations.size());
 	}
 
-	void selectMatch() {
+	void showSelection() {
 		MatchLocation ml = getCurrentMatchLocation();
 		updateCurrentMatchIndexLabel();
 		if (ml == null) {
 			return;
 		}
-		fileView.selectMatch(ml);
+		fileView.highlightSelection(ml);
 	}
 
 	public void clearSelection() {
@@ -78,8 +78,8 @@ public class SearchBar extends javax.swing.JPanel {
 		int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
 		matchLocations = fileView.findMatches(jTextFieldSearchText.getText(), flags);
 		currentMatchIndex = fileView.calculateCurrentMatchIndex(matchLocations);
-		fileView.applyHighlighting(matchLocations);
-		selectMatch();
+		fileView.highlightMatches(matchLocations);
+		showSelection();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -148,13 +148,13 @@ public class SearchBar extends javax.swing.JPanel {
     private void jButtonSearchPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchPreviousActionPerformed
 		clearSelection();
 		currentMatchIndex--;
-		selectMatch();
+		showSelection();
     }//GEN-LAST:event_jButtonSearchPreviousActionPerformed
 
     private void jButtonSearchNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchNextActionPerformed
 		clearSelection();
 		currentMatchIndex++;
-		selectMatch();
+		showSelection();
     }//GEN-LAST:event_jButtonSearchNextActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

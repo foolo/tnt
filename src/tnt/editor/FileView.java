@@ -138,16 +138,16 @@ public class FileView extends javax.swing.JPanel {
 		return 0;
 	}
 
-	public void selectMatch(MatchLocation ml) {
+	public void highlightSelection(MatchLocation ml) {
 		SegmentView segmentView = getSegmentView(ml.segmentIndex);
-		segmentView.select(ml.column, ml.range);
+		segmentView.highlightSelection(ml.column, ml.range);
 		lastCaretPosition = new FileView.CaretPosition(segmentView, ml.column, ml.range.start);
 		scroll_to_segment(segmentView);
 	}
 
 	public void clearSelection(MatchLocation ml) {
 		SegmentView segmentView = getSegmentView(ml.segmentIndex);
-		segmentView.applyHighlighting(ml.column, ml.range);
+		segmentView.highlightMatch(ml.column, ml.range);
 	}
 
 	public ArrayList<MatchLocation> findMatches(String term, int flags) {
@@ -160,14 +160,14 @@ public class FileView extends javax.swing.JPanel {
 		return res;
 	}
 
-	public void applyHighlighting(ArrayList<MatchLocation> matchLocations) {
+	public void highlightMatches(ArrayList<MatchLocation> matchLocations) {
 		Component[] components = jPanelItems.getComponents();
 		for (Component c : components) {
 			((SegmentView) c).clearHighlighting();
 		}
 		for (MatchLocation ml : matchLocations) {
 			SegmentView sv = (SegmentView) components[ml.segmentIndex];
-			sv.applyHighlighting(ml.column, ml.range);
+			sv.highlightMatch(ml.column, ml.range);
 		}
 	}
 
