@@ -178,6 +178,10 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
+	void notifyUpdate() {
+		searchBar1.notifyUpdate();
+	}
+
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

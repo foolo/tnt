@@ -185,6 +185,7 @@ public class SegmentView extends javax.swing.JPanel {
 		setStateField(SegmentTag.State.INITIAL);
 		notifyUndoManager(caretPosition1, caretPosition2);
 		modifiedFlag = true;
+		fileView.notifyUpdate();
 	}
 
 	void handleKeyPress(KeyEvent evt, MarkupView markupView) {

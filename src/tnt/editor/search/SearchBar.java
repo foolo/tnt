@@ -2,7 +2,6 @@ package tnt.editor.search;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -11,7 +10,7 @@ import tnt.editor.FileView;
 public class SearchBar extends javax.swing.JPanel {
 
 	FileView fileView;
-	SearchContext searchContext = new SearchContext(new ArrayList<MatchLocation>(), 0);
+	SearchContext searchContext = null;
 
 	public SearchBar() {
 		initComponents();
@@ -45,7 +44,11 @@ public class SearchBar extends javax.swing.JPanel {
 	}
 
 	final void updateCurrentMatchIndexLabel() {
-		jLabelCurrentMatchIndex.setText(searchContext.getIndexStatusLabel());
+		if (searchContext == null || searchContext.matchLocations.isEmpty()) {
+			jLabelCurrentMatchIndex.setText("No matches");
+			return;
+		}
+		jLabelCurrentMatchIndex.setText(searchContext.getCurrentMatchIndex() + 1 + " of " + searchContext.matchLocations.size());
 	}
 
 	void showSelection() {
@@ -72,6 +75,10 @@ public class SearchBar extends javax.swing.JPanel {
 		searchContext = fileView.findMatches(jTextFieldSearchText.getText(), flags, includeSource, includeTarget);
 		fileView.highlightMatches(searchContext.matchLocations);
 		showSelection();
+	}
+
+	public void notifyUpdate() {
+		searchContext = null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -163,12 +170,18 @@ public class SearchBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSearchPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchPreviousActionPerformed
+		if (searchContext == null) {
+			searchAndHighlight();
+		}
 		clearSelection();
 		searchContext.previousMatch();
 		showSelection();
     }//GEN-LAST:event_jButtonSearchPreviousActionPerformed
 
     private void jButtonSearchNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchNextActionPerformed
+		if (searchContext == null) {
+			searchAndHighlight();
+		}
 		clearSelection();
 		searchContext.nextMatch();
 		showSelection();

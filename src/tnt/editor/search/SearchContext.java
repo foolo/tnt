@@ -12,6 +12,10 @@ public class SearchContext {
 		this.currentMatchIndex = currentMatchIndex;
 	}
 
+	public int getCurrentMatchIndex() {
+		return currentMatchIndex;
+	}
+
 	void wrapCurrentMatchIndex() {
 		if (matchLocations.isEmpty()) {
 			currentMatchIndex = 0;
