@@ -9,8 +9,7 @@ import tnt.editor.FileView;
 public class SearchBar extends javax.swing.JPanel {
 
 	FileView fileView;
-	ArrayList<MatchLocation> matchLocations = new ArrayList<>();
-	int currentMatchIndex = 0;
+	SearchContext searchContext = new SearchContext(new ArrayList<MatchLocation>(), 0);
 
 	public SearchBar() {
 		initComponents();
@@ -36,29 +35,12 @@ public class SearchBar extends javax.swing.JPanel {
 		fileView = fv;
 	}
 
-	MatchLocation getCurrentMatchLocation() {
-		if (matchLocations.isEmpty()) {
-			return null;
-		}
-		while (currentMatchIndex >= matchLocations.size()) {
-			currentMatchIndex -= matchLocations.size();
-		}
-		while (currentMatchIndex < 0) {
-			currentMatchIndex += matchLocations.size();
-		}
-		return matchLocations.get(currentMatchIndex);
-	}
-
 	final void updateCurrentMatchIndexLabel() {
-		if (matchLocations.isEmpty()) {
-			jLabelCurrentMatchIndex.setText("No matches");
-			return;
-		}
-		jLabelCurrentMatchIndex.setText(currentMatchIndex + 1 + " of " + matchLocations.size());
+		jLabelCurrentMatchIndex.setText(searchContext.getIndexStatusLabel());
 	}
 
 	void showSelection() {
-		MatchLocation ml = getCurrentMatchLocation();
+		MatchLocation ml = searchContext.getCurrentMatchLocation();
 		updateCurrentMatchIndexLabel();
 		if (ml == null) {
 			return;
@@ -67,7 +49,7 @@ public class SearchBar extends javax.swing.JPanel {
 	}
 
 	public void clearSelection() {
-		MatchLocation currentMatchLocation = getCurrentMatchLocation();
+		MatchLocation currentMatchLocation = searchContext.getCurrentMatchLocation();
 		if (currentMatchLocation == null) {
 			return;
 		}
@@ -76,9 +58,8 @@ public class SearchBar extends javax.swing.JPanel {
 
 	void searchAndHighlight() {
 		int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
-		matchLocations = fileView.findMatches(jTextFieldSearchText.getText(), flags);
-		currentMatchIndex = fileView.calculateCurrentMatchIndex(matchLocations);
-		fileView.highlightMatches(matchLocations);
+		searchContext = fileView.findMatches(jTextFieldSearchText.getText(), flags);
+		fileView.highlightMatches(searchContext.matchLocations);
 		showSelection();
 	}
 
@@ -147,13 +128,13 @@ public class SearchBar extends javax.swing.JPanel {
 
     private void jButtonSearchPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchPreviousActionPerformed
 		clearSelection();
-		currentMatchIndex--;
+		searchContext.previousMatch();
 		showSelection();
     }//GEN-LAST:event_jButtonSearchPreviousActionPerformed
 
     private void jButtonSearchNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchNextActionPerformed
 		clearSelection();
-		currentMatchIndex++;
+		searchContext.nextMatch();
 		showSelection();
     }//GEN-LAST:event_jButtonSearchNextActionPerformed
 

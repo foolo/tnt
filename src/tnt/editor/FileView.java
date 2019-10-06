@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
+import tnt.editor.search.SearchContext;
 import tnt.xliff_model.FileTag;
 import tnt.xliff_model.SegmentTag;
 
@@ -121,7 +122,7 @@ public class FileView extends javax.swing.JPanel {
 		return -1;
 	}
 
-	public int calculateCurrentMatchIndex(ArrayList<MatchLocation> matchLocations) {
+	int calculateCurrentMatchIndex(ArrayList<MatchLocation> matchLocations) {
 		if (lastCaretPosition == null) {
 			return 0;
 		}
@@ -150,14 +151,15 @@ public class FileView extends javax.swing.JPanel {
 		segmentView.highlightMatch(ml.column, ml.range);
 	}
 
-	public ArrayList<MatchLocation> findMatches(String term, int flags) {
-		ArrayList<MatchLocation> res = new ArrayList<>();
+	public SearchContext findMatches(String term, int flags) {
+		ArrayList<MatchLocation> matchLocations = new ArrayList<>();
 		Component[] components = jPanelItems.getComponents();
 		for (int i = 0; i < components.length; i++) {
 			SegmentView sv = (SegmentView) components[i];
-			sv.findMatches(term, flags, i, res);
+			sv.findMatches(term, flags, i, matchLocations);
 		}
-		return res;
+		int currentMatchIndex = calculateCurrentMatchIndex(matchLocations);
+		return new SearchContext(matchLocations, currentMatchIndex);
 	}
 
 	public void highlightMatches(ArrayList<MatchLocation> matchLocations) {
