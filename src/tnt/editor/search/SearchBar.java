@@ -89,6 +89,11 @@ public class SearchBar extends javax.swing.JPanel {
 
         jCheckBoxMatchCase.setText("Aa");
         jCheckBoxMatchCase.setToolTipText("Match case");
+        jCheckBoxMatchCase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxMatchCaseActionPerformed(evt);
+            }
+        });
 
         jLabelCurrentMatchIndex.setText("0 of 0");
 
@@ -137,6 +142,10 @@ public class SearchBar extends javax.swing.JPanel {
 		searchContext.nextMatch();
 		showSelection();
     }//GEN-LAST:event_jButtonSearchNextActionPerformed
+
+    private void jCheckBoxMatchCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMatchCaseActionPerformed
+		searchAndHighlight();
+    }//GEN-LAST:event_jCheckBoxMatchCaseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonSearchNext;
