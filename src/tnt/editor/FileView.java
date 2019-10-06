@@ -151,12 +151,17 @@ public class FileView extends javax.swing.JPanel {
 		segmentView.highlightMatch(ml.column, ml.range);
 	}
 
-	public SearchContext findMatches(String term, int flags) {
+	public SearchContext findMatches(String term, int flags, boolean includeSource, boolean includeTarget) {
 		ArrayList<MatchLocation> matchLocations = new ArrayList<>();
 		Component[] components = jPanelItems.getComponents();
 		for (int i = 0; i < components.length; i++) {
 			SegmentView sv = (SegmentView) components[i];
-			sv.findMatches(term, flags, i, matchLocations);
+			if (includeSource) {
+				sv.findMatches(term, flags, i, 0, matchLocations);
+			}
+			if (includeTarget) {
+				sv.findMatches(term, flags, i, 1, matchLocations);
+			}
 		}
 		int currentMatchIndex = calculateCurrentMatchIndex(matchLocations);
 		return new SearchContext(matchLocations, currentMatchIndex);

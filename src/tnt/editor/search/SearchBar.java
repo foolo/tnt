@@ -1,5 +1,7 @@
 package tnt.editor.search;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javax.swing.event.DocumentEvent;
@@ -29,6 +31,13 @@ public class SearchBar extends javax.swing.JPanel {
 			}
 		});
 		updateCurrentMatchIndexLabel();
+
+		ItemListener columnChangedListener = (ItemEvent e) -> {
+			searchAndHighlight();
+		};
+		jRadioButtonSource.addItemListener(columnChangedListener);
+		jRadioButtonTarget.addItemListener(columnChangedListener);
+		jRadioButtonBoth.addItemListener(columnChangedListener);
 	}
 
 	public void setFileView(FileView fv) {
@@ -58,7 +67,9 @@ public class SearchBar extends javax.swing.JPanel {
 
 	void searchAndHighlight() {
 		int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
-		searchContext = fileView.findMatches(jTextFieldSearchText.getText(), flags);
+		boolean includeSource = jRadioButtonSource.isSelected() || jRadioButtonBoth.isSelected();
+		boolean includeTarget = jRadioButtonTarget.isSelected() || jRadioButtonBoth.isSelected();
+		searchContext = fileView.findMatches(jTextFieldSearchText.getText(), flags, includeSource, includeTarget);
 		fileView.highlightMatches(searchContext.matchLocations);
 		showSelection();
 	}
@@ -67,11 +78,15 @@ public class SearchBar extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroupColumn = new javax.swing.ButtonGroup();
         jTextFieldSearchText = new javax.swing.JTextField();
         jButtonSearchPrevious = new javax.swing.JButton();
         jButtonSearchNext = new javax.swing.JButton();
         jCheckBoxMatchCase = new javax.swing.JCheckBox();
         jLabelCurrentMatchIndex = new javax.swing.JLabel();
+        jRadioButtonSource = new javax.swing.JRadioButton();
+        jRadioButtonTarget = new javax.swing.JRadioButton();
+        jRadioButtonBoth = new javax.swing.JRadioButton();
 
         jButtonSearchPrevious.setText("Previous");
         jButtonSearchPrevious.addActionListener(new java.awt.event.ActionListener() {
@@ -97,14 +112,30 @@ public class SearchBar extends javax.swing.JPanel {
 
         jLabelCurrentMatchIndex.setText("0 of 0");
 
+        buttonGroupColumn.add(jRadioButtonSource);
+        jRadioButtonSource.setText("Source");
+
+        buttonGroupColumn.add(jRadioButtonTarget);
+        jRadioButtonTarget.setText("Target");
+
+        buttonGroupColumn.add(jRadioButtonBoth);
+        jRadioButtonBoth.setSelected(true);
+        jRadioButtonBoth.setText("Both");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextFieldSearchText, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+                .addComponent(jTextFieldSearchText, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButtonSource)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButtonTarget)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButtonBoth)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonSearchPrevious)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSearchNext)
@@ -118,15 +149,15 @@ public class SearchBar extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextFieldSearchText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonSearchNext, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonSearchPrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jCheckBoxMatchCase)
-                        .addComponent(jLabelCurrentMatchIndex)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSearchNext, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSearchPrevious, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBoxMatchCase)
+                    .addComponent(jLabelCurrentMatchIndex)
+                    .addComponent(jRadioButtonBoth)
+                    .addComponent(jRadioButtonTarget)
+                    .addComponent(jRadioButtonSource)
+                    .addComponent(jTextFieldSearchText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -148,10 +179,14 @@ public class SearchBar extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBoxMatchCaseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroupColumn;
     private javax.swing.JButton jButtonSearchNext;
     private javax.swing.JButton jButtonSearchPrevious;
     private javax.swing.JCheckBox jCheckBoxMatchCase;
     private javax.swing.JLabel jLabelCurrentMatchIndex;
+    private javax.swing.JRadioButton jRadioButtonBoth;
+    private javax.swing.JRadioButton jRadioButtonSource;
+    private javax.swing.JRadioButton jRadioButtonTarget;
     private javax.swing.JTextField jTextFieldSearchText;
     // End of variables declaration//GEN-END:variables
 }

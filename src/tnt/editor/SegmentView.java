@@ -279,20 +279,14 @@ public class SegmentView extends javax.swing.JPanel {
 		return res;
 	}
 
-	void findMatches(String term, int flags, int segmentIndex, ArrayList<MatchLocation> searchResultsOut) {
-		ArrayList<Integer> sourceIndexes = new ArrayList<>();
-		ArrayList<Integer> targetIndexes = new ArrayList<>();
-		String sourceText = markupViewSource.getPlainText(sourceIndexes);
-		String targetText = markupViewTarget.getPlainText(targetIndexes);
-		ArrayList<MatchResult> sourceMatchResults = findMatches(term, sourceText, flags);
-		ArrayList<MatchResult> targetMatchResults = findMatches(term, targetText, flags);
-		ArrayList<EditorRange> sourceEditorRanges = toEditorRange(sourceMatchResults, sourceIndexes);
-		ArrayList<EditorRange> targeteEditorRanges = toEditorRange(targetMatchResults, targetIndexes);
-		for (EditorRange range : sourceEditorRanges) {
-			searchResultsOut.add(new MatchLocation(segmentIndex, 0, range));
-		}
-		for (EditorRange range : targeteEditorRanges) {
-			searchResultsOut.add(new MatchLocation(segmentIndex, 1, range));
+	void findMatches(String term, int flags, int segmentIndex, int column, ArrayList<MatchLocation> searchResultsOut) {
+		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
+		ArrayList<Integer> indexes = new ArrayList<>();
+		String text = mv.getPlainText(indexes);
+		ArrayList<MatchResult> matchResults = findMatches(term, text, flags);
+		ArrayList<EditorRange> editorRanges = toEditorRange(matchResults, indexes);
+		for (EditorRange range : editorRanges) {
+			searchResultsOut.add(new MatchLocation(segmentIndex, column, range));
 		}
 	}
 
