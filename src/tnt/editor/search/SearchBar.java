@@ -2,27 +2,31 @@ package tnt.editor.search;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import tnt.editor.FileView;
+import tnt.util.Log;
 
 public class SearchBar extends javax.swing.JPanel {
 
 	FileView fileView;
-	SearchContext searchContext = null;
+	ArrayList<MatchLocation> matchLocations = new ArrayList<>();
+	MatchLocation currentSearchPosition = new MatchLocation(0, 0, new EditorRange(0, 0));
 
 	public SearchBar() {
 		initComponents();
 		jTextFieldSearchText.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				searchAndHighlight();
+				updateSearch();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				searchAndHighlight();
+				updateSearch();
 			}
 
 			@Override
@@ -32,7 +36,7 @@ public class SearchBar extends javax.swing.JPanel {
 		updateCurrentMatchIndexLabel();
 
 		ItemListener columnChangedListener = (ItemEvent e) -> {
-			searchAndHighlight();
+			updateSearch();
 		};
 		jRadioButtonSource.addItemListener(columnChangedListener);
 		jRadioButtonTarget.addItemListener(columnChangedListener);
@@ -43,42 +47,92 @@ public class SearchBar extends javax.swing.JPanel {
 		fileView = fv;
 	}
 
+	public void setSearchPosition(int segmentIndex, int column, int caretPos) {
+		clearSelection();
+		currentSearchPosition = new MatchLocation(segmentIndex, column, new EditorRange(caretPos, caretPos));
+	}
+
 	final void updateCurrentMatchIndexLabel() {
-		if (searchContext == null || searchContext.matchLocations.isEmpty()) {
+		if (matchLocations == null || matchLocations.isEmpty()) {
 			jLabelCurrentMatchIndex.setText("No matches");
 			return;
 		}
-		jLabelCurrentMatchIndex.setText(searchContext.getCurrentMatchIndex() + 1 + " of " + searchContext.matchLocations.size());
+		int index = matchLocations.indexOf(currentSearchPosition);
+		if (index < 0) {
+			Log.err("updateCurrentMatchIndexLabel: index < 0");
+		}
+		jLabelCurrentMatchIndex.setText(index + 1 + " of " + matchLocations.size());
 	}
 
 	void showSelection() {
-		MatchLocation ml = searchContext.getCurrentMatchLocation();
 		updateCurrentMatchIndexLabel();
-		if (ml == null) {
-			return;
-		}
-		fileView.highlightSelection(ml);
+		fileView.highlightSelection(currentSearchPosition);
 	}
 
 	public void clearSelection() {
-		MatchLocation currentMatchLocation = searchContext.getCurrentMatchLocation();
-		if (currentMatchLocation == null) {
+		if (matchLocations.contains(currentSearchPosition)) {
+			fileView.clearSelection(currentSearchPosition);
+		}
+		else {
+			// should only happen when matchLocations is empty, used for clearing only
+			if (matchLocations.size() > 0) {
+				Log.warn("clearSelection: matchLocations.size(): " + matchLocations.size());
+			}
+			fileView.highlightMatches(matchLocations);
+		}
+	}
+
+	int compareMatchLocations(MatchLocation a, MatchLocation b) {
+		int[] a_arr = new int[]{a.segmentIndex, a.column, a.range.start};
+		int[] b_arr = new int[]{b.segmentIndex, b.column, b.range.start};
+		return Arrays.compare(a_arr, b_arr);
+	}
+
+	void findMatch(boolean next) {
+		if (matchLocations.isEmpty()) {
 			return;
 		}
-		fileView.clearSelection(currentMatchLocation);
+		for (int i = 0; i < matchLocations.size(); i++) {
+			MatchLocation ml = matchLocations.get(i);
+			int compareResult = compareMatchLocations(ml, currentSearchPosition);
+			if ((compareResult > 0) || (!next && compareResult == 0)) {
+				currentSearchPosition = ml;
+				return;
+			}
+		}
+		currentSearchPosition = matchLocations.get(0);
+	}
+
+	void findPreviousMatch() {
+		if (matchLocations.isEmpty()) {
+			return;
+		}
+		for (int i = matchLocations.size() - 1; i >= 0; i--) {
+			MatchLocation ml = matchLocations.get(i);
+			if (compareMatchLocations(ml, currentSearchPosition) < 0) {
+				currentSearchPosition = ml;
+				return;
+			}
+		}
+		currentSearchPosition = matchLocations.get(matchLocations.size() - 1);
 	}
 
 	void searchAndHighlight() {
 		int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
 		boolean includeSource = jRadioButtonSource.isSelected() || jRadioButtonBoth.isSelected();
 		boolean includeTarget = jRadioButtonTarget.isSelected() || jRadioButtonBoth.isSelected();
-		searchContext = fileView.findMatches(jTextFieldSearchText.getText(), flags, includeSource, includeTarget);
-		fileView.highlightMatches(searchContext.matchLocations);
+		matchLocations = fileView.findMatches(jTextFieldSearchText.getText(), flags, includeSource, includeTarget);
+		fileView.highlightMatches(matchLocations);
+	}
+
+	void updateSearch() {
+		searchAndHighlight();
+		findMatch(false);
 		showSelection();
 	}
 
 	public void notifyUpdate() {
-		searchContext = null;
+		matchLocations = null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -170,25 +224,25 @@ public class SearchBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSearchPreviousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchPreviousActionPerformed
-		if (searchContext == null) {
+		if (matchLocations == null) {
 			searchAndHighlight();
 		}
 		clearSelection();
-		searchContext.previousMatch();
+		findPreviousMatch();
 		showSelection();
     }//GEN-LAST:event_jButtonSearchPreviousActionPerformed
 
     private void jButtonSearchNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSearchNextActionPerformed
-		if (searchContext == null) {
+		if (matchLocations == null) {
 			searchAndHighlight();
 		}
 		clearSelection();
-		searchContext.nextMatch();
+		findMatch(true);
 		showSelection();
     }//GEN-LAST:event_jButtonSearchNextActionPerformed
 
     private void jCheckBoxMatchCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMatchCaseActionPerformed
-		searchAndHighlight();
+		updateSearch();
     }//GEN-LAST:event_jCheckBoxMatchCaseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

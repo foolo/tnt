@@ -9,4 +9,8 @@ public class EditorRange {
 		this.start = start;
 		this.end = end;
 	}
+
+	public boolean isEmpty() {
+		return start == end;
+	}
 }

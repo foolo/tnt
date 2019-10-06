@@ -3,31 +3,15 @@ package tnt.editor;
 import tnt.editor.search.MatchLocation;
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.regex.Pattern;
-import tnt.editor.search.SearchContext;
 import tnt.xliff_model.FileTag;
 import tnt.xliff_model.SegmentTag;
 
 public class FileView extends javax.swing.JPanel {
 
-	static class CaretPosition {
-
-		final SegmentView segmentView;
-		final int column;
-		final int caretPos;
-
-		CaretPosition(SegmentView segmentView, int column, int caretPos) {
-			this.segmentView = segmentView;
-			this.column = column;
-			this.caretPos = caretPos;
-		}
-	}
-
-	private CaretPosition lastCaretPosition = null;
-
 	void setLastCaretPosition(SegmentView segmentView, int column, int caretPos) {
-		lastCaretPosition = new CaretPosition(segmentView, column, caretPos);
+		int segmentIndex = getIndexOfSegmentView(segmentView);
+		searchBar1.setSearchPosition(segmentIndex, column, caretPos);
 	}
 
 	public FileView(String fileId) {
@@ -122,27 +106,9 @@ public class FileView extends javax.swing.JPanel {
 		return -1;
 	}
 
-	int calculateCurrentMatchIndex(ArrayList<MatchLocation> matchLocations) {
-		if (lastCaretPosition == null) {
-			return 0;
-		}
-		int lastCaretPositionSegmentIndex = getIndexOfSegmentView(lastCaretPosition.segmentView);
-		for (int i = 0; i < matchLocations.size(); i++) {
-			MatchLocation ml = matchLocations.get(i);
-			int[] matchPos = new int[]{ml.segmentIndex, ml.column, ml.range.start};
-			int[] caretPos = new int[]{lastCaretPositionSegmentIndex, lastCaretPosition.column, lastCaretPosition.caretPos};
-			if (Arrays.compare(matchPos, caretPos) >= 0) {
-				// matchPos same or after caretPos
-				return i;
-			}
-		}
-		return 0;
-	}
-
 	public void highlightSelection(MatchLocation ml) {
 		SegmentView segmentView = getSegmentView(ml.segmentIndex);
 		segmentView.highlightSelection(ml.column, ml.range);
-		lastCaretPosition = new FileView.CaretPosition(segmentView, ml.column, ml.range.start);
 		scroll_to_segment(segmentView);
 	}
 
@@ -151,20 +117,19 @@ public class FileView extends javax.swing.JPanel {
 		segmentView.highlightMatch(ml.column, ml.range);
 	}
 
-	public SearchContext findMatches(String term, int flags, boolean includeSource, boolean includeTarget) {
-		ArrayList<MatchLocation> matchLocations = new ArrayList<>();
+	public ArrayList<MatchLocation> findMatches(String term, int flags, boolean includeSource, boolean includeTarget) {
+		ArrayList<MatchLocation> res = new ArrayList<>();
 		Component[] components = jPanelItems.getComponents();
 		for (int i = 0; i < components.length; i++) {
 			SegmentView sv = (SegmentView) components[i];
 			if (includeSource) {
-				sv.findMatches(term, flags, i, 0, matchLocations);
+				sv.findMatches(term, flags, i, 0, res);
 			}
 			if (includeTarget) {
-				sv.findMatches(term, flags, i, 1, matchLocations);
+				sv.findMatches(term, flags, i, 1, res);
 			}
 		}
-		int currentMatchIndex = calculateCurrentMatchIndex(matchLocations);
-		return new SearchContext(matchLocations, currentMatchIndex);
+		return res;
 	}
 
 	public void highlightMatches(ArrayList<MatchLocation> matchLocations) {
