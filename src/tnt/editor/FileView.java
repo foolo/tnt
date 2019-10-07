@@ -4,8 +4,8 @@ import tnt.editor.search.MatchLocation;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import tnt.xliff_model.FileTag;
 import tnt.xliff_model.SegmentTag;
+import tnt.xliff_model.XliffTag;
 
 public class FileView extends javax.swing.JPanel {
 
@@ -14,7 +14,7 @@ public class FileView extends javax.swing.JPanel {
 		searchBar1.setSearchPosition(segmentIndex, column, caretPos);
 	}
 
-	public FileView(String fileId) {
+	public FileView() {
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 		searchBar1.setFileView(this);
@@ -24,8 +24,8 @@ public class FileView extends javax.swing.JPanel {
 		return (SegmentView) jPanelItems.getComponent(index);
 	}
 
-	public void update_model(FileTag fileTag) {
-		ArrayList<SegmentTag> segmentTags = fileTag.getSegmentsArray();
+	public void update_model(XliffTag xliffTag) {
+		ArrayList<SegmentTag> segmentTags = xliffTag.getSegmentsArray();
 		for (int i = 0; i < segmentTags.size(); i++) {
 			SegmentView segmentView = (SegmentView) jPanelItems.getComponent(i);
 			segmentView.updateSegmentTag(segmentTags.get(i));
@@ -51,10 +51,12 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void getSegmentViews(ArrayList<SegmentView> segmentViews) {
+	ArrayList<SegmentView> getSegmentViews() {
+		ArrayList<SegmentView> res = new ArrayList<>();
 		for (Component c : jPanelItems.getComponents()) {
-			segmentViews.add((SegmentView) c);
+			res.add((SegmentView) c);
 		}
+		return res;
 	}
 
 	void jumpToNextSegment(SegmentView currentSegment) {

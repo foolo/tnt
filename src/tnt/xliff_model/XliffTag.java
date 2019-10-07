@@ -14,6 +14,7 @@ import tnt.xliff_model.exceptions.XliffVersionException;
 public class XliffTag implements UndoableModel {
 
 	private ArrayList<FileTag> files = new ArrayList<>();
+	private ArrayList<SegmentTag> segmentArray = null;
 	private final Document document;
 	private final String version;
 	private final File file;
@@ -52,6 +53,16 @@ public class XliffTag implements UndoableModel {
 
 	public ArrayList<FileTag> getFiles() {
 		return files;
+	}
+
+	public ArrayList<SegmentTag> getSegmentsArray() {
+		if (segmentArray == null) {
+			segmentArray = new ArrayList<>();
+			for (FileTag ft : files) {
+				segmentArray.addAll(ft.getSegmentsArray());
+			}
+		}
+		return segmentArray;
 	}
 
 	public File getFile() {

@@ -29,7 +29,6 @@ import tnt.util.FileUtil;
 import tnt.util.Log;
 import tnt.util.Settings;
 import tnt.util.XmlUtil;
-import tnt.xliff_model.FileTag;
 import tnt.xliff_model.SegmentTag;
 import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
@@ -39,7 +38,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	private final LogWindow logWindow;
 
-	private final ArrayList<FileView> fileViews = new ArrayList<>();
+	private FileView fileView = null;
 
 	static final Dimension DEFAULT_DIALOG_SIZE = new Dimension(850, 550);
 
@@ -103,16 +102,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			updateRecentFilesMenu();
 			return;
 		}
-		jTabbedPane1.removeAll();
-		fileViews.clear();
-		for (FileTag fileTag : getXliffTag().getFiles()) {
-			FileView fv = new FileView(fileTag.getId());
-			fv.setName(fileTag.getAlias());
-			fv.populate_segments(fileTag.getSegmentsArray());
-			fv.update_model(fileTag);
-			jTabbedPane1.add(fv);
-			fileViews.add(fv);
-		}
+		fileView = new FileView();
+		fileView.populate_segments(getXliffTag().getSegmentsArray());
+		fileView.update_model(getXliffTag());
+		jPanel2.removeAll();
+		jPanel2.add(fileView);
+		jPanel2.revalidate();
+
 		applyFontPreferences();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
@@ -123,7 +119,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	void initializeSpelling(String trgLang) {
 		SpellCheck.unloadDictionary();
-		for (SegmentView segmentView : getSegmentViews()) {
+		for (SegmentView segmentView : fileView.getSegmentViews()) {
 			segmentView.clearSpellcheck();
 		}
 		if (trgLang.isEmpty()) {
@@ -155,16 +151,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return (XliffTag) Session.getUndoManager().getCurrentState().getModel();
 	}
 
-	ArrayList<SegmentView> getSegmentViews() {
-		ArrayList<SegmentView> res = new ArrayList<>();
-		for (FileView fileView : fileViews) {
-			fileView.getSegmentViews(res);
-		}
-		return res;
-	}
-
 	void updateHeights() {
-		for (SegmentView segmentView : getSegmentViews()) {
+		for (SegmentView segmentView : fileView.getSegmentViews()) {
 			segmentView.updateHeight();
 		}
 	}
@@ -222,13 +210,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	@Override
 	public void notify_undo(UndoableModel model, UndoPosition newEditingPosition) {
 		XliffTag xliffTag = (XliffTag) model;
-		for (int i = 0; i < fileViews.size(); i++) {
-			fileViews.get(i).update_model(xliffTag.getFiles().get(i));
-		}
+		fileView.update_model(xliffTag);
 
 		SegmentView segmentView = newEditingPosition.getSegmentView();
 		if (segmentView != null) {
-			jTabbedPane1.setSelectedComponent(segmentView.getFileView());
 			segmentView.getFileView().scroll_to_segment(segmentView);
 			// todo why is invokeLater needed?
 			SwingUtilities.invokeLater(new Runnable() {
@@ -250,9 +235,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabelProgress = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemCreatePackage = new javax.swing.JMenuItem();
@@ -301,6 +287,21 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabelProgress))
         );
+
+        jPanel2.setLayout(new java.awt.CardLayout());
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 934, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 615, Short.MAX_VALUE)
+        );
+
+        jPanel2.add(jPanel3, "card2");
 
         jMenu1.setText("Project");
 
@@ -433,13 +434,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -539,7 +540,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
 	void jumpToNextSegment(SegmentView currentSegmentView) {
-		FileView fileView = (FileView) jTabbedPane1.getSelectedComponent();
 		if (fileView != null) {
 			fileView.jumpToNextSegment(currentSegmentView);
 		}
@@ -582,7 +582,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	void applyFontPreferences() {
 		Font f = new Font(Settings.getEditorFontName(), Font.PLAIN, Settings.getEditorFontSize());
 		int minHeight = SegmentView.getMinHeightForFont(f);
-		for (SegmentView segmentView : getSegmentViews()) {
+		for (SegmentView segmentView : fileView.getSegmentViews()) {
 			segmentView.setEditorFont(f, minHeight);
 		}
 	}
@@ -669,6 +669,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenu jMenuRecentFiles;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     // End of variables declaration//GEN-END:variables
 }
