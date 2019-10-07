@@ -2,8 +2,10 @@ package tnt.editor;
 
 import tnt.editor.search.MatchLocation;
 import java.awt.Component;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import tnt.util.Settings;
 import tnt.xliff_model.SegmentTag;
 import tnt.xliff_model.XliffTag;
 
@@ -147,6 +149,20 @@ public class FileView extends javax.swing.JPanel {
 
 	void notifyUpdate() {
 		searchBar1.notifyUpdate();
+	}
+
+	void applyFontPreferences() {
+		Font f = new Font(Settings.getEditorFontName(), Font.PLAIN, Settings.getEditorFontSize());
+		int minHeight = SegmentView.getMinHeightForFont(f);
+		for (Component c : jPanelItems.getComponents()) {
+			((SegmentView) c).setEditorFont(f, minHeight);
+		}
+	}
+
+	void updateHeights() {
+		for (Component c : jPanelItems.getComponents()) {
+			((SegmentView) c).updateHeight();
+		}
 	}
 
 	@SuppressWarnings("unchecked")

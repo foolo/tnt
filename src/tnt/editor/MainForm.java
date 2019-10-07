@@ -12,7 +12,6 @@ import javax.xml.transform.stream.StreamResult;
 import tnt.conversion.OpenXliffHandler;
 import tnt.conversion.ConversionError;
 import tnt.conversion.OpenXliffValidator;
-import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JMenuItem;
@@ -109,12 +108,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jPanel2.add(fileView);
 		jPanel2.revalidate();
 
-		applyFontPreferences();
+		fileView.applyFontPreferences();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
 		initializeSpelling(Session.getProperties().getTrgLang());
-		SwingUtilities.invokeLater(this::updateHeights);
+		SwingUtilities.invokeLater(fileView::updateHeights);
 	}
 
 	void initializeSpelling(String trgLang) {
@@ -149,12 +148,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	XliffTag getXliffTag() {
 		return (XliffTag) Session.getUndoManager().getCurrentState().getModel();
-	}
-
-	void updateHeights() {
-		for (SegmentView segmentView : fileView.getSegmentViews()) {
-			segmentView.updateHeight();
-		}
 	}
 
 	public boolean save_file() {
@@ -579,17 +572,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
-	void applyFontPreferences() {
-		Font f = new Font(Settings.getEditorFontName(), Font.PLAIN, Settings.getEditorFontSize());
-		int minHeight = SegmentView.getMinHeightForFont(f);
-		for (SegmentView segmentView : fileView.getSegmentViews()) {
-			segmentView.setEditorFont(f, minHeight);
-		}
-	}
-
 	void applyPreferences() {
-		applyFontPreferences();
-		updateHeights();
+		if (fileView != null) {
+			fileView.applyFontPreferences();
+			fileView.updateHeights();
+		}
 	}
 
     private void jMenuItemPreferencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreferencesActionPerformed
@@ -602,11 +589,12 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemPreferencesActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-		applyPreferences();
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent componentEvent) {
-				updateHeights();
+				if (fileView != null) {
+					fileView.updateHeights();
+				}
 			}
 		});
     }//GEN-LAST:event_formWindowActivated
