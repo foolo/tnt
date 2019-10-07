@@ -1,5 +1,6 @@
 package tnt.editor;
 
+import tnt.editor.search.MatchLocation;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -8,9 +9,19 @@ import tnt.xliff_model.SegmentTag;
 
 public class FileView extends javax.swing.JPanel {
 
+	void setLastCaretPosition(SegmentView segmentView, int column, int caretPos) {
+		int segmentIndex = getIndexOfSegmentView(segmentView);
+		searchBar1.setSearchPosition(segmentIndex, column, caretPos);
+	}
+
 	public FileView(String fileId) {
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+		searchBar1.setFileView(this);
+	}
+
+	SegmentView getSegmentView(int index) {
+		return (SegmentView) jPanelItems.getComponent(index);
 	}
 
 	public void update_model(FileTag fileTag) {
@@ -84,13 +95,56 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void applyFilter() {
-		for (Component c : jPanelItems.getComponents()) {
-			SegmentView sv = (SegmentView) c;
-			int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
-			sv.applyFilter(jTextFieldSourceFilter.getText(), jTextFieldTargetFilter.getText(), flags);
+	int getIndexOfSegmentView(SegmentView segmentView) {
+		Component[] components = jPanelItems.getComponents();
+		for (int i = 0; i < components.length; i++) {
+			SegmentView sv = (SegmentView) components[i];
+			if (sv == segmentView) {
+				return i;
+			}
 		}
-		Session.getUndoManager().resetUndoBuffer();
+		return -1;
+	}
+
+	public void highlightSelection(MatchLocation ml) {
+		SegmentView segmentView = getSegmentView(ml.segmentIndex);
+		segmentView.highlightSelection(ml.column, ml.range);
+		scroll_to_segment(segmentView);
+	}
+
+	public void clearSelection(MatchLocation ml) {
+		SegmentView segmentView = getSegmentView(ml.segmentIndex);
+		segmentView.clearSelection();
+	}
+
+	public ArrayList<MatchLocation> findMatches(String term, int flags, boolean includeSource, boolean includeTarget) {
+		ArrayList<MatchLocation> res = new ArrayList<>();
+		Component[] components = jPanelItems.getComponents();
+		for (int i = 0; i < components.length; i++) {
+			SegmentView sv = (SegmentView) components[i];
+			if (includeSource) {
+				sv.findMatches(term, flags, i, 0, res);
+			}
+			if (includeTarget) {
+				sv.findMatches(term, flags, i, 1, res);
+			}
+		}
+		return res;
+	}
+
+	public void highlightMatches(ArrayList<MatchLocation> matchLocations) {
+		Component[] components = jPanelItems.getComponents();
+		for (Component c : components) {
+			((SegmentView) c).clearHighlighting();
+		}
+		for (MatchLocation ml : matchLocations) {
+			SegmentView sv = (SegmentView) components[ml.segmentIndex];
+			sv.highlightMatch(ml.column, ml.range);
+		}
+	}
+
+	void notifyUpdate() {
+		searchBar1.notifyUpdate();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -99,109 +153,32 @@ public class FileView extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanelItems = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jTextFieldSourceFilter = new javax.swing.JTextField();
-        jPanel6 = new javax.swing.JPanel();
-        jTextFieldTargetFilter = new javax.swing.JTextField();
-        jCheckBoxMatchCase = new javax.swing.JCheckBox();
+        searchBar1 = new tnt.editor.search.SearchBar();
 
         setMinimumSize(new java.awt.Dimension(800, 0));
 
         jPanelItems.setLayout(new javax.swing.BoxLayout(jPanelItems, javax.swing.BoxLayout.PAGE_AXIS));
         jScrollPane1.setViewportView(jPanelItems);
 
-        jPanel1.setLayout(new java.awt.GridLayout(1, 0));
-
-        jTextFieldSourceFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldSourceFilterActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jTextFieldSourceFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jTextFieldSourceFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel5);
-
-        jTextFieldTargetFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldTargetFilterActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jTextFieldTargetFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jTextFieldTargetFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel6);
-
-        jCheckBoxMatchCase.setText("Aa");
-        jCheckBoxMatchCase.setToolTipText("Match case");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBoxMatchCase)
-                .addGap(105, 105, 105))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .addComponent(searchBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxMatchCase, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(6, 6, 6)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
+                .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldSourceFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSourceFilterActionPerformed
-		applyFilter();
-    }//GEN-LAST:event_jTextFieldSourceFilterActionPerformed
-
-    private void jTextFieldTargetFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTargetFilterActionPerformed
-		applyFilter();
-    }//GEN-LAST:event_jTextFieldTargetFilterActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBoxMatchCase;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextFieldSourceFilter;
-    private javax.swing.JTextField jTextFieldTargetFilter;
+    private tnt.editor.search.SearchBar searchBar1;
     // End of variables declaration//GEN-END:variables
 }
