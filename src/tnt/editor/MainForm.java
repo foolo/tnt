@@ -60,7 +60,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 					if (okToClose() == false) {
 						return;
 					}
-					load_file(new File(item.getText()), true);
+					load_file(new File(item.getText()));
 				}
 			});
 		}
@@ -88,15 +88,13 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		setTitle(title);
 	}
 
-	public void load_file(File f, boolean promptErrors) {
+	public void load_file(File f) {
 		try {
 			Session.newSession(f, this);
 		}
 		catch (LoadException ex) {
 			Log.debug("load_file: " + ex.toString());
-			if (promptErrors) {
-				JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			}
+			JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			Settings.removeRecentFile(f.getAbsolutePath());
 			updateRecentFilesMenu();
 			return;
@@ -455,7 +453,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 		Settings.setOpenDirectory(fc.getSelectedFile().getParentFile());
-		load_file(fc.getSelectedFile(), true);
+		load_file(fc.getSelectedFile());
     }//GEN-LAST:event_jMenuItemOpenActionPerformed
 
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
@@ -504,7 +502,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			OpenXliffHandler converter = new OpenXliffHandler();
 			try {
 				xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSourceLanguage().originalTagStr, d.getTargetLanguage().originalTagStr);
-				load_file(xliffFile, true);
+				load_file(xliffFile);
 			}
 			catch (ConversionError ex) {
 				JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);

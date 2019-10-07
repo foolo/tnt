@@ -71,12 +71,12 @@ public class Application {
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
 				if (args.length > 0) {
-					mainForm.load_file(new File(args[0]), true);
+					mainForm.load_file(new File(args[0]));
 				}
 				else {
 					File lastOpenedFile = Settings.getLastOpenedFile();
 					if (lastOpenedFile != null) {
-						mainForm.load_file(lastOpenedFile, false);
+						mainForm.load_file(lastOpenedFile);
 					}
 				}
 			}
