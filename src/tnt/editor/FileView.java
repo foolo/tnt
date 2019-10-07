@@ -114,7 +114,7 @@ public class FileView extends javax.swing.JPanel {
 
 	public void clearSelection(MatchLocation ml) {
 		SegmentView segmentView = getSegmentView(ml.segmentIndex);
-		segmentView.highlightMatch(ml.column, ml.range);
+		segmentView.clearSelection();
 	}
 
 	public ArrayList<MatchLocation> findMatches(String term, int flags, boolean includeSource, boolean includeTarget) {

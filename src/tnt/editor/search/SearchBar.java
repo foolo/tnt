@@ -70,16 +70,7 @@ public class SearchBar extends javax.swing.JPanel {
 	}
 
 	public void clearSelection() {
-		if (matchLocations.contains(currentSearchPosition)) {
-			fileView.clearSelection(currentSearchPosition);
-		}
-		else {
-			// should only happen when matchLocations is empty, used for clearing only
-			if (matchLocations.size() > 0) {
-				Log.warn("clearSelection: matchLocations.size(): " + matchLocations.size());
-			}
-			fileView.highlightMatches(matchLocations);
-		}
+		fileView.clearSelection(currentSearchPosition);
 	}
 
 	int compareMatchLocations(MatchLocation a, MatchLocation b) {

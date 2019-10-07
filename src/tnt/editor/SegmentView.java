@@ -30,6 +30,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.DocumentFilter;
+import javax.swing.text.Highlighter;
 import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
@@ -53,6 +54,7 @@ public class SegmentView extends javax.swing.JPanel {
 	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
 	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
+	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
 	SegmentView(FileView fileView, String segmentId) {
 		initComponents();
@@ -89,6 +91,7 @@ public class SegmentView extends javax.swing.JPanel {
 				super.replace(fb, offset, length, s, attrs);
 			}
 		});
+		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
 	}
 
 	void updateStateLabel(SegmentTag.State state) {
@@ -301,10 +304,23 @@ public class SegmentView extends javax.swing.JPanel {
 		mv.applyHighlighting(range, FILTER_MATCH_HIGHLIGHT_PAINTER);
 	}
 
+	void clearSelection(MarkupView mv) {
+		Highlighter.Highlight[] highlights = mv.getHighlighter().getHighlights();
+		for (Highlighter.Highlight hl : highlights) {
+			if (hl.getPainter() == selectionPainter) {
+				mv.getHighlighter().removeHighlight(hl);
+			}
+		}
+	}
+
+	void clearSelection() {
+		clearSelection(markupViewSource);
+		clearSelection(markupViewTarget);
+	}
+
 	void highlightSelection(int column, EditorRange range) {
 		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
-		DefaultHighlighter.DefaultHighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(mv.getSelectionColor());
-		mv.applyHighlighting(range, painter);
+		mv.applyHighlighting(range, selectionPainter);
 	}
 
 	void updateHeight() {
