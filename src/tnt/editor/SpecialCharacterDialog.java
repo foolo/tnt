@@ -80,7 +80,11 @@ public class SpecialCharacterDialog extends BaseDialog {
 
 		void update() {
 			try {
-				char c = (char) Integer.parseInt(jTextFieldCodePoint.getText(), 16);
+				int i = Integer.parseInt(jTextFieldCodePoint.getText(), 16);
+				if (i > 0xffff || i < 0) {
+					throw new NumberFormatException();
+				}
+				char c = (char) i;
 				jTextFieldChar.setText("" + c);
 				jTextAreaCharName.setText(Character.getName(c));
 				jButtonOk.setEnabled(true);
