@@ -84,6 +84,10 @@ public class SpecialCharacterDialog extends BaseDialog {
 				if (i > 0xffff || i < 0) {
 					throw new NumberFormatException();
 				}
+				if (i == 0xffff) {
+					// workaround for null pointer exception in java.awt.font.TextLayout.getBaselineFromGraphic, https://bugs.openjdk.java.net/browse/JDK-8037965
+					throw new NumberFormatException();
+				}
 				char c = (char) i;
 				jTextFieldChar.setText("" + c);
 				jTextAreaCharName.setText(Character.getName(c));
