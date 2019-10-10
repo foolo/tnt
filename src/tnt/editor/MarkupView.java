@@ -129,7 +129,8 @@ public class MarkupView extends JTextPane {
 		}
 		ArrayList<TaggedTextContent> res = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
-		for (int i = p0; i < p1; i++) {
+		for (int i = p0; i < p1;) {
+			int codepoint = docText.codePointAt(i);
 			Element e = doc.getCharacterElement(i);
 			TagIcon icon = getIcon(e);
 			if (icon != null) {
@@ -138,8 +139,9 @@ public class MarkupView extends JTextPane {
 				sb = new StringBuilder();
 			}
 			else {
-				sb.appendCodePoint(docText.codePointAt(i));
+				sb.appendCodePoint(codepoint);
 			}
+			i += Character.charCount(codepoint);
 		}
 		res.add(new Text(sb.toString()));
 		return new TaggedText(res);
@@ -155,12 +157,14 @@ public class MarkupView extends JTextPane {
 		StyledDocument doc = getStyledDocument();
 		String docText = getDocText(doc);
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < doc.getLength(); i++) {
+		for (int i = 0; i < doc.getLength();) {
+			int codepoint = docText.codePointAt(i);
 			Element e = doc.getCharacterElement(i);
 			if (getIcon(e) == null) {
 				sb.appendCodePoint(docText.codePointAt(i));
 				plainToTaggedIndexes.add(i);
 			}
+			i += Character.charCount(codepoint);
 		}
 		return sb.toString();
 	}
