@@ -14,6 +14,8 @@ import tnt.conversion.ConversionError;
 import tnt.conversion.OpenXliffValidator;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tnt.language.Language;
@@ -26,6 +28,7 @@ import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoableModel;
 import tnt.util.FileUtil;
 import tnt.util.Log;
+import tnt.util.SegmentsHtmlEncoder;
 import tnt.util.Settings;
 import tnt.util.XmlUtil;
 import tnt.xliff_model.SegmentTag;
@@ -238,6 +241,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemClearRecentFiles = new javax.swing.JMenuItem();
         jMenuItemSave = new javax.swing.JMenuItem();
         jMenuItemExport = new javax.swing.JMenuItem();
+        jMenuItemExportTable = new javax.swing.JMenuItem();
         jMenuItemLocateInFileBrowser = new javax.swing.JMenuItem();
         jMenuItemProperties = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
@@ -270,7 +274,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelProgress)
-                .addGap(0, 823, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,6 +347,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu1.add(jMenuItemExport);
+
+        jMenuItemExportTable.setText("Export as table");
+        jMenuItemExportTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemExportTableActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItemExportTable);
 
         jMenuItemLocateInFileBrowser.setText("Locate in file browser");
         jMenuItemLocateInFileBrowser.addActionListener(new java.awt.event.ActionListener() {
@@ -634,6 +646,26 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		FileUtil.desktopOpen(this, dir);
     }//GEN-LAST:event_jMenuItemLocateInFileBrowserActionPerformed
 
+    private void jMenuItemExportTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportTableActionPerformed
+		SegmentsHtmlEncoder encoder = new SegmentsHtmlEncoder();
+		XliffTag xliffTag = getXliffTag();
+		String htmlData = encoder.encode(xliffTag);
+		String originalFilename = new File(xliffTag.getFiles().get(0).getOriginalFilePath()).getName();
+		String sourceLanguage = Session.getProperties().getSrcLang();
+		String targetLanguage = Session.getProperties().getTrgLang();
+		String tableFilename = originalFilename + " (" + sourceLanguage + "-" + targetLanguage + " table).html";
+		File targetFile = new File(xliffTag.getFile().getParentFile(), tableFilename);
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile));
+			writer.write(htmlData);
+			writer.close();
+			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(targetFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
+		}
+		catch (IOException ex) {
+			JOptionPane.showMessageDialog(this, "Could not export table:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
+		}
+    }//GEN-LAST:event_jMenuItemExportTableActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JMenu jMenu1;
@@ -646,6 +678,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemCopySrc;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
+    private javax.swing.JMenuItem jMenuItemExportTable;
     private javax.swing.JMenuItem jMenuItemLocateInFileBrowser;
     private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemMarkTranslated;
