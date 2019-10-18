@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <sstream>
-#include <iostream>
 #include <shlwapi.h>
 
 void cdToApplication() {
@@ -31,6 +30,26 @@ int main() {
 		MessageBoxExW(NULL, ss.str().c_str(), L"Message", MB_OK | MB_ICONERROR, 0);
 		return 0;
 	}
+
+	WaitForSingleObject(pi.hProcess, INFINITE);
+	DWORD exitCode = 0;
+	if (GetExitCodeProcess(pi.hProcess, &exitCode) != 0) {
+		if (exitCode != 0) {
+			std::wstringstream ss;
+			ss << cmd << std::endl;
+			ss << "failed with exit code " << exitCode << std::endl;
+			ss << "command line: " << args << std::endl;
+			MessageBoxExW(NULL, ss.str().c_str(), L"Message", MB_OK | MB_ICONERROR, 0);
+		}
+	}
+	else {
+		std::wstringstream ss;
+		ss << cmd << std::endl;
+		ss << "terminated with unknown exit code" << std::endl;
+		ss << "command line: " << args << std::endl;
+		MessageBoxExW(NULL, ss.str().c_str(), L"Message", MB_OK | MB_ICONERROR, 0);
+	}
+
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 	return 0;
