@@ -141,7 +141,6 @@ pre {
 	overflow: auto;
 	font-size: 0.9rem;
 	line-height: 1.45;
-	-webkit-overflow-scrolling: touch
 }
 
 .main-content .highlight {
@@ -159,7 +158,6 @@ pre {
 	overflow: auto;
 	word-break: normal;
 	word-break: keep-all;
-	-webkit-overflow-scrolling: touch
 }
 
 .main-content table th,
