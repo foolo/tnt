@@ -28,9 +28,7 @@ pre {
 }
 
 code,
-kbd,
-pre,
-samp {
+pre {
 	font-family: monospace, monospace;
 	font-size: 1em
 }
