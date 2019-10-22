@@ -6,9 +6,9 @@ from os.path import join
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 AddOption('--release_version', default="snapshot")
 version = GetOption('release_version')
-TARGET_LINUX='linux'
-TARGET_WINDOWS='windows'
-AddOption('--target', default=TARGET_LINUX)
+TARGET_LINUX_X64='linux-x64'
+TARGET_WINDOWS_X64='windows-x64'
+AddOption('--target', default=TARGET_LINUX_X64)
 target = GetOption('target')
 
 subprocess.call(["git", "submodule", "init"])
@@ -17,8 +17,8 @@ subprocess.call(["git", "submodule", "update"])
 appdir = target + ".AppDir"
 appdirlib = join(appdir, "lib")
 jredir = appdir + "/jre"
-release_name = "tnt-" + version
-release_file = release_name + {TARGET_LINUX: ".AppImage", TARGET_WINDOWS: ".zip"}[target]
+release_name = "tnt-" + version + "-" + target
+release_file = release_name + {TARGET_LINUX_X64: ".AppImage", TARGET_WINDOWS_X64: ".zip"}[target]
 
 try:
 	shutil.rmtree(appdir)
@@ -27,7 +27,7 @@ except FileNotFoundError:
 
 env.Command("dist/tnt.jar", None, "ant jar")
 env.AlwaysBuild("dist/tnt.jar")
-jre_artifact = "tnt-artifacts/" + {TARGET_LINUX: "tnt-jre-linux-x64.7z", TARGET_WINDOWS: "tnt-jre-windows-x64.7z"}[target]
+jre_artifact = "tnt-artifacts/" + {TARGET_LINUX_X64: "tnt-jre-linux-x64.7z", TARGET_WINDOWS_X64: "tnt-jre-windows-x64.7z"}[target]
 env.Command(jredir, None, "7z x " + jre_artifact + " -o" + appdir)
 
 def exit_error(ex):
@@ -42,9 +42,9 @@ def add_resources(target_path, res_path, pattern=None):
 			relp = os.path.relpath(path, res_path)
 			env.Install(join(target_path, relp), join(path, f))
 
-if target == TARGET_WINDOWS:
+if target == TARGET_WINDOWS_X64:
 	env.Install(appdir, "tnt-artifacts/tnt.exe")
-if target == TARGET_LINUX:
+if target == TARGET_LINUX_X64:
 	add_resources(appdir, "deploy/linux")
 
 add_resources(join(appdir, "catalog"),   "OpenXLIFF/catalog")
@@ -59,7 +59,7 @@ env.Install(appdirlib, "dist/tnt.jar")
 env.Install(appdirlib, "tnt-artifacts/hunspell-1.6.2-SNAPSHOT.jar")
 env.Install(appdirlib, "HunspellJNA/lib/jna.jar")
 
-native_libs = {TARGET_LINUX: "HunspellJNA/native-lib/libhunspell-linux-x86-64.so", TARGET_WINDOWS: "HunspellJNA/native-lib/hunspell-win-x86-64.dll"}
+native_libs = {TARGET_LINUX_X64: "HunspellJNA/native-lib/libhunspell-linux-x86-64.so", TARGET_WINDOWS_X64: "HunspellJNA/native-lib/hunspell-win-x86-64.dll"}
 env.Install(appdirlib, native_libs[target])
 
 def zipdir(target, source, env):
@@ -68,9 +68,9 @@ def zipdir(target, source, env):
 	zip_name = re.sub("\.zip$", "", str(target[0]))
 	shutil.make_archive(zip_name, 'zip', str(source[0]))
 
-if target == TARGET_WINDOWS:
+if target == TARGET_WINDOWS_X64:
 	env.Command(release_file, appdir, zipdir)
-if target == TARGET_LINUX:
+if target == TARGET_LINUX_X64:
 	env.Command(release_file, appdir, "appimagetool " + appdir + " " + release_file)
 
 env.AlwaysBuild(release_file)
