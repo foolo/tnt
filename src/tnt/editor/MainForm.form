@@ -149,12 +149,12 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="View"/>
+            <Property name="text" type="java.lang.String" value="Help"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemLogs">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Log"/>
+                <Property name="text" type="java.lang.String" value="Show logs"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemLogsActionPerformed"/>

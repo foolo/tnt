@@ -420,9 +420,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenuBar1.add(jMenu2);
 
-        jMenu3.setText("View");
+        jMenu3.setText("Help");
 
-        jMenuItemLogs.setText("Log");
+        jMenuItemLogs.setText("Show logs");
         jMenuItemLogs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemLogsActionPerformed(evt);
