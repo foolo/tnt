@@ -253,6 +253,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemMarkTranslated = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItemLogs = new javax.swing.JMenuItem();
+        jMenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(840, 0));
@@ -429,6 +430,14 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
             }
         });
         jMenu3.add(jMenuItemLogs);
+
+        jMenuItemAbout.setText("About");
+        jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemAboutActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItemAbout);
 
         jMenuBar1.add(jMenu3);
 
@@ -667,6 +676,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
     }//GEN-LAST:event_jMenuItemExportTableActionPerformed
 
+    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
+		JOptionPane.showMessageDialog(this, new AboutPanel(), "About", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jMenuItemAboutActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JMenu jMenu1;
@@ -674,6 +687,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemAddSpecialChar;
     private javax.swing.JMenuItem jMenuItemClearRecentFiles;
     private javax.swing.JMenuItem jMenuItemCopySrc;
