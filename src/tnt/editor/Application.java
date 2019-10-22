@@ -16,6 +16,9 @@ import tnt.util.Settings;
 
 public class Application {
 
+	public static final String APPLICATION_NAME = "tnt";
+	public static final String APPLICATION_VERSION = "0.2";
+
 	public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
 		public void handle(Throwable thrown) {

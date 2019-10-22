@@ -87,7 +87,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			languageInfo = " (" + srcLang + " -> " + trgLang + ")";
 		}
 		String fileInfo = getXliffTag().getFile().getName() + " (" + getXliffTag().getFile().getParent() + ")";
-		String title = fileInfo + languageInfo;
+		String applicationInfo = " - " + Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION;
+		String title = fileInfo + languageInfo + applicationInfo;
 		setTitle(title);
 	}
 
