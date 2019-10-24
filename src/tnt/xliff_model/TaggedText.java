@@ -59,8 +59,9 @@ public class TaggedText {
 		this.content = content;
 	}
 
-	public TaggedText(ArrayList<TaggedTextContent> content, String textContent) {
+	public TaggedText(ArrayList<TaggedTextContent> content, String textContentCache) {
 		this.content = content;
+		this.textContentCache = textContentCache;
 	}
 
 	public ArrayList<TaggedTextContent> getContent() {
