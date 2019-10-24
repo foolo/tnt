@@ -58,8 +58,9 @@ public class SegmentTag {
 			tn = node.getOwnerDocument().renameNode(tn, null, "target");
 		}
 		targetNode = tn;
-		sourceText = new TaggedText(sourceNode);
-		targetText = new TaggedText(targetNode);
+		id = Session.generateSegmentId();
+		sourceText = new TaggedText(sourceNode, id);
+		targetText = new TaggedText(targetNode, id);
 		if (Settings.getShowWhitespace()) {
 			sourceLeadingWhitepace = "";
 		}
@@ -67,7 +68,6 @@ public class SegmentTag {
 			sourceLeadingWhitepace = sourceText.trim();
 			targetText.trim();
 		}
-		id = Session.generateSegmentId();
 		sourceWordCount = RegexUtil.countWords(sourceText.getTextContent());
 	}
 
@@ -91,7 +91,7 @@ public class SegmentTag {
 		if (targetText != null) {
 			return targetText;
 		}
-		return new TaggedText(new ArrayList<>());
+		return new TaggedText(new ArrayList<>(), id);
 	}
 
 	public Element getNode() {

@@ -88,7 +88,15 @@ public class TaggedTextTransferHandler extends TransferHandler implements UIReso
 		if (data instanceof TaggedText) {
 			Session.getUndoManager().markSnapshot();
 			TaggedText tt = (TaggedText) data;
-			c.insertTaggedText(tt.copy());
+			String sourceSegmentId = tt.getSegmentId();
+			String targetSegmentId = c.getSegmentView().getSegmentTag().getId();
+			if (sourceSegmentId.equals(targetSegmentId)) {
+				System.out.println("sourceSegmentId == targetSegmentId");
+				c.insertTaggedText(tt.copy());
+			}
+			else {
+				c.insertText(c.getCaretPosition(), tt.getTextContent());
+			}
 			Session.getUndoManager().markSnapshot();
 			return true;
 		}

@@ -122,10 +122,10 @@ public class MarkupView extends JTextPane {
 		}
 	}
 
-	static TaggedText getTaggedText(int p0, int p1, StyledDocument doc) {
+	static ArrayList<TaggedTextContent> getTaggedText(int p0, int p1, StyledDocument doc) {
 		String docText = getDocText(doc);
 		if (docText.isEmpty()) {
-			return new TaggedText(new ArrayList<>());
+			return new ArrayList<>();
 		}
 		ArrayList<TaggedTextContent> res = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
@@ -144,13 +144,14 @@ public class MarkupView extends JTextPane {
 			i += Character.charCount(codepoint);
 		}
 		res.add(new Text(sb.toString()));
-		return new TaggedText(res);
+		return res;
 	}
 
 	public TaggedText getSelectedTaggedText() {
 		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
 		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
-		return getTaggedText(p0, p1, getStyledDocument());
+		String segmentId = segmentView.getSegmentTag().getId();
+		return new TaggedText(getTaggedText(p0, p1, getStyledDocument()), segmentId);
 	}
 
 	public String getPlainText(ArrayList<Integer> plainToTaggedIndexes) {
