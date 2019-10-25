@@ -25,12 +25,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.DocumentFilter;
 import javax.swing.text.Highlighter;
+
 import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
@@ -67,6 +64,7 @@ public class SegmentView extends javax.swing.JPanel {
 		jLabelQc.setVisible(false);
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
+		markupViewTarget.addDocumentFilter();
 		markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -82,15 +80,6 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewSource.setBorder(new CompoundBorder(markupViewSource.getBorder(), PADDING_BORDER));
 		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
-
-		AbstractDocument targetAbstractDocument = ((AbstractDocument) markupViewTarget.getDocument());
-		targetAbstractDocument.setDocumentFilter(new DocumentFilter() {
-			@Override
-			public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String s, AttributeSet attrs) throws BadLocationException {
-				s = s.replaceAll("\\R|\t", "");
-				super.replace(fb, offset, length, s, attrs);
-			}
-		});
 		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
 	}
 
@@ -202,6 +191,9 @@ public class SegmentView extends javax.swing.JPanel {
 				case KeyEvent.VK_Y:
 					Session.getUndoManager().redo();
 					evt.consume();
+					break;
+				case KeyEvent.VK_V:
+					Session.getUndoManager().markSnapshot();
 					break;
 			}
 		}
