@@ -10,7 +10,7 @@ public class Qc {
 		String p1 = RegexUtil.getPunctuation(st);
 		String p2 = RegexUtil.getPunctuation(tt);
 		if (p1.equals(p2) == false) {
-			messages.add("Source and target ends with different punctuation");
+			messages.add("Source and target end with different punctuation");
 		}
 	}
 
@@ -18,7 +18,7 @@ public class Qc {
 		String p1 = RegexUtil.getLeadingWhiteSpace(st);
 		String p2 = RegexUtil.getLeadingWhiteSpace(tt);
 		if (p1.equals(p2) == false) {
-			messages.add("Source and target begins with difference spacing");
+			messages.add("Source and target begin with different spacing");
 		}
 	}
 
@@ -33,11 +33,24 @@ public class Qc {
 		}
 	}
 
+	static void checkLeadingCasing(String st, String tt, ArrayList<String> messages) {
+		String s1 = RegexUtil.getFirstWordCharacter(st);
+		String s2 = RegexUtil.getFirstWordCharacter(tt);
+		if (s1.isEmpty() == false && s2.isEmpty() == false) {
+			boolean s1Uppercase = Character.isUpperCase(s1.codePointAt(0));
+			boolean s2Uppercase = Character.isUpperCase(s2.codePointAt(0));
+			if (s1Uppercase != s2Uppercase) {
+				messages.add("Source and target begin with different case");
+			}
+		}
+	}
+
 	static ArrayList<String> runQc(String st, String tt) {
 		ArrayList<String> res = new ArrayList<>();
 		checkPunctuation(st, tt, res);
 		checkLeadingWhitespace(st, tt, res);
 		checkRepeatedWords(tt, res);
+		checkLeadingCasing(st, tt, res);
 		return res;
 	}
 

@@ -11,6 +11,7 @@ public class RegexUtil {
 	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern WORD_CHARACTER_PATTERN = Pattern.compile("\\w", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -62,5 +63,14 @@ public class RegexUtil {
 			res.add(m.group(1));
 		}
 		return res;
+	}
+
+	public static String getFirstWordCharacter(String s) {
+		ArrayList<String> res = new ArrayList<>();
+		Matcher m = WORD_CHARACTER_PATTERN.matcher(s);
+		if (m.find()) {
+			return m.group();
+		}
+		return "";
 	}
 }
