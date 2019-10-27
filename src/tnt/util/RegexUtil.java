@@ -9,7 +9,8 @@ public class RegexUtil {
 
 	public static final Pattern WORD_PATTERN = Pattern.compile("\\b(\\w\\S*\\w|\\w)\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern LEADING_PUNCTUATION_PATTERN = Pattern.compile("^(\\W*)\\w", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern WORD_CHARACTER_PATTERN = Pattern.compile("\\w", Pattern.UNICODE_CHARACTER_CLASS);
@@ -32,8 +33,34 @@ public class RegexUtil {
 		return null;
 	}
 
-	public static String getPunctuation(String s) {
-		Matcher m = END_PUNCTUATION_PATTERN.matcher(s);
+	public static String trimLeadingWhitespace(String s) {
+		Matcher m = LEADING_WHITESPACE_PATTERN.matcher(s);
+		while (m.find()) {
+			s = new StringBuilder(s).replace(m.start(1), m.end(1), "").toString();
+		}
+		return s;
+	}
+
+	public static String trimTrailingWhitespace(String s) {
+		Matcher m = TRAILING_WHITESPACE_PATTERN.matcher(s);
+		while (m.find()) {
+			s = new StringBuilder(s).replace(m.start(1), m.end(1), "").toString();
+		}
+		return s;
+	}
+
+	public static String getLeadingPunctuation(String s) {
+		s = trimLeadingWhitespace(s);
+		Matcher m = LEADING_PUNCTUATION_PATTERN.matcher(s);
+		if (m.find()) {
+			return m.group(1);
+		}
+		return "";
+	}
+
+	public static String getTrailingPunctuation(String s) {
+		s = trimTrailingWhitespace(s);
+		Matcher m = TRAILING_PUNCTUATION_PATTERN.matcher(s);
 		if (m.find()) {
 			return m.group(1);
 		}

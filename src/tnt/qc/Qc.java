@@ -6,9 +6,17 @@ import tnt.xliff_model.SegmentTag;
 
 public class Qc {
 
-	static void checkPunctuation(String st, String tt, ArrayList<String> messages) {
-		String p1 = RegexUtil.getPunctuation(st);
-		String p2 = RegexUtil.getPunctuation(tt);
+	static void checkLeadingPunctuation(String st, String tt, ArrayList<String> messages) {
+		String p1 = RegexUtil.getLeadingPunctuation(st);
+		String p2 = RegexUtil.getLeadingPunctuation(tt);
+		if (p1.equals(p2) == false) {
+			messages.add("Source and target begin with different punctuation");
+		}
+	}
+
+	static void checkTrailingPunctuation(String st, String tt, ArrayList<String> messages) {
+		String p1 = RegexUtil.getTrailingPunctuation(st);
+		String p2 = RegexUtil.getTrailingPunctuation(tt);
 		if (p1.equals(p2) == false) {
 			messages.add("Source and target end with different punctuation");
 		}
@@ -55,7 +63,8 @@ public class Qc {
 
 	static ArrayList<String> runQc(String st, String tt) {
 		ArrayList<String> res = new ArrayList<>();
-		checkPunctuation(st, tt, res);
+		checkLeadingPunctuation(st, tt, res);
+		checkTrailingPunctuation(st, tt, res);
 		checkLeadingWhitespace(st, tt, res);
 		checkTrailingWhitespace(st, tt, res);
 		checkRepeatedWords(tt, res);
