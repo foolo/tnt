@@ -50,8 +50,8 @@ public class Qc {
 	}
 
 	static void checkLeadingCasing(String st, String tt, ArrayList<String> messages) {
-		String s1 = RegexUtil.getFirstWordCharacter(st);
-		String s2 = RegexUtil.getFirstWordCharacter(tt);
+		String s1 = RegexUtil.getFirstLetter(st);
+		String s2 = RegexUtil.getFirstLetter(tt);
 		if (s1.isEmpty() == false && s2.isEmpty() == false) {
 			boolean s1Uppercase = Character.isUpperCase(s1.codePointAt(0));
 			boolean s2Uppercase = Character.isUpperCase(s2.codePointAt(0));

@@ -13,7 +13,7 @@ public class RegexUtil {
 	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern WORD_CHARACTER_PATTERN = Pattern.compile("\\w", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern LETTER_PATTERN = Pattern.compile("\\pL", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -101,9 +101,8 @@ public class RegexUtil {
 		return res;
 	}
 
-	public static String getFirstWordCharacter(String s) {
-		ArrayList<String> res = new ArrayList<>();
-		Matcher m = WORD_CHARACTER_PATTERN.matcher(s);
+	public static String getFirstLetter(String s) {
+		Matcher m = LETTER_PATTERN.matcher(s);
 		if (m.find()) {
 			return m.group();
 		}
