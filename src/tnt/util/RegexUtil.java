@@ -11,6 +11,7 @@ public class RegexUtil {
 	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern END_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern WORD_CHARACTER_PATTERN = Pattern.compile("\\w", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
@@ -41,6 +42,14 @@ public class RegexUtil {
 
 	public static String getLeadingWhiteSpace(String s) {
 		Matcher m = LEADING_WHITESPACE_PATTERN.matcher(s);
+		if (m.find()) {
+			return m.group(1);
+		}
+		return "";
+	}
+
+	public static String getTrailingWhiteSpace(String s) {
+		Matcher m = TRAILING_WHITESPACE_PATTERN.matcher(s);
 		if (m.find()) {
 			return m.group(1);
 		}

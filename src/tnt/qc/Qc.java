@@ -22,6 +22,14 @@ public class Qc {
 		}
 	}
 
+	static void checkTrailingWhitespace(String st, String tt, ArrayList<String> messages) {
+		String p1 = RegexUtil.getTrailingWhiteSpace(st);
+		String p2 = RegexUtil.getTrailingWhiteSpace(tt);
+		if (p1.equals(p2) == false) {
+			messages.add("Source and target end with different spacing");
+		}
+	}
+
 	static void checkRepeatedWords(String tt, ArrayList<String> messages) {
 		ArrayList<String> words = RegexUtil.getWords(tt);
 		for (int i = 0; i < words.size() - 1; i++) {
@@ -49,6 +57,7 @@ public class Qc {
 		ArrayList<String> res = new ArrayList<>();
 		checkPunctuation(st, tt, res);
 		checkLeadingWhitespace(st, tt, res);
+		checkTrailingWhitespace(st, tt, res);
 		checkRepeatedWords(tt, res);
 		checkLeadingCasing(st, tt, res);
 		return res;
