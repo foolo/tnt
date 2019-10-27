@@ -16,6 +16,10 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tnt.language.Language;
@@ -39,15 +43,15 @@ import tnt.xliff_model.exceptions.SaveException;
 public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	private final LogWindow logWindow;
-
 	private FileView fileView = null;
-
+	private Timer autosaveTimer = new Timer();
 	static final Dimension DEFAULT_DIALOG_SIZE = new Dimension(850, 550);
 
 	public MainForm() {
 		initComponents();
 		logWindow = new LogWindow();
-		jLabelProgress.setText(" ");
+		jLabelProgress.setText("");
+		jLabelSaveStatus.setText("");
 	}
 
 	void updateRecentFilesMenu() {
@@ -92,6 +96,19 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		setTitle(title);
 	}
 
+	void restartAutosaveTimer() {
+		TimerTask timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				autosave_file();
+			}
+		};
+		autosaveTimer.cancel();
+		autosaveTimer = new Timer();
+		long delay = 600000;
+		autosaveTimer.scheduleAtFixedRate(timerTask, delay, delay);
+	}
+
 	public void load_file(File f) {
 		try {
 			Session.newSession(f, this);
@@ -114,6 +131,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
+		restartAutosaveTimer();
 		initializeSpelling(Session.getProperties().getTrgLang());
 		SwingUtilities.invokeLater(fileView::updateHeights);
 	}
@@ -152,23 +170,45 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		return (XliffTag) Session.getUndoManager().getCurrentState().getModel();
 	}
 
-	public boolean save_file() {
+	String getAutosaveTimestamp() {
+		return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+	}
+
+	boolean manual_save_file() {
+		try {
+			save_file();
+			jLabelSaveStatus.setText("Saved at " + getAutosaveTimestamp());
+			restartAutosaveTimer();
+		}
+		catch (SaveException ex) {
+			jLabelSaveStatus.setText("Save failed");
+			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+	}
+
+	void autosave_file() {
+		try {
+			save_file();
+			jLabelSaveStatus.setText("Autosaved at " + getAutosaveTimestamp());
+		}
+		catch (SaveException ex) {
+			Log.err(ex);
+			jLabelSaveStatus.setText("Autosave failed " + getAutosaveTimestamp());
+		}
+	}
+
+	void save_file() throws SaveException {
 		ArrayList<String> errors = new ArrayList<>();
 		getXliffTag().encode(errors, false);
 		Session.getProperties().encode(getXliffTag().getDocument());
 		for (String e : errors) {
 			Log.debug("showValidationErrors: ValidationError: " + e);
 		}
-		try {
-			Log.debug("save_to_file: " + getXliffTag().getFile());
-			XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
-		}
-		catch (SaveException ex) {
-			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
+		Log.debug("save_to_file: " + getXliffTag().getFile());
+		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
 		Session.markSaved();
-		return true;
 	}
 
 	boolean okToClose() {
@@ -181,7 +221,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 		switch (choice) {
 			case JOptionPane.YES_OPTION:
-				return save_file();
+				return manual_save_file();
 			case JOptionPane.NO_OPTION:
 				return true;
 			case JOptionPane.CANCEL_OPTION:
@@ -232,6 +272,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jPanel1 = new javax.swing.JPanel();
         jLabelProgress = new javax.swing.JLabel();
+        jLabelSaveStatus = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -270,19 +311,24 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jLabelProgress.setText("jLabelProgress");
 
+        jLabelSaveStatus.setText("jLabelSaveStatus");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelProgress)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelSaveStatus))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabelProgress))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelProgress)
+                    .addComponent(jLabelSaveStatus)))
         );
 
         jPanel2.setLayout(new java.awt.CardLayout());
@@ -481,7 +527,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
 		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Saving... ");
 		dialog.run(() -> {
-			save_file();
+			manual_save_file();
 		});
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
@@ -499,6 +545,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 		if (okToClose()) {
 			logWindow.dispose();
+			autosaveTimer.cancel();
 			dispose();
 		}
     }//GEN-LAST:event_formWindowClosing
@@ -541,7 +588,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		dialog.run(() -> {
 			OpenXliffHandler converter = new OpenXliffHandler();
 			try {
-				save_file(); // save file first in case export crashes/hangs
+				manual_save_file(); // save file first in case export crashes/hangs
 				String xliffData = save_to_string();
 				File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
 				JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
@@ -645,7 +692,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			if (segmentView == null) {
 				return;
 			}
-			SegmentTag segmentTag = segmentView.getSegmentTag();
 			segmentView.insertText(dialog.getSelectedChar());
 			Session.getUndoManager().markSnapshot();
 		}
@@ -682,6 +728,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
+    private javax.swing.JLabel jLabelSaveStatus;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
