@@ -14,6 +14,7 @@ public class RegexUtil {
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LETTER_PATTERN = Pattern.compile("\\pL", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern MULTIPLE_SPACES_PATTERN = Pattern.compile("\\pZ\\pZ+", Pattern.UNICODE_CHARACTER_CLASS);
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -107,5 +108,9 @@ public class RegexUtil {
 			return m.group();
 		}
 		return "";
+	}
+
+	public static boolean hasMultipleSpaces(String s) {
+		return MULTIPLE_SPACES_PATTERN.matcher(s).find();
 	}
 }

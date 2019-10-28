@@ -61,6 +61,12 @@ public class Qc {
 		}
 	}
 
+	static void checkMultipleSpaces(String tt, ArrayList<String> messages) {
+		if (RegexUtil.hasMultipleSpaces(tt)) {
+			messages.add("Multiple spaces in target");
+		}
+	}
+
 	static ArrayList<String> runQc(String st, String tt) {
 		ArrayList<String> res = new ArrayList<>();
 		checkLeadingPunctuation(st, tt, res);
@@ -68,6 +74,7 @@ public class Qc {
 		checkLeadingWhitespace(st, tt, res);
 		checkTrailingWhitespace(st, tt, res);
 		checkRepeatedWords(tt, res);
+		checkMultipleSpaces(tt, res);
 		checkLeadingCasing(st, tt, res);
 		return res;
 	}
