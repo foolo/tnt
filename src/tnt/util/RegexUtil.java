@@ -15,6 +15,8 @@ public class RegexUtil {
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LETTER_PATTERN = Pattern.compile("\\pL", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern MULTIPLE_SPACES_PATTERN = Pattern.compile("\\pZ\\pZ+", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final String QUOTES_PATTERN = "[\\p{Pi}\\p{Pf}'\"]";
+	public static final String DASH_PATTERN = "\\p{Pd}";
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {
 		ArrayList<MatchResult> matches = new ArrayList<>();
@@ -50,11 +52,17 @@ public class RegexUtil {
 		return s;
 	}
 
+	static String normalizePunctuation(String s) {
+		s = s.replaceAll(QUOTES_PATTERN, "'");
+		s = s.replaceAll(DASH_PATTERN, "-");
+		return s;
+	}
+
 	public static String getLeadingPunctuation(String s) {
 		s = trimLeadingWhitespace(s);
 		Matcher m = LEADING_PUNCTUATION_PATTERN.matcher(s);
 		if (m.find()) {
-			return m.group(1);
+			return normalizePunctuation(m.group(1));
 		}
 		return "";
 	}
@@ -63,7 +71,7 @@ public class RegexUtil {
 		s = trimTrailingWhitespace(s);
 		Matcher m = TRAILING_PUNCTUATION_PATTERN.matcher(s);
 		if (m.find()) {
-			return m.group(1);
+			return normalizePunctuation(m.group(1));
 		}
 		return "";
 	}
