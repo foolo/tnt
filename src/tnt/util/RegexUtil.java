@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
 	public static final Pattern WORD_PATTERN = Pattern.compile("\\b(\\w\\S*\\w|\\w)\\b", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern REPEATED_WORD_PATTERN = Pattern.compile("\\b(\\w+)[\\pZ\\h]+\\1\\b", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern REPEATED_WORD_PATTERN = Pattern.compile("([\\pZ\\h]+|^)([\\pL'\\-]+)[\\pZ\\h]+\\2", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_PUNCTUATION_PATTERN = Pattern.compile("^(\\W*)\\w", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
@@ -108,7 +108,7 @@ public class RegexUtil {
 		ArrayList<String> res = new ArrayList<>();
 		Matcher m = REPEATED_WORD_PATTERN.matcher(s);
 		while (m.find()) {
-			res.add(m.group(1));
+			res.add(m.group(2));
 		}
 		return res;
 	}
