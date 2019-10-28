@@ -1,6 +1,8 @@
 package tnt.qc;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import tnt.editor.Session;
 import tnt.util.RegexUtil;
 import tnt.xliff_model.SegmentTag;
 
@@ -39,13 +41,9 @@ public class Qc {
 	}
 
 	static void checkRepeatedWords(String tt, ArrayList<String> messages) {
-		ArrayList<String> words = RegexUtil.getWords(tt);
-		for (int i = 0; i < words.size() - 1; i++) {
-			String w1 = words.get(i).toLowerCase();
-			String w2 = words.get(i + 1).toLowerCase();
-			if (w1.equals(w2)) {
-				messages.add("Repeated word: '" + w1 + "'");
-			}
+		ArrayList<String> repeatedWords = RegexUtil.getRepeatedWords(tt, new Locale(Session.getProperties().getTrgLang()));
+		for (String word : repeatedWords) {
+			messages.add("Repeated word: '" + word + "'");
 		}
 	}
 

@@ -1,6 +1,7 @@
 package tnt.util;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
 public class RegexUtil {
 
 	public static final Pattern WORD_PATTERN = Pattern.compile("\\b(\\w\\S*\\w|\\w)\\b", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern REPEATED_WORD_PATTERN = Pattern.compile("\\b(\\w+)[\\pZ\\h]+\\1\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_PUNCTUATION_PATTERN = Pattern.compile("^(\\W*)\\w", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
@@ -101,9 +103,10 @@ public class RegexUtil {
 		return count;
 	}
 
-	public static ArrayList<String> getWords(String s) {
+	public static ArrayList<String> getRepeatedWords(String s, Locale locale) {
+		s = s.toLowerCase(locale);
 		ArrayList<String> res = new ArrayList<>();
-		Matcher m = WORD_PATTERN.matcher(s);
+		Matcher m = REPEATED_WORD_PATTERN.matcher(s);
 		while (m.find()) {
 			res.add(m.group(1));
 		}
