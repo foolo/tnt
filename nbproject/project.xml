@@ -6,6 +6,7 @@
             <name>tnt</name>
             <source-roots>
                 <root id="src.dir"/>
+                <root id="src.test.dir" name="Test Packages"/>
             </source-roots>
             <test-roots/>
         </data>

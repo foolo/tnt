@@ -41,7 +41,9 @@ public class Qc {
 	}
 
 	static void checkRepeatedWords(String tt, ArrayList<String> messages) {
-		ArrayList<String> repeatedWords = RegexUtil.getRepeatedWords(tt, new Locale(Session.getProperties().getTrgLang()));
+		Session session = Session.getInstance();
+		Locale locale = (session == null) ? Locale.getDefault() : new Locale(session.properties.getTrgLang());
+		ArrayList<String> repeatedWords = RegexUtil.getRepeatedWords(tt, locale);
 		for (String word : repeatedWords) {
 			messages.add("Repeated word: '" + word + "'");
 		}

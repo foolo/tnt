@@ -75,7 +75,7 @@ public class Session {
 	}
 
 	private final UndoManager undoManager;
-	private final Properties properties;
+	public final Properties properties;
 
 	public static UndoManager getUndoManager() {
 		return session.undoManager;
