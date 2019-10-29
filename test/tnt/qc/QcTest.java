@@ -68,11 +68,15 @@ public class QcTest {
 	@Test
 	public void testCheckRepeatedWords() {
 		assertEquals("[]", Qc.runQc("", "Test foo").toString());
-		//assertEquals("[]", Qc.runQc("", "Test testing.").toString());
+		assertEquals("[]", Qc.runQc("", "Test testing").toString());
+		assertEquals("[]", Qc.runQc("", "test test-test").toString());
+		assertEquals("[]", Qc.runQc("", "test-test test").toString());
+		assertEquals("[]", Qc.runQc("", "test'test test").toString());
+		assertEquals("[]", Qc.runQc("'test", "'test test").toString());
 		assertEquals("[]", Qc.runQc("Test.", "Test, test.").toString());
 		assertEquals("[]", Qc.runQc("Test.", "Test. Test.").toString());
 		assertEquals("[]", Qc.runQc("Test.", "A test, test.").toString());
-		//assertEquals("[]", Qc.runQc("Test.", "A test testing stuff.").toString());
+		assertEquals("[]", Qc.runQc("Test.", "A test testing stuff.").toString());
 		assertEquals("[]", Qc.runQc("Test.", "A testing test stuff.").toString());
 		assertEquals("[]", Qc.runQc("Test.", "A testing ing stuff.").toString());
 		assertEquals("[]", Qc.runQc("Test.", "A ing testing stuff.").toString());
