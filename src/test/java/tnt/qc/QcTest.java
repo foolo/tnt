@@ -1,8 +1,7 @@
 package tnt.qc;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.junit.runner.JUnitCore;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 public class QcTest {
 
@@ -114,9 +113,5 @@ public class QcTest {
 		assertEquals("[Multiple spaces in target]", Qc.runQc("Test", "Test  foo").toString()); // SPACE x 2
 		assertEquals("[Multiple spaces in target]", Qc.runQc("Test", "Test  foo").toString()); // EM QUAD + SPACE
 		assertEquals("[Multiple spaces in target]", Qc.runQc("Test", "Test  foo").toString()); // EM QUAD x 2
-	}
-
-	public static void main(String[] args) {
-		JUnitCore.main("tnt.qc.QcTest");
 	}
 }

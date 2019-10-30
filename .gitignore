@@ -1,8 +1,5 @@
-/nbproject/private/
-build/
-dist/
-lib/dev/
 *.AppDir/
 .sconsign.dblite
 tnt-*.zip
 *.AppImage
+/target/
