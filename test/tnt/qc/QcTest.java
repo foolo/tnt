@@ -108,8 +108,8 @@ public class QcTest {
 	public void testCheckMultipleSpaces() {
 		assertEquals("[]", Qc.runQc("Test", "Test foo").toString());
 		assertEquals("[]", Qc.runQc("Test", "Test foo").toString()); // EM QUAD
-		//assertEquals("[Source and target begin with different spacing]", Qc.runQc("Test", "  Test foo").toString());
-		//assertEquals("[Source and target end with different spacing]", Qc.runQc("Test", "Test foo  ").toString());
+		assertEquals("[Source and target begin with different spacing]", Qc.runQc("Test", "  Test foo").toString());
+		assertEquals("[Source and target end with different spacing]", Qc.runQc("Test", "Test foo  ").toString());
 
 		assertEquals("[Multiple spaces in target]", Qc.runQc("Test", "Test  foo").toString()); // SPACE x 2
 		assertEquals("[Multiple spaces in target]", Qc.runQc("Test", "Test  foo").toString()); // EM QUAD + SPACE
