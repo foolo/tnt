@@ -6,7 +6,7 @@ import tnt.xliff_model.XliffTag;
 
 public class SegmentsHtmlEncoder {
 
-	public String encode(XliffTag xliffTag) {
+	public String encode(XliffTag xliffTag, boolean includeSource) {
 		ArrayList<SegmentTag> segmentTags = xliffTag.getSegmentsArray();
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html>\n");
@@ -15,7 +15,9 @@ public class SegmentsHtmlEncoder {
 		sb.append("<table border=\"1\">\n");
 		sb.append("<tr>\n");
 		sb.append("<th>Id</th>\n");
-		sb.append("<th>Source text</th>\n");
+		if (includeSource) {
+			sb.append("<th>Source text</th>\n");
+		}
 		sb.append("<th>Target text</th>\n");
 		sb.append("<th>State</th>\n");
 		sb.append("</tr>\n");
@@ -24,7 +26,9 @@ public class SegmentsHtmlEncoder {
 			String targetText = st.getTargetText().getTextContent();
 			sb.append("<tr>\n");
 			sb.append("<td>").append(st.getId()).append("</td>\n");
-			sb.append("<td>").append(sourceText).append("</td>\n");
+			if (includeSource) {
+				sb.append("<td>").append(sourceText).append("</td>\n");
+			}
 			sb.append("<td>").append(targetText).append("</td>\n");
 			sb.append("<td>").append(st.getState()).append("</td>\n");
 			sb.append("</tr>\n");
