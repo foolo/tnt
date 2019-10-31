@@ -10,7 +10,7 @@ public class RegexUtil {
 
 	public static final Pattern WORD_PATTERN = Pattern.compile("\\b(\\w\\S*\\w|\\w)\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern REPEATED_WORD_PATTERN = Pattern.compile("(^|[^\\pL'\\-])([\\pL'\\-]+)([\\pZ\\h]+)\\2([^\\pL'\\-]|$)", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("[\\w-]+", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("\\b[\\w-']+\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_PUNCTUATION_PATTERN = Pattern.compile("^(\\W*)\\w", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
