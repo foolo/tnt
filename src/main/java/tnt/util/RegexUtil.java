@@ -12,7 +12,7 @@ public class RegexUtil {
 	public static final Pattern REPEATED_WORD_PATTERN = Pattern.compile("(^|[^\\pL'\\-])([\\pL'\\-]+)([\\pZ\\h]+)\\2([^\\pL'\\-]|$)", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern SPELLING_UNIT_PATTERN = Pattern.compile("\\b[\\w-']+\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_PUNCTUATION_PATTERN = Pattern.compile("^(\\W*)\\w", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("\\w(\\W*)$", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("(?:(?=[^%])[\\pP])+$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LETTER_PATTERN = Pattern.compile("\\pL", Pattern.UNICODE_CHARACTER_CLASS);
@@ -73,7 +73,7 @@ public class RegexUtil {
 		s = trimTrailingWhitespace(s);
 		Matcher m = TRAILING_PUNCTUATION_PATTERN.matcher(s);
 		if (m.find()) {
-			return normalizePunctuation(m.group(1));
+			return normalizePunctuation(m.group());
 		}
 		return "";
 	}

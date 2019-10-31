@@ -39,15 +39,17 @@ public class QcTest {
 	@Test
 	public void testCheckTrailingPunctuation() {
 		assertEquals("[]", Qc.runQc("Test.", "Test.").toString());
+		assertEquals("[]", Qc.runQc("Test!", "Test !").toString());
 		assertEquals("[]", Qc.runQc("Test", "Test").toString());
 		assertEquals("[]", Qc.runQc("Test'", "Test‛").toString());
 		assertEquals("[]", Qc.runQc("Test“", "Test’").toString());
+		assertEquals("[]", Qc.runQc("Test.", "Test .").toString());
+		assertEquals("[]", Qc.runQc("5 %.", "5 percent.").toString());
+		assertEquals("[]", Qc.runQc("5 m2.", "5 m².").toString());
 		assertEquals("[Source and target end with different spacing]", Qc.runQc("Test.", "Test. ").toString());
 
 		assertEquals("[Source and target end with different punctuation]", Qc.runQc("Test.", "Test...").toString());
 		assertEquals("[Source and target end with different punctuation]", Qc.runQc("Test", "Test.").toString());
-		assertEquals("[Source and target end with different punctuation]", Qc.runQc("Test.", "Test .").toString());
-		assertEquals("[Source and target end with different punctuation]", Qc.runQc("Test!", "Test !").toString());
 		assertEquals("[Source and target end with different punctuation]", Qc.runQc("Test,", "Test'").toString());
 	}
 
