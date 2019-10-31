@@ -17,7 +17,7 @@ public class RegexUtil {
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LETTER_PATTERN = Pattern.compile("\\pL", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern MULTIPLE_SPACES_PATTERN = Pattern.compile("\\b\\pZ\\pZ+\\b", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final String QUOTES_PATTERN = "[\\p{Pi}\\p{Pf}'\"]";
+	public static final String QUOTES_PATTERN = "[\\p{Pi}\\p{Pf}'\"\u201A\u201E\u2E42\u301D\u301E\u301F\uFF02]";
 	public static final String DASH_PATTERN = "\\p{Pd}";
 
 	public static ArrayList<MatchResult> matchAll(Matcher m) {

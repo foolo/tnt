@@ -8,8 +8,23 @@ public class QcTest {
 	@Test
 	public void testCheckLeadingPunctuation() {
 		assertEquals("[]", Qc.runQc("-Test", "–Test").toString());
-		assertEquals("[]", Qc.runQc("'Test", "’Test").toString());
-		assertEquals("[]", Qc.runQc("“Test", "‛Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "«Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "»Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u2018Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u2019Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u201ATest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u201BTest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u201CTest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u201DTest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u201ETest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u201FTest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u2039Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u203ATest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u2E42Test").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u301DTest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u301ETest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\u301FTest").toString());
+		assertEquals("[]", Qc.runQc("'Test", "\uFF02Test").toString());
 		assertEquals("[]", Qc.runQc("Test", "Test").toString());
 		assertEquals("[]", Qc.runQc("('Test", "('Test").toString());
 		assertEquals("[Source and target begin with different spacing]", Qc.runQc("  –Test", "-Test").toString());
