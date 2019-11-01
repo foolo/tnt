@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -145,7 +146,7 @@ public class OpenXliffHandler {
 		Log.debug("exportTranslatedFile: xliffFile: " + xliffTmpFile);
 		checkResources();
 
-		Files.write(Paths.get(xliffTmpFile.getPath()), xliffData.getBytes());
+		Files.write(Paths.get(xliffTmpFile.getPath()), xliffData.getBytes(StandardCharsets.UTF_8));
 
 		String originalFilePath = xliffTag.getFiles().get(0).getOriginalFilePath();
 
