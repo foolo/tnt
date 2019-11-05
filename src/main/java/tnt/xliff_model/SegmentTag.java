@@ -41,6 +41,10 @@ public class SegmentTag {
 		public String toString() {
 			return this.name().toLowerCase();
 		}
+
+		public String toShortString() {
+			return new String(Character.toChars(name().codePointAt(0)));
+		}
 	};
 
 	public SegmentTag(Element node, UnitTag parent) throws ParseException {

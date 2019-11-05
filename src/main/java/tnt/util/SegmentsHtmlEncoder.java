@@ -19,7 +19,7 @@ public class SegmentsHtmlEncoder {
 			sb.append("<th>Source text</th>\n");
 		}
 		sb.append("<th>Target text</th>\n");
-		sb.append("<th>State</th>\n");
+		sb.append("<th>St</th>\n");
 		sb.append("</tr>\n");
 		for (SegmentTag st : segmentTags) {
 			String sourceText = st.getSourceText().getTextContent();
@@ -30,7 +30,7 @@ public class SegmentsHtmlEncoder {
 				sb.append("<td>").append(sourceText).append("</td>\n");
 			}
 			sb.append("<td>").append(targetText).append("</td>\n");
-			sb.append("<td>").append(st.getState()).append("</td>\n");
+			sb.append("<td>").append(st.getState().toShortString()).append("</td>\n");
 			sb.append("</tr>\n");
 		}
 		sb.append("</table>\n");
