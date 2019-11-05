@@ -11,6 +11,7 @@ public class SegmentsHtmlEncoder {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html>\n");
 		sb.append("<title>").append(xliffTag.getFile().getName()).append("</title>\n");
+		sb.append("<style> tr { page-break-inside: avoid; } </style>\n");
 		sb.append("<body>\n");
 		sb.append("<table border=\"1\">\n");
 		sb.append("<tr>\n");
