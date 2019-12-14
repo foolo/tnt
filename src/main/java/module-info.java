@@ -9,7 +9,9 @@ module Tnt {
 	requires jna;
 	requires openxliff;
 	requires mapdb;
-	requires hunspell;
+	requires junit;
+	requires hamcrest.core;
 
 	exports tnt.qc;
+	exports tnt.util;
 }

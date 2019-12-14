@@ -25,7 +25,7 @@ try:
 except FileNotFoundError:
 	pass
 
-env.Command("dist/tnt.jar", None, "mvn package")
+env.Command("dist/tnt.jar", None, "ant jar")
 env.AlwaysBuild("dist/tnt.jar")
 jre_artifact = "tnt-artifacts/" + {TARGET_LINUX_X64: "tnt-jre-linux-x64.7z", TARGET_WINDOWS_X64: "tnt-jre-windows-x64.7z"}[target]
 env.Command(jredir, None, "7z x " + jre_artifact + " -o" + appdir)
@@ -55,7 +55,7 @@ env.Install(appdirlib, "OpenXLIFF/lib/dtd.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/json.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/jsoup-1.11.3.jar")
 env.Install(appdirlib, "OpenXLIFF/lib/openxliff.jar")
-env.InstallAs(join(appdirlib, "tnt.jar"), "target/tnt-1.0-SNAPSHOT.jar")
+env.Install(appdirlib, "dist/tnt.jar")
 env.Install(appdirlib, "tnt-artifacts/hunspell-1.6.2-SNAPSHOT.jar")
 env.Install(appdirlib, "HunspellJNA/lib/jna.jar")
 

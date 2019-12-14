@@ -2,8 +2,9 @@ package tnt.util;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertArrayEquals;
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
 
 public class RegexUtilTest {
 
@@ -21,15 +22,19 @@ public class RegexUtilTest {
 
 	@Test
 	public void testSpellingUnitPattern() {
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test foo bar"));
-		Assertions.assertArrayEquals(new String[]{"Test", "Foo", "bar"}, getSpellingUnits("\"Test. Foo, bar.\""));
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "foo", "bar"}, getSpellingUnits("test/foo foo.bar"));
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("  test   foo bar "));
-		Assertions.assertArrayEquals(new String[]{"test", "foo-bar"}, getSpellingUnits("test foo-bar"));
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test foo- bar"));
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test -foo bar"));
-		Assertions.assertArrayEquals(new String[]{"test", "that's", "all"}, getSpellingUnits("test that's all"));
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test foo' bar"));
-		Assertions.assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test 'foo bar"));
+		assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test foo bar"));
+		assertArrayEquals(new String[]{"Test", "Foo", "bar"}, getSpellingUnits("\"Test. Foo, bar.\""));
+		assertArrayEquals(new String[]{"test", "foo", "foo", "bar"}, getSpellingUnits("test/foo foo.bar"));
+		assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("  test   foo bar "));
+		assertArrayEquals(new String[]{"test", "foo-bar"}, getSpellingUnits("test foo-bar"));
+		assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test foo- bar"));
+		assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test -foo bar"));
+		assertArrayEquals(new String[]{"test", "that's", "all"}, getSpellingUnits("test that's all"));
+		assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test foo' bar"));
+		assertArrayEquals(new String[]{"test", "foo", "bar"}, getSpellingUnits("test 'foo bar"));
+	}
+
+	public static void main(String[] args) {
+		JUnitCore.main("tnt.util.RegexUtilTest");
 	}
 }
