@@ -13,4 +13,5 @@ module Tnt {
 	requires hamcrest.core;
 
 	exports tnt.qc;
+	exports tnt.util;
 }

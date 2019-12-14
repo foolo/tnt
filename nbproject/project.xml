@@ -5,8 +5,8 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>tnt</name>
             <source-roots>
-                <root id="src.dir"/>
-                <root id="src.test.dir" name="Test Packages"/>
+                <root id="src.java.dir" name="Source Packages"/>
+                <root id="src.java2.dir" name="Test Packages"/>
             </source-roots>
             <test-roots/>
         </data>
