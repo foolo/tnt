@@ -20,7 +20,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -65,18 +64,6 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
-		markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
-			@Override
-			public void keyPressed(java.awt.event.KeyEvent evt) {
-				handleKeyPress(evt, markupViewSource);
-			}
-		});
-		markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
-			@Override
-			public void keyPressed(java.awt.event.KeyEvent evt) {
-				handleKeyPress(evt, markupViewTarget);
-			}
-		});
 		markupViewSource.setBorder(new CompoundBorder(markupViewSource.getBorder(), PADDING_BORDER));
 		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
@@ -180,33 +167,32 @@ public class SegmentView extends javax.swing.JPanel {
 		fileView.notifyUpdate();
 	}
 
-	void handleKeyPress(KeyEvent evt, MarkupView markupView) {
+	void handleKeyPress(KeyEvent evt) {
 		fileView.scroll_to_segment(this);
 		if (evt.getModifiers() == CTRL_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
 					Session.getUndoManager().undo();
 					evt.consume();
-					break;
+					return;
 				case KeyEvent.VK_Y:
 					Session.getUndoManager().redo();
 					evt.consume();
-					break;
+					return;
 				case KeyEvent.VK_V:
 					Session.getUndoManager().markSnapshot();
-					break;
+					return;
 			}
-		}
-		if (evt.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
-			if (markupView.canMoveCaret(SwingConstants.SOUTH) == false) {
+			if (evt.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
 				fileView.jumpToNextSegment(this);
+				return;
 			}
-		}
-		if (evt.getExtendedKeyCode() == KeyEvent.VK_UP) {
-			if (markupView.canMoveCaret(SwingConstants.NORTH) == false) {
+			if (evt.getExtendedKeyCode() == KeyEvent.VK_UP) {
 				fileView.jumpToPreviousSegment(this);
+				return;
 			}
 		}
+
 		if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
 			fileView.jumpToNextSegment(this);
 		}
@@ -359,6 +345,11 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewSourceFocusGained(evt);
             }
         });
+        markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                markupViewSourceKeyPressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(markupViewSource);
 
         jPanel1.add(jScrollPane3);
@@ -382,6 +373,11 @@ public class SegmentView extends javax.swing.JPanel {
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 markupViewTargetMouseReleased(evt);
+            }
+        });
+        markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                markupViewTargetKeyPressed(evt);
             }
         });
         jScrollPane4.setViewportView(markupViewTarget);
@@ -533,6 +529,14 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
 		reportCaretPosition(0, markupViewSource.getCaret().getDot());
     }//GEN-LAST:event_markupViewSourceCaretUpdate
+
+    private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
+		handleKeyPress(evt);
+    }//GEN-LAST:event_markupViewSourceKeyPressed
+
+    private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
+		handleKeyPress(evt);
+    }//GEN-LAST:event_markupViewTargetKeyPressed
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;

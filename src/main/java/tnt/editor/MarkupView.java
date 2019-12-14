@@ -14,7 +14,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
-import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 import tnt.editor.search.EditorRange;
 import tnt.util.Log;
@@ -56,18 +55,6 @@ public class MarkupView extends JTextPane {
 				tagIcon.setSize(font.getSize());
 			}
 		}
-	}
-
-	boolean canMoveCaret(int direction) {
-		try {
-			int pos = getCaretPosition();
-			int nextPos = getUI().getNextVisualPositionFrom(this, pos, Position.Bias.Forward, direction, new Position.Bias[1]);
-			return (nextPos != pos);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
-		return false;
 	}
 
 	void insertTag(Tag tag) {
