@@ -7,21 +7,11 @@
 
 ## Linux
 
-Install JDK 11 and Apache Maven. Add ```/bin``` directories to PATH.
+Install JDK 11 and Apache Ant. Add ```/bin``` directories to PATH.
 
 Download appimagetool from https://github.com/AppImage/AppImageKit/releases and make it executable as ```appimagetool``` from PATH.
 
 Install scons (e.g. ```sudo apt install scons``` on Ubuntu). Scons must be run with Python 3.
-
-Add artifacts to local Maven repository:
-
-	mvn install:install-file -Dfile=OpenXLIFF/lib/dtd.jar -DgroupId=local.com.wutka -DartifactId=dtdparser -Dversion=1.16 -Dpackaging=jar -DgeneratePom=true
-	mvn install:install-file -Dfile=OpenXLIFF/lib/json.jar -DgroupId=local.org.json -DartifactId=json -Dversion=0.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
-	mvn install:install-file -Dfile=OpenXLIFF/lib/jsoup-1.11.3.jar -DgroupId=local.org.jsoup -DartifactId=jsoup -Dversion=1.11.3 -Dpackaging=jar -DgeneratePom=true
-	mvn install:install-file -Dfile=OpenXLIFF/lib/mapdb.jar -DgroupId=local.org.mapdb -DartifactId=mapdb -Dversion=0.0-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
-	mvn install:install-file -Dfile=OpenXLIFF/lib/openxliff.jar -DgroupId=com.maxprograms -DartifactId=openxliff -Dversion=1.5.1 -Dpackaging=jar -DgeneratePom=true
-	mvn install:install-file -Dfile=HunspellJNA/lib/jna.jar -DgroupId=local.net.java.dev.jna -DartifactId=jna -Dversion=3.4.0 -Dpackaging=jar -DgeneratePom=true
-	mvn install:install-file -Dfile=tnt-artifacts/hunspell-1.6.2-SNAPSHOT.jar -DgroupId=local.dk.dren -DartifactId=hunspell -Dversion=1.6.2-SNAPSHOT -Dpackaging=jar -DgeneratePom=true
 
 # Create release
 
