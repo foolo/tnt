@@ -115,7 +115,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 		catch (LoadException ex) {
 			Log.debug("load_file: " + ex.toString());
-			JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			PleaseWaitDialog.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			Settings.removeRecentFile(f.getAbsolutePath());
 			updateRecentFilesMenu();
 			return;
@@ -182,7 +182,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 		catch (SaveException ex) {
 			jLabelSaveStatus.setText("Save failed");
-			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			PleaseWaitDialog.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 		return true;
@@ -588,7 +588,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 				load_file(xliffFile);
 			}
 			catch (ConversionError ex) {
-				JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+				PleaseWaitDialog.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			}
 		});
     }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
@@ -605,10 +605,10 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 				manual_save_file(); // save file first in case export crashes/hangs
 				String xliffData = save_to_string();
 				File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
-				JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
+				PleaseWaitDialog.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
 			}
 			catch (IOException | ConversionError | SaveException ex) {
-				JOptionPane.showMessageDialog(this, "Could not export file:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
+				PleaseWaitDialog.showMessageDialog(this, "Could not export file:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
 			}
 		});
     }//GEN-LAST:event_jMenuItemExportActionPerformed
