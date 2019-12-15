@@ -215,10 +215,12 @@ public class SegmentView extends javax.swing.JPanel {
 		return Column.TARGET;
 	}
 
-	void navigateToView(Column column, int caretPosition) {
+	void navigateToView(Column column, Integer caretPosition) {
 		MarkupView markupView = getMarkupView(column);
 		markupView.grabFocus();
-		markupView.setCaretPosition(caretPosition);
+		if (caretPosition != null) {
+			markupView.setCaretPosition(caretPosition);
+		}
 	}
 
 	private static SegmentView lastActiveSegmentView = null;

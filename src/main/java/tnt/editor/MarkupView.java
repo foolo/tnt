@@ -167,6 +167,7 @@ public class MarkupView extends JTextPane {
 	}
 
 	public void setTaggedText(TaggedText t) {
+		int caretPosition = getCaretPosition();
 		setText("");
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
@@ -179,6 +180,7 @@ public class MarkupView extends JTextPane {
 				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
+		setCaretPosition(Math.min(caretPosition, getText().length()));
 	}
 
 	void applyHighlighting(EditorRange range, Highlighter.HighlightPainter highlightPainter) {
