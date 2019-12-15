@@ -25,8 +25,10 @@ public class Settings {
 	private static final String CUSTOM_SPECIAL_CHARACTERS = "custom_special_characters";
 
 	public static File getInputFileDirectory() {
-		File defaultDir = new File(System.getProperty("user.home"));
-		String dir = prefs.get(INPUT_FILE_DIRECTORY, defaultDir.getAbsolutePath());
+		String dir = prefs.get(INPUT_FILE_DIRECTORY, null);
+		if (dir == null) {
+			return null;
+		}
 		return new File(dir);
 	}
 
@@ -35,7 +37,10 @@ public class Settings {
 	}
 
 	public static File getOpenDirectory() {
-		String dir = prefs.get(LAST_OPENED_FILE, System.getProperty("user.home"));
+		String dir = prefs.get(LAST_OPENED_FILE, null);
+		if (dir == null) {
+			return null;
+		}
 		return new File(dir);
 	}
 

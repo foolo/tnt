@@ -525,7 +525,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (okToClose() == false) {
 			return;
 		}
-		JFileChooser fc = new JFileChooser(Settings.getOpenDirectory());
+		File dir = FileUtil.getExistingDirectory(Settings.getOpenDirectory());
+		JFileChooser fc = new JFileChooser(dir);
 		fc.setPreferredSize(DEFAULT_DIALOG_SIZE);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLIFF files", "xlf");
 		fc.addChoosableFileFilter(filter);

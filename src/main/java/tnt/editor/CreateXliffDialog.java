@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import tnt.language.Language;
 import tnt.language.LanguageCollection;
+import tnt.util.FileUtil;
 import tnt.util.Settings;
 
 public final class CreateXliffDialog extends BaseDialog {
@@ -186,7 +187,8 @@ public final class CreateXliffDialog extends BaseDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonChooseInputFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonChooseInputFilesActionPerformed
-		JFileChooser fc = new JFileChooser(Settings.getInputFileDirectory());
+		File dir = FileUtil.getExistingDirectory(Settings.getInputFileDirectory());
+		JFileChooser fc = new JFileChooser(dir);
 		fc.setPreferredSize(MainForm.DEFAULT_DIALOG_SIZE);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt");
 		fc.addChoosableFileFilter(filter);
@@ -195,7 +197,7 @@ public final class CreateXliffDialog extends BaseDialog {
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		Settings.setInputFileDirectory(fc.getSelectedFile());
+		Settings.setInputFileDirectory(fc.getSelectedFile().getParentFile());
 		inputFile = fc.getSelectedFile().getAbsoluteFile();
 		xliffFile = new File(inputFile.getAbsolutePath() + ".xlf");
 		update();

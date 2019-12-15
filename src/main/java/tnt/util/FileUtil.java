@@ -46,4 +46,15 @@ public class FileUtil {
 			JOptionPane.showMessageDialog(parent, "Could not open direcory: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+
+	public static File getExistingDirectory(File file) {
+		File f = file;
+		for (int i = 0; i < 10 && f != null; i++) {
+			if (f.exists()) {
+				return f;
+			}
+			f = f.getParentFile();
+		}
+		return f;
+	}
 }
