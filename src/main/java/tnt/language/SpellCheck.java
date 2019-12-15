@@ -26,27 +26,22 @@ public class SpellCheck {
 		CLEAR_MISSPELLED_ATTRIBUTE_SET.addAttribute(UnderlinerEditorKit.UNDERLINE_COLOR_ATTRIBUTE, new UnderlinerEditorKit.UnderlinedAttribute(false, null));
 	}
 
-	public static void spellCheck(MarkupView markupView, int caretLocationTagged, boolean modified) {
+	public static void spellCheck(MarkupView markupView) {
 		if (currentDictionary == null) {
 			return;
 		}
 		clearStyle(markupView);
 		ArrayList<Integer> indexes = new ArrayList<>();
 		String text = markupView.getPlainText(indexes);
-		int caretLocationPlain = StringUtil.taggedToPlainIndex(caretLocationTagged, indexes);
 		Matcher m = RegexUtil.SPELLING_UNIT_PATTERN.matcher(text);
 		while (m.find()) {
 			String word = m.group();
 			int startPlain = m.start();
 			int endPlain = m.end();
-			boolean caretInWord = (caretLocationPlain <= endPlain) && (caretLocationPlain >= startPlain);
-			boolean skipSpellCheckForWord = (caretInWord && modified);
-			if (skipSpellCheckForWord == false) {
-				if (isMisspelled(word)) {
-					int startTagged = StringUtil.plainToTaggedIndex(startPlain, indexes);
-					int endTagged = StringUtil.plainToTaggedIndex(endPlain, indexes);
-					markText(markupView, startTagged, endTagged);
-				}
+			if (isMisspelled(word)) {
+				int startTagged = StringUtil.plainToTaggedIndex(startPlain, indexes);
+				int endTagged = StringUtil.plainToTaggedIndex(endPlain, indexes);
+				markText(markupView, startTagged, endTagged);
 			}
 		}
 	}

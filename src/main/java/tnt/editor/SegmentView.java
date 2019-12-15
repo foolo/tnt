@@ -238,10 +238,9 @@ public class SegmentView extends javax.swing.JPanel {
 		return lastActiveSegmentView;
 	}
 
-	void applySpellcheck(boolean modified) {
-		int caretLocation = markupViewTarget.getCaret().getDot();
+	void applySpellcheck() {
 		SwingUtilities.invokeLater(() -> {
-			SpellCheck.spellCheck(markupViewTarget, caretLocation, modified);
+			SpellCheck.spellCheck(markupViewTarget);
 		});
 	}
 
@@ -459,7 +458,7 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		Session.getUndoManager().markSnapshot();
 		lastActiveSegmentView = this;
-		applySpellcheck(false);
+		applySpellcheck();
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
@@ -467,7 +466,7 @@ public class SegmentView extends javax.swing.JPanel {
 		if (modifiedFlag == false) {
 			Session.getUndoManager().markSnapshot();
 		}
-		applySpellcheck(modifiedFlag);
+		applySpellcheck();
 		if (modifiedFlag) {
 			updateHeight();
 		}
@@ -475,7 +474,7 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetCaretUpdate
 
     private void markupViewTargetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusLost
-		applySpellcheck(false);
+		applySpellcheck();
     }//GEN-LAST:event_markupViewTargetFocusLost
 
 	void showTargetPopup(MouseEvent evt) {
