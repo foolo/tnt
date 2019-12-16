@@ -1,13 +1,17 @@
 package tnt.editor;
 
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import tnt.language.DictionaryList;
 import tnt.language.DictionaryMapper;
@@ -50,11 +54,25 @@ public class Application {
 		DictionaryMapper.mapDictionaries(dictionaryList);
 	}
 
+	public static void setUIFont() {
+		FontUIResource f = new FontUIResource(Font.SANS_SERIF, Font.PLAIN, 11);
+		Enumeration keys = UIManager.getDefaults().keys();
+		while (keys.hasMoreElements()) {
+			Object key = keys.nextElement();
+			Object value = UIManager.get(key);
+			if (value instanceof FontUIResource) {
+				UIManager.put(key, f);
+			}
+		}
+	}
+
 	public static void main(String args[]) {
 		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		try {
-			javax.swing.UIManager.setLookAndFeel(new MetalLookAndFeel());
+			UIManager.setLookAndFeel(new MetalLookAndFeel());
+			UIManager.put("swing.boldMetal", Boolean.FALSE);
+			setUIFont();
 		}
 		catch (javax.swing.UnsupportedLookAndFeelException ex) {
 			Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);

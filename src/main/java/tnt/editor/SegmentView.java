@@ -388,6 +388,7 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel2.setMinimumSize(new java.awt.Dimension(50, 50));
         jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
 
+        jLabelState.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
         jLabelState.setText("jLabel1");
 
         jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
