@@ -144,7 +144,7 @@ public class EditableMarkupView extends MarkupView {
 		}
 	}
 
-	public void pasteTaggedText(TaggedText t) {
+	public void pasteTaggedText(TaggedText t, boolean includeTags) {
 		int caretPosition1 = getCaretPosition();
 		documentListener.enabled = false;
 		removeSelection();
@@ -154,7 +154,9 @@ public class EditableMarkupView extends MarkupView {
 				insertText(getCaretPosition(), text);
 			}
 			else if (c instanceof Tag) {
-				insertTag((Tag) c);
+				if (includeTags) {
+					insertTag((Tag) c);
+				}
 			}
 			else {
 				Log.warn("insertTaggedText: unexpected instance: " + c.getClass().getName());

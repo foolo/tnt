@@ -91,10 +91,10 @@ public class TaggedTextTransferHandler extends TransferHandler implements UIReso
 			String sourceSegmentId = tt.getSegmentId();
 			String targetSegmentId = c.getSegmentView().getSegmentTag().getId();
 			if (sourceSegmentId.equals(targetSegmentId)) {
-				c.pasteTaggedText(tt.copy());
+				c.pasteTaggedText(tt.copy(), true);
 			}
 			else {
-				c.insertText(c.getCaretPosition(), tt.getTextContent());
+				c.pasteTaggedText(tt.copy(), false);
 			}
 			Session.getUndoManager().markSnapshot();
 			return true;
