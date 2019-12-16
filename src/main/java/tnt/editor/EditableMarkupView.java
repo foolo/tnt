@@ -144,7 +144,9 @@ public class EditableMarkupView extends MarkupView {
 		}
 	}
 
-	public void insertTaggedText(TaggedText t) {
+	public void pasteTaggedText(TaggedText t) {
+		int caretPosition1 = getCaretPosition();
+		documentListener.enabled = false;
 		removeSelection();
 		for (TaggedTextContent c : t.getContent()) {
 			if (c instanceof Text) {
@@ -158,6 +160,9 @@ public class EditableMarkupView extends MarkupView {
 				Log.warn("insertTaggedText: unexpected instance: " + c.getClass().getName());
 			}
 		}
+		documentListener.enabled = true;
+		int caretPosition2 = getCaretPosition();
+		getSegmentView().update(caretPosition1, caretPosition2);
 	}
 
 	public void replaceTaggedText(int start, int end, String newText) {
