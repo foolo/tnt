@@ -182,6 +182,9 @@ public class SegmentView extends javax.swing.JPanel {
 				case KeyEvent.VK_V:
 					Session.getUndoManager().markSnapshot();
 					return;
+				case KeyEvent.VK_F:
+					fileView.focusSearchBox();
+					return;
 			}
 			if (evt.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
 				fileView.jumpToNextSegment(this);
