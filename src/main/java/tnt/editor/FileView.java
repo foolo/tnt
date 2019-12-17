@@ -155,6 +155,12 @@ public class FileView extends javax.swing.JPanel {
 		searchBar1.focusSearchBox();
 	}
 
+	void focusFirstSegment() {
+		if (jPanelItems.getComponentCount() > 0) {
+			((SegmentView) jPanelItems.getComponent(0)).navigateToView(SegmentView.Column.TARGET, 0);
+		}
+	}
+
 	void applyFontPreferences() {
 		Font f = new Font(Settings.getEditorFontName(), Font.PLAIN, Settings.getEditorFontSize());
 		int minHeight = SegmentView.getMinHeightForFont(f);

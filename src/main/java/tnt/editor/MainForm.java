@@ -128,6 +128,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jPanel2.revalidate();
 
 		fileView.applyFontPreferences();
+		fileView.focusFirstSegment();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();
