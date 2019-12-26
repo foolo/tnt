@@ -3,4 +3,4 @@ set -o xtrace
 
 APPRUN_DIR="$(dirname "$(readlink -f "$0")")"
 cd $APPRUN_DIR
-./jre/bin/java --class-path "lib/*" tnt.editor.Application
+./jre/bin/java --class-path "lib/*" tnt.editor.Application "$@"
