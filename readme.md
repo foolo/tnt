@@ -15,7 +15,11 @@ Install scons (e.g. ```sudo apt install scons``` on Ubuntu). Scons must be run w
 
 # Create release
 
-	scons --target=TARGET --release_version=VERSION
+Update APPLICATION_VERSION in Application.java
+
+Build using the same version
+
+	scons --target=TARGET --release_version=APPLICATION_VERSION
 
 # Configure Netbeans
 
