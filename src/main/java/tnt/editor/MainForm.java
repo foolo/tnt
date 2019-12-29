@@ -36,6 +36,9 @@ import tnt.util.SegmentsHtmlEncoder;
 import tnt.util.Settings;
 import tnt.util.XmlUtil;
 import tnt.xliff_model.SegmentTag;
+import tnt.xliff_model.Tag;
+import tnt.xliff_model.TaggedText;
+import tnt.xliff_model.TaggedTextContent;
 import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
 import tnt.xliff_model.exceptions.SaveException;
@@ -294,6 +297,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemAddSpecialChar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItemCopySrc = new javax.swing.JMenuItem();
+        jMenuItemCopySrcTags = new javax.swing.JMenuItem();
         jMenuItemMarkTranslated = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItemLogs = new javax.swing.JMenuItem();
@@ -470,6 +474,15 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         });
         jMenu2.add(jMenuItemCopySrc);
 
+        jMenuItemCopySrcTags.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItemCopySrcTags.setText("Copy tags from source to target");
+        jMenuItemCopySrcTags.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemCopySrcTagsActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItemCopySrcTags);
+
         jMenuItemMarkTranslated.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemMarkTranslated.setText("Mark as translated");
         jMenuItemMarkTranslated.setEnabled(false);
@@ -548,11 +561,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     }//GEN-LAST:event_jMenuItemSaveActionPerformed
 
     private void jMenuItemCopySrcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcActionPerformed
-		Session.getUndoManager().markSnapshot();
 		SegmentView segmentView = SegmentView.getActiveSegmentView();
 		if (segmentView == null) {
 			return;
 		}
+		Session.getUndoManager().markSnapshot();
 		SegmentTag segmentTag = segmentView.getSegmentTag();
 		segmentView.setTargetText(segmentTag.getSourceText().copy());
 		Session.getUndoManager().markSnapshot();
@@ -750,6 +763,20 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		exportTable(true);
     }//GEN-LAST:event_jMenuItemExportTableBothActionPerformed
 
+    private void jMenuItemCopySrcTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCopySrcTagsActionPerformed
+		SegmentView segmentView = SegmentView.getActiveSegmentView();
+		if (segmentView == null) {
+			return;
+		}
+		Session.getUndoManager().markSnapshot();
+		SegmentTag segmentTag = segmentView.getSegmentTag();
+		ArrayList<Tag> tags = segmentTag.getSourceText().copy().getTags();
+		ArrayList<TaggedTextContent> ttc = (ArrayList<TaggedTextContent>) segmentTag.getTargetText().getContent().clone();
+		ttc.addAll(new ArrayList<TaggedTextContent>(tags));
+		segmentView.setTargetText(new TaggedText(ttc, segmentTag.getSourceText().getSegmentId()));
+		Session.getUndoManager().markSnapshot();
+    }//GEN-LAST:event_jMenuItemCopySrcTagsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JLabel jLabelSaveStatus;
@@ -763,6 +790,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemAddSpecialChar;
     private javax.swing.JMenuItem jMenuItemClearRecentFiles;
     private javax.swing.JMenuItem jMenuItemCopySrc;
+    private javax.swing.JMenuItem jMenuItemCopySrcTags;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
     private javax.swing.JMenuItem jMenuItemExportTableBoth;
