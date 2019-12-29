@@ -42,7 +42,7 @@ public class OpenXliffValidator {
 			Tag srcTag = srcTags.get(i);
 			Tag trgTag = trgTags.get(i);
 			if (compareTags(srcTag, trgTag) == false) {
-				return "Source/target tag mismatch at target tag #" + i + 1 + ": Expected " + tagInfoString(srcTag) + ", found " + tagInfoString(trgTag);
+				return "Source/target tag mismatch at target tag #" + (i + 1) + ": Expected " + tagInfoString(srcTag) + ", found " + tagInfoString(trgTag);
 			}
 		}
 		return "";
