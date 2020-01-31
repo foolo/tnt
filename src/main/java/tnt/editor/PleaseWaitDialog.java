@@ -1,9 +1,5 @@
 package tnt.editor;
 
-import java.awt.Component;
-import java.awt.HeadlessException;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class PleaseWaitDialog extends javax.swing.JDialog {
@@ -22,7 +18,6 @@ public class PleaseWaitDialog extends javax.swing.JDialog {
 		jLabel1.setText(message);
 		pack();
 		setLocationRelativeTo(parent);
-		setAlwaysOnTop(true);
 		setVisible(true);
 	}
 
@@ -40,19 +35,6 @@ public class PleaseWaitDialog extends javax.swing.JDialog {
 			}
 			setVisible(false);
 		});
-	}
-
-	// workaround for https://bugs.openjdk.java.net/browse/JDK-6690019
-	// re-implements JOptionPane.showOptionDialog with setAlwaysOnTop
-	public static void showMessageDialog(Component parentComponent, Object message, String title, int messageType) throws HeadlessException {
-		JOptionPane pane = new JOptionPane(message, messageType, JOptionPane.DEFAULT_OPTION, null, null, null);
-		pane.setInitialValue(null);
-		pane.setComponentOrientation(parentComponent.getComponentOrientation());
-		JDialog dialog = pane.createDialog(parentComponent, title);
-		pane.selectInitialValue();
-		dialog.setAlwaysOnTop(true);
-		dialog.setVisible(true);
-		dialog.dispose();
 	}
 
 	@SuppressWarnings("unchecked")
