@@ -6,6 +6,7 @@ import com.maxprograms.converters.EncodingResolver;
 import com.maxprograms.converters.FileFormats;
 import com.maxprograms.converters.Merge;
 import com.maxprograms.converters.Utils;
+import com.maxprograms.xliff2.Resegmenter;
 import com.maxprograms.xliff2.ToXliff2;
 import tnt.editor.Session;
 import java.io.File;
@@ -16,8 +17,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import tnt.util.Log;
 import tnt.xliff_model.XliffTag;
 
@@ -76,21 +78,25 @@ public class OpenXliffHandler {
 			throw new ConversionError(ex.toString());
 		}
 
-		Hashtable<String, String> params = new Hashtable<>();
+		Map<String, String> params = new HashMap<>();
 		params.put("source", source);
 		params.put("xliff", xliff);
 		params.put("skeleton", skl);
 		params.put("format", type);
 		params.put("catalog", catalog);
 		params.put("srcEncoding", enc);
-		params.put("paragraph", "no");
+		params.put("paragraph", "yes");
 		params.put("srxFile", srx);
 		params.put("srcLang", srcLang);
 		params.put("tgtLang", tgtLang);
-		Vector<String> result = Convert.run(params);
+		List<String> result = Convert.run(params);
 		if (Constants.SUCCESS.equals(result.get(0))) {
 			Convert.addSkeleton(xliff, catalog);
 			result = ToXliff2.run(new File(xliff), catalog);
+			if (Constants.SUCCESS.equals(result.get(0)) == false) {
+				throw new ConversionError(result.get(1));
+			}
+			result = Resegmenter.run(xliff, srx, srcLang, catalog);
 			if (Constants.SUCCESS.equals(result.get(0)) == false) {
 				throw new ConversionError(result.get(1));
 			}
@@ -134,7 +140,7 @@ public class OpenXliffHandler {
 		String target = targetFile.getAbsolutePath();
 		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
 		boolean unapproved = false;
-		Vector<String> result = Merge.merge(xliff, target, catalog, unapproved);
+		List<String> result = Merge.merge(xliff, target, catalog, unapproved);
 		if (Constants.SUCCESS.equals(result.get(0)) == false) {
 			throw new ConversionError("Merge error: " + result.get(1));
 		}
