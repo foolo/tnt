@@ -48,22 +48,28 @@ public class OpenXliffHandler {
 		String xliff = inputFile.getAbsolutePath() + ".xlf";
 		String skl = inputFile.getAbsolutePath() + "_tmp_" + System.currentTimeMillis() + ".skl";
 
-		String type = FileFormats.detectFormat(source);
-		if (type == null) {
-			throw new ConversionError("Unable to auto-detect file format for " + inputFile);
+		String type;
+		String enc;
+		if (source.endsWith(".txt")) {
+			type = FileFormats.TEXT;
+			enc = StandardCharsets.UTF_8.name();
 		}
-		Log.debug("convert: detected type: " + type);
-
-		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
-
-		Charset charset = EncodingResolver.getEncoding(source, type);
-		if (charset == null) {
-			throw new ConversionError("Unable to auto-detect character set for " + inputFile);
+		else {
+			type = FileFormats.detectFormat(source);
+			if (type == null) {
+				throw new ConversionError("Unable to auto-detect file format for " + inputFile);
+			}
+			Log.debug("convert: detected type: " + type);
+			Charset charset = EncodingResolver.getEncoding(source, type);
+			if (charset == null) {
+				throw new ConversionError("Unable to auto-detect character set for " + inputFile);
+			}
+			enc = charset.name();
+			Log.debug("Auto-detected encoding: " + enc);
 		}
-		String enc = charset.name();
-		Log.debug("Auto-detected encoding: " + enc);
 
 		String srx = new File("srx", "default.srx").getAbsolutePath();
+		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
 
 		try {
 			if (Utils.isValidLanguage(srcLang) == false) {

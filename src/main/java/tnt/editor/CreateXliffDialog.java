@@ -190,7 +190,7 @@ public final class CreateXliffDialog extends BaseDialog {
 		File dir = FileUtil.getExistingDirectory(Settings.getInputFileDirectory());
 		JFileChooser fc = new JFileChooser(dir);
 		fc.setPreferredSize(MainForm.DEFAULT_DIALOG_SIZE);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt", "txt");
 		fc.addChoosableFileFilter(filter);
 		fc.setFileFilter(filter);
 		int returnVal = fc.showOpenDialog(this);
