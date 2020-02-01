@@ -1,6 +1,7 @@
 package tnt.editor;
 
 import java.io.File;
+import javax.swing.SwingUtilities;
 import tnt.util.FileUtil;
 
 public class ExportCompletedPanel extends javax.swing.JPanel {
@@ -38,7 +39,7 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
             }
         });
 
-        jButtonOpenFile.setText("Open file");
+        jButtonOpenFile.setText("Open file and close dialog");
         jButtonOpenFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOpenFileActionPerformed(evt);
@@ -61,7 +62,7 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
                                 .addComponent(jButtonOpenFile)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonLocateInBrowser)))
-                        .addGap(0, 297, Short.MAX_VALUE)))
+                        .addGap(0, 183, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -87,6 +88,7 @@ public class ExportCompletedPanel extends javax.swing.JPanel {
 
     private void jButtonOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOpenFileActionPerformed
 		FileUtil.desktopOpen(this, outputFile);
+		SwingUtilities.getWindowAncestor(this).setVisible(false);
     }//GEN-LAST:event_jButtonOpenFileActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
