@@ -42,8 +42,8 @@ public class FileUtil {
 				Desktop.getDesktop().open(f);
 			}
 		}
-		catch (IOException ex) {
-			JOptionPane.showMessageDialog(parent, "Could not open direcory: " + f.toString() + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+		catch (IOException | NullPointerException | IllegalArgumentException | UnsupportedOperationException ex) {
+			JOptionPane.showMessageDialog(parent, "Could not open direcory: " + f.toString() + "\n" + ex, "", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
