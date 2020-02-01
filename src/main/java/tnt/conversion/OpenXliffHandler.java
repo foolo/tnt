@@ -50,7 +50,7 @@ public class OpenXliffHandler {
 
 		String type;
 		String enc;
-		if (source.endsWith(".txt")) {
+		if (source.endsWith(".txt") || source.endsWith(".segments")) {
 			type = FileFormats.TEXT;
 			enc = StandardCharsets.UTF_8.name();
 		}
@@ -68,7 +68,14 @@ public class OpenXliffHandler {
 			Log.debug("Auto-detected encoding: " + enc);
 		}
 
-		String srx = new File("srx", "default.srx").getAbsolutePath();
+		String srx;
+		if (source.endsWith(".segments")) {
+			srx = new File("srx", "segment_lines.srx").getAbsolutePath();
+		}
+		else {
+			srx = new File("srx", "default.srx").getAbsolutePath();
+		}
+
 		String catalog = new File("catalog", "catalog.xml").getAbsolutePath();
 
 		try {

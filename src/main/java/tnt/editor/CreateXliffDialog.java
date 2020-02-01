@@ -192,6 +192,7 @@ public final class CreateXliffDialog extends BaseDialog {
 		fc.setPreferredSize(MainForm.DEFAULT_DIALOG_SIZE);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documents", "docx", "doc", "odt", "txt");
 		fc.addChoosableFileFilter(filter);
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("Pre-segmented text file", "segments"));
 		fc.setFileFilter(filter);
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal != JFileChooser.APPROVE_OPTION) {
