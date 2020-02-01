@@ -180,12 +180,18 @@ public class SegmentTag {
 		}
 	}
 
-	public void encode(ArrayList<String> errors, boolean skipInitialSegments) {
+	public void encode(ArrayList<String> errors, boolean replaceIncompleteSegments) {
 		node.setAttribute(ATTRIBUTE_STATE, state.toString());
 		encodeContent(sourceNode, sourceText, errors);
-		boolean skipNode = targetText.getContent().isEmpty() || (skipInitialSegments && (state == State.INITIAL));
+		boolean skipNode = targetText.getContent().isEmpty() || (replaceIncompleteSegments && (state == State.INITIAL));
 		if (skipNode) {
-			removeChild(targetNode);
+			if (replaceIncompleteSegments) {
+				encodeContent(targetNode, sourceText, errors);
+				node.appendChild(targetNode);
+			}
+			else {
+				removeChild(targetNode);
+			}
 		}
 		else {
 			encodeContent(targetNode, targetText, errors);

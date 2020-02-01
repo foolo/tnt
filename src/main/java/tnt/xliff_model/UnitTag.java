@@ -72,9 +72,9 @@ public class UnitTag implements Item {
 	}
 
 	@Override
-	public void encode(ArrayList<String> errors, boolean skipInitialSegments) {
+	public void encode(ArrayList<String> errors, boolean replaceIncompleteSegments) {
 		for (SegmentTag st : segments) {
-			st.encode(errors, skipInitialSegments);
+			st.encode(errors, replaceIncompleteSegments);
 		}
 		Node lastFoundNode = null;
 		for (int i = 0; i < segments.size(); i++) {

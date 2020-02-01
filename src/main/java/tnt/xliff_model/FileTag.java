@@ -82,9 +82,9 @@ public class FileTag {
 		return new FileTag(this);
 	}
 
-	void encode(ArrayList<String> errors, boolean skipInitialSegments) {
+	void encode(ArrayList<String> errors, boolean replaceIncompleteSegments) {
 		for (Item i : items) {
-			i.encode(errors, skipInitialSegments);
+			i.encode(errors, replaceIncompleteSegments);
 		}
 	}
 
