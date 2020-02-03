@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
@@ -197,5 +198,15 @@ public class MarkupView extends JTextPane {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		super.paintComponent(g);
+	}
+
+	@Override
+	public void updateUI() {
+		setCaret(null);
+		super.updateUI();
+		Caret oldCaret = getCaret();
+		Caret caret = new SelectWordCaret();
+		caret.setBlinkRate(oldCaret.getBlinkRate());
+		setCaret(caret);
 	}
 }
