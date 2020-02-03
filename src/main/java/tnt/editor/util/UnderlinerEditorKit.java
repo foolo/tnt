@@ -1,4 +1,4 @@
-package tnt.editor;
+package tnt.editor.util;
 
 import java.awt.Color;
 import java.awt.Graphics;

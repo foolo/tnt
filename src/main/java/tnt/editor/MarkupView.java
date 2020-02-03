@@ -1,5 +1,7 @@
 package tnt.editor;
 
+import tnt.editor.util.TaggedTextTransferHandler;
+import tnt.editor.util.SelectWordCaret;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

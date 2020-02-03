@@ -1,4 +1,4 @@
-package tnt.editor;
+package tnt.editor.util;
 
 import java.awt.Component;
 import java.awt.event.MouseWheelEvent;

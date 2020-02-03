@@ -2,7 +2,7 @@ package tnt.language;
 
 import dk.dren.hunspell.Hunspell;
 import tnt.editor.MarkupView;
-import tnt.editor.UnderlinerEditorKit;
+import tnt.editor.util.UnderlinerEditorKit;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;

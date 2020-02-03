@@ -28,6 +28,8 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
 import tnt.editor.search.EditorRange;
+import tnt.editor.util.MouseWheelScrollListener;
+import tnt.editor.util.UnderlinerEditorKit;
 import tnt.language.SpellCheck;
 import tnt.qc.Qc;
 import tnt.undo_manager.UndoPosition;

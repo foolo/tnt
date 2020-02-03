@@ -1,4 +1,4 @@
-package tnt.editor;
+package tnt.editor.util;
 
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
@@ -9,7 +9,7 @@ import javax.swing.text.Position;
 import javax.swing.text.Utilities;
 import tnt.util.Log;
 
-class SelectWordCaret extends DefaultCaret {
+public class SelectWordCaret extends DefaultCaret {
 	private boolean wordSelectingMode = false;
 	private int p0;
 	private int p1;

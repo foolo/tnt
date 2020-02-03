@@ -1,4 +1,4 @@
-package tnt.editor;
+package tnt.editor.util;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -9,6 +9,7 @@ import javax.swing.plaf.UIResource;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import tnt.editor.MarkupView;
 import tnt.util.Log;
 import tnt.xliff_model.TaggedText;
 
