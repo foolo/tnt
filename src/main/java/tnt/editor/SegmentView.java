@@ -53,6 +53,7 @@ public class SegmentView extends javax.swing.JPanel {
 	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
 	static final Color BACKGROUND_COLOR = Color.WHITE;
 	static final Color GRID_COLOR = new Color(204, 204, 204);
+	static final Color ACTIVE_SEGMENT_COLOR = new Color(241, 247, 255);
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
@@ -231,10 +232,14 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
-	private static SegmentView lastActiveSegmentView = null;
+	private static SegmentView activeSegmentView = null;
 
 	static void setActiveSegmentView(SegmentView segmentView) {
-		lastActiveSegmentView = segmentView;
+		if (activeSegmentView != null) {
+			activeSegmentView.setBackground(BACKGROUND_COLOR);
+		}
+		activeSegmentView = segmentView;
+		activeSegmentView.setBackground(ACTIVE_SEGMENT_COLOR);
 	}
 
 	static SegmentView getActiveSegmentView() {
@@ -243,7 +248,7 @@ public class SegmentView extends javax.swing.JPanel {
 			MarkupView mv = (MarkupView) c;
 			return mv.getSegmentView();
 		}
-		return lastActiveSegmentView;
+		return activeSegmentView;
 	}
 
 	void applySpellcheck() {
@@ -475,12 +480,12 @@ public class SegmentView extends javax.swing.JPanel {
     private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
 		Session.getUndoManager().markSnapshot();
 		markupViewSource.getCaret().setVisible(true);
-		lastActiveSegmentView = this;
+		setActiveSegmentView(this);
     }//GEN-LAST:event_markupViewSourceFocusGained
 
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		Session.getUndoManager().markSnapshot();
-		lastActiveSegmentView = this;
+		setActiveSegmentView(this);
 		applySpellcheck();
     }//GEN-LAST:event_markupViewTargetFocusGained
 
