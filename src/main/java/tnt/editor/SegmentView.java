@@ -51,6 +51,7 @@ public class SegmentView extends javax.swing.JPanel {
 	private int minHeight = 0;
 	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
 	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
+	static final Color BACKGROUND_COLOR = Color.WHITE;
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
@@ -70,6 +71,8 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
 		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
+		jScrollPane3.getViewport().setOpaque(false);
+		jScrollPane4.getViewport().setOpaque(false);
 	}
 
 	void updateStateLabel(SegmentTag.State state) {
@@ -335,11 +338,17 @@ public class SegmentView extends javax.swing.JPanel {
         jLabelQc = new javax.swing.JLabel();
         jLabelId = new javax.swing.JLabel();
 
+        setBackground(BACKGROUND_COLOR);
+
         jPanel1.setMinimumSize(new java.awt.Dimension(50, 50));
+        jPanel1.setOpaque(false);
         jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
+        jScrollPane3.setOpaque(false);
+
         markupViewSource.setEditable(false);
+        markupViewSource.setOpaque(false);
         markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 markupViewSourceCaretUpdate(evt);
@@ -359,6 +368,9 @@ public class SegmentView extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane3);
 
+        jScrollPane4.setOpaque(false);
+
+        markupViewTarget.setOpaque(false);
         markupViewTarget.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 markupViewTargetCaretUpdate(evt);
@@ -390,6 +402,7 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel1.add(jScrollPane4);
 
         jPanel2.setMinimumSize(new java.awt.Dimension(50, 50));
+        jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
 
         jLabelState.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
