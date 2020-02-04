@@ -52,6 +52,7 @@ public class SegmentView extends javax.swing.JPanel {
 	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
 	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
 	static final Color BACKGROUND_COLOR = Color.WHITE;
+	static final Color GRID_COLOR = new Color(204, 204, 204);
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
@@ -339,12 +340,14 @@ public class SegmentView extends javax.swing.JPanel {
         jLabelId = new javax.swing.JLabel();
 
         setBackground(BACKGROUND_COLOR);
+        setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, GRID_COLOR));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(50, 50));
         jPanel1.setOpaque(false);
         jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
 
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, GRID_COLOR));
         jScrollPane3.setOpaque(false);
 
         markupViewSource.setEditable(false);
@@ -368,6 +371,7 @@ public class SegmentView extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane3);
 
+        jScrollPane4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, GRID_COLOR));
         jScrollPane4.setOpaque(false);
 
         markupViewTarget.setOpaque(false);
@@ -401,6 +405,7 @@ public class SegmentView extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane4);
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, GRID_COLOR));
         jPanel2.setMinimumSize(new java.awt.Dimension(50, 50));
         jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
@@ -427,7 +432,7 @@ public class SegmentView extends javax.swing.JPanel {
                         .addComponent(jLabelValidationError)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelQc)))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,14 +457,14 @@ public class SegmentView extends javax.swing.JPanel {
                 .addGap(6, 6, 6)
                 .addComponent(jLabelId)
                 .addGap(6, 6, 6)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jLabelId)
