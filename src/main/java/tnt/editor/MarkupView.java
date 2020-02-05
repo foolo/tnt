@@ -140,8 +140,8 @@ public class MarkupView extends JTextPane {
 	public TaggedText getSelectedTaggedText() {
 		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
 		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
-		String segmentId = segmentView.getSegmentTag().getId();
-		return new TaggedText(getTaggedText(p0, p1, getStyledDocument()), segmentId);
+		String segmentInternalId = segmentView.getSegmentTag().getInternalId();
+		return new TaggedText(getTaggedText(p0, p1, getStyledDocument()), segmentInternalId);
 	}
 
 	public String getPlainText(ArrayList<Integer> plainToTaggedIndexes) {

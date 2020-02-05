@@ -49,7 +49,7 @@ public class FileView extends javax.swing.JPanel {
 
 	void populate_segments(ArrayList<SegmentTag> segmentTags) {
 		for (SegmentTag st : segmentTags) {
-			jPanelItems.add(new SegmentView(this, st.getId()));
+			jPanelItems.add(new SegmentView(this, st.getInternalId()));
 		}
 	}
 

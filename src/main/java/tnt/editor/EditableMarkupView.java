@@ -111,8 +111,8 @@ public class EditableMarkupView extends MarkupView {
 
 	public TaggedText getTaggedText() {
 		StyledDocument doc = getStyledDocument();
-		String segmentId = getSegmentView().getSegmentTag().getId();
-		return new TaggedText(getTaggedText(0, doc.getLength(), doc), segmentId);
+		String segmentInteralId = getSegmentView().getSegmentTag().getInternalId();
+		return new TaggedText(getTaggedText(0, doc.getLength(), doc), segmentInteralId);
 	}
 
 	void insertText(int pos, String s) {

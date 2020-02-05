@@ -773,7 +773,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		ArrayList<Tag> tags = segmentTag.getSourceText().copy().getTags();
 		ArrayList<TaggedTextContent> ttc = (ArrayList<TaggedTextContent>) segmentTag.getTargetText().getContent().clone();
 		ttc.addAll(new ArrayList<TaggedTextContent>(tags));
-		segmentView.setTargetText(new TaggedText(ttc, segmentTag.getSourceText().getSegmentId()));
+		segmentView.setTargetText(new TaggedText(ttc, segmentTag.getSourceText().getSegmentInternalId()));
 		Session.getUndoManager().markSnapshot();
     }//GEN-LAST:event_jMenuItemCopySrcTagsActionPerformed
 

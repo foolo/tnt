@@ -26,7 +26,7 @@ public class SegmentsHtmlEncoder {
 			String sourceText = st.getSourceText().getTextContent();
 			String targetText = st.getTargetText().getTextContent();
 			sb.append("<tr>\n");
-			sb.append("<td>").append(st.getId()).append("</td>\n");
+			sb.append("<td>").append(st.getInternalId()).append("</td>\n");
 			if (includeSource) {
 				sb.append("<td>").append(sourceText).append("</td>\n");
 			}

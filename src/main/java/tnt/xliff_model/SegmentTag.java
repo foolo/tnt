@@ -19,7 +19,7 @@ public class SegmentTag {
 	private final Node sourceNode;
 	private final Node targetNode;
 	private State state;
-	private final String id;
+	private final String internalId;
 	private final String sourceLeadingWhitepace;
 	private final Integer sourceWordCount;
 
@@ -62,9 +62,9 @@ public class SegmentTag {
 			tn = node.getOwnerDocument().renameNode(tn, null, "target");
 		}
 		targetNode = tn;
-		id = Session.generateSegmentId();
-		sourceText = new TaggedText(sourceNode, id);
-		targetText = new TaggedText(targetNode, id);
+		internalId = Session.generateSegmentId();
+		sourceText = new TaggedText(sourceNode, internalId);
+		targetText = new TaggedText(targetNode, internalId);
 		if (Settings.getShowWhitespace()) {
 			sourceLeadingWhitepace = "";
 		}
@@ -82,7 +82,7 @@ public class SegmentTag {
 		this.sourceNode = st.sourceNode;
 		this.targetNode = st.targetNode;
 		this.state = st.state;
-		this.id = st.id;
+		this.internalId = st.internalId;
 		this.sourceLeadingWhitepace = st.sourceLeadingWhitepace;
 		this.sourceWordCount = st.sourceWordCount;
 	}
@@ -95,7 +95,7 @@ public class SegmentTag {
 		if (targetText != null) {
 			return targetText;
 		}
-		return new TaggedText(new ArrayList<>(), id);
+		return new TaggedText(new ArrayList<>(), internalId);
 	}
 
 	public Element getNode() {
@@ -110,8 +110,8 @@ public class SegmentTag {
 		return state;
 	}
 
-	public String getId() {
-		return id;
+	public String getInternalId() {
+		return internalId;
 	}
 
 	public String testEncodeTarget() {
@@ -170,7 +170,7 @@ public class SegmentTag {
 		String unitId = unitNode.getAttribute("id");
 		Element fileNode = findFileParent(unitNode.getParentNode());
 		String fileId = fileNode.getAttribute("id");
-		return "file='" + fileId + "', unit='" + unitId + "', segment='" + getId();
+		return "file='" + fileId + "', unit='" + unitId + "', segment='" + getInternalId();
 	}
 
 	private void encodeContent(Node n, TaggedText text, ArrayList<String> errors) {

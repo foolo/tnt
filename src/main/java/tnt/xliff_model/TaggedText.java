@@ -18,7 +18,7 @@ public class TaggedText {
 
 	private final ArrayList<TaggedTextContent> content;
 	private String textContentCache = null;
-	private final String segmentId;
+	private final String segmentInternalId;
 
 	static Node createRefNode(Node node) {
 		Node newNode = node.cloneNode(false);
@@ -52,28 +52,28 @@ public class TaggedText {
 		return res;
 	}
 
-	public TaggedText(Node node, String segmentId) {
+	public TaggedText(Node node, String segmentInternalId) {
 		content = decode(node);
-		this.segmentId = segmentId;
+		this.segmentInternalId = segmentInternalId;
 	}
 
-	public TaggedText(ArrayList<TaggedTextContent> content, String segmentId) {
+	public TaggedText(ArrayList<TaggedTextContent> content, String segmentInternalId) {
 		this.content = content;
-		this.segmentId = segmentId;
+		this.segmentInternalId = segmentInternalId;
 	}
 
-	public TaggedText(ArrayList<TaggedTextContent> content, String textContentCache, String segmentId) {
+	public TaggedText(ArrayList<TaggedTextContent> content, String textContentCache, String segmentInternalId) {
 		this.content = content;
 		this.textContentCache = textContentCache;
-		this.segmentId = segmentId;
+		this.segmentInternalId = segmentInternalId;
 	}
 
 	public ArrayList<TaggedTextContent> getContent() {
 		return content;
 	}
 
-	public String getSegmentId() {
-		return segmentId;
+	public String getSegmentInternalId() {
+		return segmentInternalId;
 	}
 
 	public String getTextContent() {

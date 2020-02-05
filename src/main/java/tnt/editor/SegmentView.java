@@ -57,7 +57,7 @@ public class SegmentView extends javax.swing.JPanel {
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
-	SegmentView(FileView fileView, String segmentId) {
+	SegmentView(FileView fileView, String id) {
 		initComponents();
 		this.fileView = fileView;
 		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
@@ -71,7 +71,7 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.addDocumentFilter();
 		markupViewSource.setBorder(new CompoundBorder(markupViewSource.getBorder(), PADDING_BORDER));
 		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
-		jLabelId.setText(StringUtil.leftPad(segmentId, ' ', 3));
+		jLabelId.setText(StringUtil.leftPad(id, ' ', 3));
 		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
 		jScrollPane3.getViewport().setOpaque(false);
 		jScrollPane4.getViewport().setOpaque(false);
