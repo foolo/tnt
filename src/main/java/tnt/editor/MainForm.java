@@ -117,8 +117,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			Session.newSession(f, this);
 		}
 		catch (LoadException ex) {
-			Log.debug("load_file: " + ex.toString());
-			JOptionPane.showMessageDialog(this, ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			Log.debug("load_file: " + ex);
+			JOptionPane.showMessageDialog(this, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
 			Settings.removeRecentFile(f.getAbsolutePath());
 			updateRecentFilesMenu();
 			return;

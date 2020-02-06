@@ -9,7 +9,6 @@ import org.w3c.dom.Node;
 import tnt.undo_manager.UndoableModel;
 import tnt.util.Log;
 import tnt.util.NodeArray;
-import tnt.xliff_model.exceptions.XliffVersionException;
 
 public class XliffTag implements UndoableModel {
 
@@ -24,10 +23,10 @@ public class XliffTag implements UndoableModel {
 		Element node = doc.getDocumentElement();
 		version = node.getAttribute("version");
 		if (version.isEmpty()) {
-			throw new XliffVersionException("Missing XLIFF version attribute");
+			throw new ParseException("Missing XLIFF version attribute");
 		}
 		if (version.startsWith("2.") == false) {
-			throw new XliffVersionException("Unsupported XLIFF version: " + version);
+			throw new ParseException("Unsupported XLIFF version: " + version);
 		}
 		this.document = doc;
 		for (Node n : new NodeArray(node.getChildNodes())) {

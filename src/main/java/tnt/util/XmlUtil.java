@@ -16,25 +16,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import tnt.xliff_model.exceptions.LoadException;
-import tnt.xliff_model.exceptions.ParseException;
 import tnt.xliff_model.exceptions.SaveException;
 
 public class XmlUtil {
 
-	public static Document read_xml(File file) throws LoadException, ParseException {
+	public static Document read_xml(File file) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			Document doc = dbf.newDocumentBuilder().parse(file);
-			doc.getDocumentElement().normalize();
-			return doc;
-		}
-		catch (SAXException | ParserConfigurationException ex) {
-			throw new ParseException(ex.toString());
-		}
-		catch (IOException ex) {
-			throw new LoadException(ex.getMessage());
-		}
+		Document doc = dbf.newDocumentBuilder().parse(file);
+		doc.getDocumentElement().normalize();
+		return doc;
 	}
 
 	public static void write_xml(Document doc, StreamResult result) throws SaveException {

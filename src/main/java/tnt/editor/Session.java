@@ -1,8 +1,11 @@
 package tnt.editor;
 
 import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 import tnt.undo_manager.UndoPosition;
 import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoManager;
@@ -12,7 +15,6 @@ import tnt.util.XmlUtil;
 import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
 import tnt.xliff_model.exceptions.ParseException;
-import tnt.xliff_model.exceptions.XliffVersionException;
 
 public class Session {
 
@@ -66,7 +68,28 @@ public class Session {
 
 	public static void newSession(File f, UndoEventListener undoEventListener) throws LoadException {
 		idSegmentCounter = 1;
-		XliffTag xliffTag = load_xliff(f);
+
+		Document doc;
+		try {
+			doc = XmlUtil.read_xml(f);
+		}
+		catch (IOException ex) {
+			Log.debug("newSession: " + ex);
+			throw new LoadException(ex.getMessage());
+		}
+		catch (ParserConfigurationException | SAXException ex) {
+			Log.debug("newSession: " + ex);
+			throw new LoadException(ex.toString());
+		}
+
+		XliffTag xliffTag;
+		try {
+			xliffTag = new XliffTag(doc, f);
+		}
+		catch (ParseException ex) {
+			Log.debug("newSession: " + ex);
+			throw new LoadException(ex.getMessage());
+		}
 		session = new Session(xliffTag, undoEventListener);
 	}
 
@@ -96,25 +119,6 @@ public class Session {
 
 	public static String generateSegmentId() {
 		return "" + idSegmentCounter++;
-	}
-
-	static XliffTag load_xliff(File f) throws LoadException {
-		XliffTag xliffTag = null;
-		try {
-			Document doc = XmlUtil.read_xml(f);
-			xliffTag = new XliffTag(doc, f);
-		}
-		catch (LoadException ex) {
-			throw new LoadException("Could not open file\n" + ex.getMessage());
-		}
-		catch (XliffVersionException ex) {
-			throw new LoadException("Could not open " + f + "\n" + ex.getMessage());
-		}
-		catch (ParseException ex) {
-			Log.debug("load_file: " + ex.toString());
-			throw new LoadException("Could not open " + f + "\nUnrecogized format");
-		}
-		return xliffTag;
 	}
 
 	public Session(XliffTag xliffTag, UndoEventListener undoEventListener) {
