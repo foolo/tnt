@@ -2,6 +2,7 @@ package tnt.editor;
 
 import java.io.File;
 import java.io.IOException;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,7 +12,6 @@ import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoManager;
 import tnt.undo_manager.UndoableState;
 import tnt.util.Log;
-import tnt.util.XmlUtil;
 import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
 import tnt.xliff_model.exceptions.ParseException;
@@ -71,7 +71,8 @@ public class Session {
 
 		Document doc;
 		try {
-			doc = XmlUtil.read_xml(f);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			doc = dbf.newDocumentBuilder().parse(f);
 		}
 		catch (IOException ex) {
 			Log.debug("newSession: " + ex);
@@ -81,6 +82,7 @@ public class Session {
 			Log.debug("newSession: " + ex);
 			throw new LoadException(ex.toString());
 		}
+		doc.getDocumentElement().normalize();
 
 		XliffTag xliffTag;
 		try {

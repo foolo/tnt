@@ -1,9 +1,5 @@
 package tnt.util;
 
-import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -15,17 +11,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import tnt.xliff_model.exceptions.SaveException;
 
 public class XmlUtil {
-
-	public static Document read_xml(File file) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		Document doc = dbf.newDocumentBuilder().parse(file);
-		doc.getDocumentElement().normalize();
-		return doc;
-	}
 
 	public static void write_xml(Document doc, StreamResult result) throws SaveException {
 		try {
