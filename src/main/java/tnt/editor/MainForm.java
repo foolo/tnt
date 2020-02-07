@@ -22,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JMenuItem;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import tnt.editor.util.SelectableOptionPane;
 import tnt.language.Language;
 import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
@@ -118,7 +119,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		}
 		catch (LoadException ex) {
 			Log.debug("load_file: " + ex);
-			JOptionPane.showMessageDialog(this, "Could not open " + f + "\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
+			SelectableOptionPane.show(this, "", "Could not open " + f + "\n\n" + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
 			Settings.removeRecentFile(f.getAbsolutePath());
 			updateRecentFilesMenu();
 			return;
