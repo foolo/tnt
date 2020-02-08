@@ -88,10 +88,18 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
+	boolean bypassListeners = false;
+
 	public void updateSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
-		markupViewSource.setTaggedText(segmentTag.getSourceText());
-		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
+		try {
+			bypassListeners = true;
+			markupViewSource.setTaggedText(segmentTag.getSourceText());
+			markupViewTarget.updateTaggedText(segmentTag.getTargetText());
+		}
+		finally {
+			bypassListeners = false;
+		}
 		updateStateLabel(segmentTag.getState());
 		applySpellcheck();
 		if (segmentTag.getState() != SegmentTag.State.INITIAL) {
@@ -168,6 +176,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void update(int caretPosition1, int caretPosition2) {
+		fileView.scroll_to_segment(this);
 		segmentTag.setTargetText(markupViewTarget.getTaggedText());
 		setStateField(SegmentTag.State.INITIAL);
 		notifyUndoManager(caretPosition1, caretPosition2);
@@ -177,7 +186,6 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void handleKeyPress(KeyEvent evt) {
-		fileView.scroll_to_segment(this);
 		if (evt.getModifiers() == CTRL_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
@@ -488,6 +496,10 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
+		if (bypassListeners) {
+			return;
+		}
+		fileView.scroll_to_segment(this);
 		reportCaretPosition(1, markupViewTarget.getCaret().getDot());
 		if (modifiedFlag == false) {
 			Session.getUndoManager().markSnapshot();
@@ -549,6 +561,10 @@ public class SegmentView extends javax.swing.JPanel {
     }//GEN-LAST:event_markupViewTargetMouseReleased
 
     private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
+		if (bypassListeners) {
+			return;
+		}
+		fileView.scroll_to_segment(this);
 		reportCaretPosition(0, markupViewSource.getCaret().getDot());
     }//GEN-LAST:event_markupViewSourceCaretUpdate
 
