@@ -2,6 +2,7 @@ package tnt.editor.search;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -144,6 +145,12 @@ public class SearchBar extends javax.swing.JPanel {
         jRadioButtonTarget = new javax.swing.JRadioButton();
         jRadioButtonBoth = new javax.swing.JRadioButton();
 
+        jTextFieldSearchText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldSearchTextKeyPressed(evt);
+            }
+        });
+
         jButtonSearchPrevious.setText("Previous");
         jButtonSearchPrevious.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -239,6 +246,12 @@ public class SearchBar extends javax.swing.JPanel {
     private void jCheckBoxMatchCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMatchCaseActionPerformed
 		updateSearch();
     }//GEN-LAST:event_jCheckBoxMatchCaseActionPerformed
+
+    private void jTextFieldSearchTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSearchTextKeyPressed
+		if (evt.getModifiersEx() == 0 && evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+			updateSearch();
+		}
+    }//GEN-LAST:event_jTextFieldSearchTextKeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupColumn;
