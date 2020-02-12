@@ -251,6 +251,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	public void notify_undo(UndoableModel model, UndoPosition newEditingPosition) {
 		XliffTag xliffTag = (XliffTag) model;
 		fileView.update_model(xliffTag);
+		fileView.searchBar1.searchAndHighlight();
 
 		SegmentView segmentView = newEditingPosition.getSegmentView();
 		if (segmentView != null) {
@@ -259,7 +260,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					segmentView.navigateToView(SegmentView.Column.TARGET, newEditingPosition.getTextPosition());
+					segmentView.navigateToView(SegmentView.Column.TARGET, newEditingPosition.getTextPosition(), true);
+					segmentView.reportCaretPosition();
 				}
 			});
 		}

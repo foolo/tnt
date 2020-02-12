@@ -207,6 +207,6 @@ public class FileView extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane1;
-    private tnt.editor.search.SearchBar searchBar1;
+    public tnt.editor.search.SearchBar searchBar1;
     // End of variables declaration//GEN-END:variables
 }

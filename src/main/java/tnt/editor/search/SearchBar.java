@@ -109,7 +109,7 @@ public class SearchBar extends javax.swing.JPanel {
 		currentSearchPosition = matchLocations.get(matchLocations.size() - 1);
 	}
 
-	void searchAndHighlight() {
+	public void searchAndHighlight() {
 		int flags = jCheckBoxMatchCase.isSelected() ? 0 : Pattern.CASE_INSENSITIVE;
 		boolean includeSource = jRadioButtonSource.isSelected() || jRadioButtonBoth.isSelected();
 		boolean includeTarget = jRadioButtonTarget.isSelected() || jRadioButtonBoth.isSelected();

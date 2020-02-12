@@ -235,10 +235,20 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void navigateToView(Column column, Integer caretPosition) {
+		navigateToView(column, caretPosition, false);
+	}
+
+	void navigateToView(Column column, Integer caretPosition, boolean bypassCaretListener) {
 		MarkupView markupView = getMarkupView(column);
 		markupView.grabFocus();
 		if (caretPosition != null) {
-			markupView.setCaretPosition(caretPosition);
+			try {
+				bypassListeners = bypassCaretListener;
+				markupView.setCaretPosition(caretPosition);
+			}
+			finally {
+				bypassListeners = false;
+			}
 		}
 	}
 
@@ -335,8 +345,13 @@ public class SegmentView extends javax.swing.JPanel {
 		fileView.validate();
 	}
 
-	void reportCaretPosition(int column, int textPos) {
-		fileView.setLastCaretPosition(this, column, textPos);
+	void reportCaretPosition() {
+		if (markupViewSource.hasFocus()) {
+			fileView.setLastCaretPosition(this, 0, markupViewSource.getCaret().getDot());
+		}
+		else {
+			fileView.setLastCaretPosition(this, 1, markupViewTarget.getCaret().getDot());
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -500,7 +515,7 @@ public class SegmentView extends javax.swing.JPanel {
 			return;
 		}
 		fileView.scroll_to_segment(this);
-		reportCaretPosition(1, markupViewTarget.getCaret().getDot());
+		reportCaretPosition();
 		if (modifiedFlag == false) {
 			Session.getUndoManager().markSnapshot();
 		}
@@ -565,7 +580,7 @@ public class SegmentView extends javax.swing.JPanel {
 			return;
 		}
 		fileView.scroll_to_segment(this);
-		reportCaretPosition(0, markupViewSource.getCaret().getDot());
+		reportCaretPosition();
     }//GEN-LAST:event_markupViewSourceCaretUpdate
 
     private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
