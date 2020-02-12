@@ -147,14 +147,6 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void notifyUpdate() {
-		searchBar1.notifyUpdate();
-	}
-
-	void focusSearchBox() {
-		searchBar1.focusSearchBox();
-	}
-
 	void focusFirstSegment() {
 		if (jPanelItems.getComponentCount() > 0) {
 			((SegmentView) jPanelItems.getComponent(0)).navigateToView(SegmentView.Column.TARGET, 0);
@@ -181,7 +173,6 @@ public class FileView extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanelItems = new javax.swing.JPanel();
-        searchBar1 = new tnt.editor.search.SearchBar();
 
         setMinimumSize(new java.awt.Dimension(800, 0));
 
@@ -207,6 +198,6 @@ public class FileView extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane1;
-    public tnt.editor.search.SearchBar searchBar1;
+    public final tnt.editor.search.SearchBar searchBar1 = new tnt.editor.search.SearchBar();
     // End of variables declaration//GEN-END:variables
 }

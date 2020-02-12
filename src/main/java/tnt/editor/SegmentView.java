@@ -181,7 +181,7 @@ public class SegmentView extends javax.swing.JPanel {
 		setStateField(SegmentTag.State.INITIAL);
 		notifyUndoManager(caretPosition1, caretPosition2);
 		modifiedFlag = true;
-		fileView.notifyUpdate();
+		fileView.searchBar1.notifyUpdate();
 		applySpellcheck();
 	}
 
@@ -200,7 +200,7 @@ public class SegmentView extends javax.swing.JPanel {
 					Session.getUndoManager().markSnapshot();
 					return;
 				case KeyEvent.VK_F:
-					fileView.focusSearchBox();
+					fileView.searchBar1.focusSearchBox();
 					return;
 			}
 			if (evt.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
