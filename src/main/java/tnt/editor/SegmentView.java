@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
-import static java.awt.event.InputEvent.CTRL_MASK;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -186,7 +185,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void handleKeyPress(KeyEvent evt) {
-		if (evt.getModifiers() == CTRL_MASK) {
+		if (evt.getModifiersEx() == InputEvent.CTRL_DOWN_MASK) {
 			switch (evt.getKeyCode()) {
 				case KeyEvent.VK_Z:
 					Session.getUndoManager().undo();
