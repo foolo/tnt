@@ -68,6 +68,7 @@ public class FileView extends javax.swing.JPanel {
 				SegmentView segmentView = ((SegmentView) c);
 				segmentView.navigateToView(currentSegment.getActiveColumn(), null);
 				scroll_to_segment(segmentView);
+				segmentView.markupViewTarget.setCaretPosition(0);
 				return;
 			}
 			if ((SegmentView) c == currentSegment) {

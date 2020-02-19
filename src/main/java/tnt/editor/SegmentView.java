@@ -361,7 +361,6 @@ public class SegmentView extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         markupViewSource = new tnt.editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
-        markupViewTarget = new tnt.editor.EditableMarkupView(this);
         jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
@@ -618,6 +617,6 @@ public class SegmentView extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private tnt.editor.MarkupView markupViewSource;
-    private tnt.editor.EditableMarkupView markupViewTarget;
+    public final tnt.editor.EditableMarkupView markupViewTarget = new tnt.editor.EditableMarkupView(this);
     // End of variables declaration//GEN-END:variables
 }
