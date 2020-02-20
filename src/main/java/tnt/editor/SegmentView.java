@@ -3,7 +3,6 @@ package tnt.editor;
 import tnt.editor.search.MatchLocation;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.InputEvent;
@@ -198,14 +197,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void updateHeight() {
-		Dimension d = getPreferredSize();
-		int h2 = markupViewTarget.getPreferredSize().height;
-		int newHeight = Math.max(minHeight, h2);
-		if (newHeight != d.height) {
-			d.height = newHeight + 3;
-			setPreferredSize(d);
-		}
-		fileView.validate();
+		System.out.println("tnt.editor.SegmentView.updateHeight() " + markupViewTarget.getPreferredSize());
 	}
 
 	void reportCaretPosition() {
