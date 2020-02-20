@@ -59,20 +59,16 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentView(FileView fileView, String id) {
 		initComponents();
 		this.fileView = fileView;
-		jScrollPane3.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane3));
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
-		markupViewSource.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		jLabelValidationError.setVisible(false);
 		jLabelQc.setVisible(false);
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
-		markupViewSource.setBorder(new CompoundBorder(markupViewSource.getBorder(), PADDING_BORDER));
 		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		jLabelId.setText(StringUtil.leftPad(id, ' ', 3));
 		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
-		jScrollPane3.getViewport().setOpaque(false);
 		jScrollPane4.getViewport().setOpaque(false);
 	}
 
@@ -93,7 +89,6 @@ public class SegmentView extends javax.swing.JPanel {
 		this.segmentTag = segmentTag;
 		try {
 			bypassListeners = true;
-			markupViewSource.setTaggedText(segmentTag.getSourceText());
 			markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		}
 		finally {
@@ -217,19 +212,10 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	MarkupView getMarkupView(Column column) {
-		switch (column) {
-			case SOURCE:
-				return markupViewSource;
-			case TARGET:
-			default:
 				return markupViewTarget;
-		}
 	}
 
 	Column getActiveColumn() {
-		if (markupViewSource.hasFocus()) {
-			return Column.SOURCE;
-		}
 		return Column.TARGET;
 	}
 
@@ -295,7 +281,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void findMatches(String term, int flags, int segmentIndex, int column, ArrayList<MatchLocation> searchResultsOut) {
-		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
+		MarkupView mv = markupViewTarget;
 		ArrayList<Integer> indexes = new ArrayList<>();
 		String text = mv.getPlainText(indexes);
 		ArrayList<MatchResult> matchResults = findMatches(term, text, flags);
@@ -306,12 +292,11 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void clearHighlighting() {
-		markupViewSource.getHighlighter().removeAllHighlights();
 		markupViewTarget.getHighlighter().removeAllHighlights();
 	}
 
 	void highlightMatch(int column, EditorRange range) {
-		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
+		MarkupView mv = markupViewTarget;
 		mv.applyHighlighting(range, FILTER_MATCH_HIGHLIGHT_PAINTER);
 	}
 
@@ -325,20 +310,18 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void clearSelection() {
-		clearSelection(markupViewSource);
 		clearSelection(markupViewTarget);
 	}
 
 	void highlightSelection(int column, EditorRange range) {
-		MarkupView mv = (column == 0) ? markupViewSource : markupViewTarget;
+		MarkupView mv = markupViewTarget;
 		mv.applyHighlighting(range, selectionPainter);
 	}
 
 	void updateHeight() {
 		Dimension d = getPreferredSize();
-		int h1 = markupViewSource.getPreferredSize().height;
 		int h2 = markupViewTarget.getPreferredSize().height;
-		int newHeight = Math.max(minHeight, Math.max(h1, h2));
+		int newHeight = Math.max(minHeight, h2);
 		if (newHeight != d.height) {
 			d.height = newHeight + 3;
 			setPreferredSize(d);
@@ -347,12 +330,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void reportCaretPosition() {
-		if (markupViewSource.hasFocus()) {
-			fileView.setLastCaretPosition(this, 0, markupViewSource.getCaret().getDot());
-		}
-		else {
 			fileView.setLastCaretPosition(this, 1, markupViewTarget.getCaret().getDot());
-		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -360,8 +338,6 @@ public class SegmentView extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        markupViewSource = new tnt.editor.MarkupView(this);
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jLabelState = new javax.swing.JLabel();
@@ -376,30 +352,6 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel1.setOpaque(false);
         jPanel1.setPreferredSize(new java.awt.Dimension(50, 50));
         jPanel1.setLayout(new java.awt.GridLayout(1, 0));
-
-        jScrollPane3.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, GRID_COLOR));
-        jScrollPane3.setOpaque(false);
-
-        markupViewSource.setEditable(false);
-        markupViewSource.setOpaque(false);
-        markupViewSource.addCaretListener(new javax.swing.event.CaretListener() {
-            public void caretUpdate(javax.swing.event.CaretEvent evt) {
-                markupViewSourceCaretUpdate(evt);
-            }
-        });
-        markupViewSource.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                markupViewSourceFocusGained(evt);
-            }
-        });
-        markupViewSource.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                markupViewSourceKeyPressed(evt);
-            }
-        });
-        jScrollPane3.setViewportView(markupViewSource);
-
-        jPanel1.add(jScrollPane3);
 
         jScrollPane4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, GRID_COLOR));
         jScrollPane4.setOpaque(false);
@@ -499,12 +451,6 @@ public class SegmentView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void markupViewSourceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewSourceFocusGained
-		Session.getUndoManager().markSnapshot();
-		markupViewSource.getCaret().setVisible(true);
-		setActiveSegmentView(this);
-    }//GEN-LAST:event_markupViewSourceFocusGained
-
     private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
 		Session.getUndoManager().markSnapshot();
 		setActiveSegmentView(this);
@@ -575,25 +521,12 @@ public class SegmentView extends javax.swing.JPanel {
 		}
     }//GEN-LAST:event_markupViewTargetMouseReleased
 
-    private void markupViewSourceCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewSourceCaretUpdate
-		if (bypassListeners) {
-			return;
-		}
-		fileView.scroll_to_segment(this);
-		reportCaretPosition();
-    }//GEN-LAST:event_markupViewSourceCaretUpdate
-
-    private void markupViewSourceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewSourceKeyPressed
-		handleKeyPress(evt);
-    }//GEN-LAST:event_markupViewSourceKeyPressed
-
     private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
 		handleKeyPress(evt);
     }//GEN-LAST:event_markupViewTargetKeyPressed
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;
-		markupViewSource.setFont(f);
 		markupViewTarget.setFont(f);
 	}
 
@@ -616,9 +549,7 @@ public class SegmentView extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelValidationError;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private tnt.editor.MarkupView markupViewSource;
     public final tnt.editor.EditableMarkupView markupViewTarget = new tnt.editor.EditableMarkupView(this);
     // End of variables declaration//GEN-END:variables
 }
