@@ -4,18 +4,14 @@ import tnt.editor.search.MatchLocation;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JTextPane;
-import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import tnt.editor.search.EditorRange;
-import tnt.editor.util.UnderlinerEditorKit;
 import tnt.language.SpellCheck;
 import tnt.undo_manager.UndoPosition;
 import tnt.util.RegexUtil;
@@ -36,8 +32,6 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentView(FileView fileView, String id) {
 		initComponents();
 		this.fileView = fileView;
-		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
-		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
 	}
