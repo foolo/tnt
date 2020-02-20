@@ -72,17 +72,6 @@ public class SegmentView extends javax.swing.JPanel {
 		jScrollPane4.getViewport().setOpaque(false);
 	}
 
-	void updateStateLabel(SegmentTag.State state) {
-		Session.getUndoManager().updateProgress();
-		jLabelState.setText(state.toString());
-		if (state == SegmentTag.State.INITIAL) {
-			jLabelState.setForeground(Color.DARK_GRAY);
-		}
-		else {
-			jLabelState.setForeground(NON_INITIAL_LABEL_COLOR);
-		}
-	}
-
 	boolean bypassListeners = false;
 
 	public void updateSegmentTag(SegmentTag segmentTag) {
@@ -94,7 +83,6 @@ public class SegmentView extends javax.swing.JPanel {
 		finally {
 			bypassListeners = false;
 		}
-		updateStateLabel(segmentTag.getState());
 		applySpellcheck();
 		if (segmentTag.getState() != SegmentTag.State.INITIAL) {
 			jLabelValidationError.setVisible(false);
@@ -113,9 +101,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private boolean setStateField(SegmentTag.State state) {
 		boolean res = segmentTag.setState(state);
-		if (res) {
-			updateStateLabel(segmentTag.getState());
-		}
 		if (state != SegmentTag.State.INITIAL) {
 			jLabelValidationError.setVisible(false);
 		}
@@ -340,7 +325,6 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
-        jLabelState = new javax.swing.JLabel();
         jLabelValidationError = new javax.swing.JLabel();
         jLabelQc = new javax.swing.JLabel();
         jLabelId = new javax.swing.JLabel();
@@ -389,9 +373,6 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        jLabelState.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
-        jLabelState.setText("jLabel1");
-
         jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
         jLabelValidationError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tnt/images/dialog-error.png"))); // NOI18N
         jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -405,24 +386,19 @@ public class SegmentView extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelState)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabelValidationError)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelQc)))
+                .addComponent(jLabelValidationError)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelQc)
                 .addContainerGap(65, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelState)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(33, 33, 33)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelValidationError)
                     .addComponent(jLabelQc))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         jLabelId.setFont(new java.awt.Font("DejaVu Sans Mono", 1, 12)); // NOI18N
@@ -545,7 +521,6 @@ public class SegmentView extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelId;
     private javax.swing.JLabel jLabelQc;
-    private javax.swing.JLabel jLabelState;
     private javax.swing.JLabel jLabelValidationError;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
