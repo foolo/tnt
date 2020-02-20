@@ -336,7 +336,9 @@ public class SegmentView extends javax.swing.JPanel {
 
 	void updateHeight() {
 		Dimension d = getPreferredSize();
-		int newHeight = Math.max(minHeight, Math.max(markupViewSource.getPreferredSize().height, markupViewTarget.getPreferredSize().height));
+		int h1 = markupViewSource.getPreferredSize().height;
+		int h2 = markupViewTarget.getPreferredSize().height;
+		int newHeight = Math.max(minHeight, Math.max(h1, h2));
 		if (newHeight != d.height) {
 			d.height = newHeight + 3;
 			setPreferredSize(d);
