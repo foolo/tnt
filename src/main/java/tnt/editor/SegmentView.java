@@ -309,11 +309,6 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewTargetCaretUpdate(evt);
             }
         });
-        markupViewTarget.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                markupViewTargetFocusGained(evt);
-            }
-        });
         markupViewTarget.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 markupViewTargetMousePressed(evt);
@@ -343,11 +338,6 @@ public class SegmentView extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void markupViewTargetFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_markupViewTargetFocusGained
-		Session.getUndoManager().markSnapshot();
-		setActiveSegmentView(this);
-    }//GEN-LAST:event_markupViewTargetFocusGained
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
 		if (bypassListeners) {
