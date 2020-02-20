@@ -6,17 +6,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -32,7 +27,6 @@ import tnt.editor.util.UnderlinerEditorKit;
 import tnt.language.SpellCheck;
 import tnt.undo_manager.UndoPosition;
 import tnt.util.RegexUtil;
-import tnt.util.Settings;
 import tnt.util.StringUtil;
 import tnt.xliff_model.SegmentTag;
 import tnt.xliff_model.TaggedText;
@@ -111,16 +105,6 @@ public class SegmentView extends javax.swing.JPanel {
 		return fileView;
 	}
 
-	String qcMessagesToHtml(ArrayList<String> msgs) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("<html><body><b>QC Messages</b>");
-		for (String s : msgs) {
-			sb.append("<p>").append(s).append("</p>");
-		}
-		sb.append("</body></html>");
-		return sb.toString();
-	}
-
 	void notifyUndoManager(int caretPos1, int caretPos2) {
 		UndoPosition pos1 = new UndoPosition(this, caretPos1);
 		UndoPosition pos2 = new UndoPosition(this, caretPos2);
@@ -135,38 +119,6 @@ public class SegmentView extends javax.swing.JPanel {
 		modifiedFlag = true;
 		fileView.searchBar1.notifyUpdate();
 		applySpellcheck();
-	}
-
-	void handleKeyPress(KeyEvent evt) {
-		if (evt.getModifiersEx() == InputEvent.CTRL_DOWN_MASK) {
-			switch (evt.getKeyCode()) {
-				case KeyEvent.VK_Z:
-					Session.getUndoManager().undo();
-					evt.consume();
-					return;
-				case KeyEvent.VK_Y:
-					Session.getUndoManager().redo();
-					evt.consume();
-					return;
-				case KeyEvent.VK_V:
-					Session.getUndoManager().markSnapshot();
-					return;
-				case KeyEvent.VK_F:
-					fileView.searchBar1.focusSearchBox();
-					return;
-			}
-			if (evt.getExtendedKeyCode() == KeyEvent.VK_DOWN) {
-				fileView.jumpToNextSegment(this);
-				return;
-			}
-			if (evt.getExtendedKeyCode() == KeyEvent.VK_UP) {
-				fileView.jumpToPreviousSegment(this);
-				return;
-			}
-		}
-		else if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-			fileView.jumpToNextSegment(this);
-		}
 	}
 
 	MarkupView getMarkupView(Column column) {
@@ -340,44 +292,6 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 		modifiedFlag = false;
     }//GEN-LAST:event_markupViewTargetCaretUpdate
-
-	void showTargetPopup(MouseEvent evt) {
-		ArrayList<Integer> indexes = new ArrayList<>();
-		String plainText = markupViewTarget.getPlainText(indexes);
-		int textPositionTagged = markupViewTarget.viewToModel2D(evt.getPoint());
-		int textPositionPlain = StringUtil.taggedToPlainIndex(textPositionTagged, indexes);
-		MatchResult matchResult = RegexUtil.findSpellingUnitAtPosition(plainText, textPositionPlain);
-		if (matchResult == null) {
-			return;
-		}
-		String word = matchResult.group();
-		if (SpellCheck.isMisspelled(word) == false) {
-			return;
-		}
-		List<String> suggestions = SpellCheck.getSuggestions(word);
-		JPopupMenu popupMenu = new JPopupMenu();
-		if (suggestions.isEmpty()) {
-			popupMenu.add(new JMenuItem("(No suggestions)"));
-		}
-		for (String s : suggestions) {
-			JMenuItem menuItem = new JMenuItem(s);
-			menuItem.addActionListener((ActionEvent e) -> {
-				int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), indexes);
-				int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), indexes);
-				Session.getUndoManager().markSnapshot();
-				markupViewTarget.replaceTaggedText(startTagged, endTagged, s);
-				Session.getUndoManager().markSnapshot();
-			});
-			popupMenu.add(menuItem);
-		}
-		popupMenu.addSeparator();
-		JMenuItem menuItem = new JMenuItem("Add to dictionary");
-		menuItem.addActionListener((ActionEvent e) -> {
-			Settings.addWordToWordlist(word);
-		});
-		popupMenu.add(menuItem);
-		popupMenu.show(markupViewTarget, evt.getX(), evt.getY());
-	}
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;
