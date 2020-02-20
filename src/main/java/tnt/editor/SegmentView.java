@@ -53,17 +53,9 @@ public class SegmentView extends javax.swing.JPanel {
 		jScrollPane4.getViewport().setOpaque(false);
 	}
 
-	boolean bypassListeners = false;
-
 	public void updateSegmentTag(SegmentTag segmentTag) {
 		this.segmentTag = segmentTag;
-		try {
-			bypassListeners = true;
-			markupViewTarget.updateTaggedText(segmentTag.getTargetText());
-		}
-		finally {
-			bypassListeners = false;
-		}
+		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		applySpellcheck();
 	}
 
@@ -113,7 +105,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	MarkupView getMarkupView(Column column) {
-				return markupViewTarget;
+		return markupViewTarget;
 	}
 
 	Column getActiveColumn() {
@@ -128,13 +120,7 @@ public class SegmentView extends javax.swing.JPanel {
 		MarkupView markupView = getMarkupView(column);
 		markupView.grabFocus();
 		if (caretPosition != null) {
-			try {
-				bypassListeners = bypassCaretListener;
-				markupView.setCaretPosition(caretPosition);
-			}
-			finally {
-				bypassListeners = false;
-			}
+			markupView.setCaretPosition(caretPosition);
 		}
 	}
 
@@ -223,7 +209,7 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void reportCaretPosition() {
-			fileView.setLastCaretPosition(this, 1, markupViewTarget.getCaret().getDot());
+		fileView.setLastCaretPosition(this, 1, markupViewTarget.getCaret().getDot());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -261,9 +247,6 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		if (bypassListeners) {
-			return;
-		}
 		fileView.scroll_to_segment(this);
 		reportCaretPosition();
 		if (modifiedFlag == false) {
