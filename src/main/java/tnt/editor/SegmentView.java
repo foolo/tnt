@@ -30,7 +30,6 @@ import tnt.editor.search.EditorRange;
 import tnt.editor.util.MouseWheelScrollListener;
 import tnt.editor.util.UnderlinerEditorKit;
 import tnt.language.SpellCheck;
-import tnt.qc.Qc;
 import tnt.undo_manager.UndoPosition;
 import tnt.util.RegexUtil;
 import tnt.util.Settings;
@@ -61,8 +60,6 @@ public class SegmentView extends javax.swing.JPanel {
 		this.fileView = fileView;
 		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
-		jLabelValidationError.setVisible(false);
-		jLabelQc.setVisible(false);
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
@@ -84,11 +81,6 @@ public class SegmentView extends javax.swing.JPanel {
 			bypassListeners = false;
 		}
 		applySpellcheck();
-		if (segmentTag.getState() != SegmentTag.State.INITIAL) {
-			jLabelValidationError.setVisible(false);
-			ArrayList<String> qcRes = Qc.runQc(getSegmentTag());
-			showQcMsg(qcRes);
-		}
 	}
 
 	public void setTargetText(TaggedText t) {
@@ -101,9 +93,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private boolean setStateField(SegmentTag.State state) {
 		boolean res = segmentTag.setState(state);
-		if (state != SegmentTag.State.INITIAL) {
-			jLabelValidationError.setVisible(false);
-		}
 		return res;
 	}
 
@@ -123,11 +112,6 @@ public class SegmentView extends javax.swing.JPanel {
 		return fileView;
 	}
 
-	void showValidationError(String message) {
-		jLabelValidationError.setVisible(true);
-		jLabelValidationError.setToolTipText("<html><body><b>Target text errors</b><p>" + message + "</p></body></html>");
-	}
-
 	String qcMessagesToHtml(ArrayList<String> msgs) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<html><body><b>QC Messages</b>");
@@ -136,16 +120,6 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 		sb.append("</body></html>");
 		return sb.toString();
-	}
-
-	void showQcMsg(ArrayList<String> msgs) {
-		if (msgs.isEmpty()) {
-			jLabelQc.setVisible(false);
-			jLabelQc.setToolTipText(null);
-			return;
-		}
-		jLabelQc.setVisible(true);
-		jLabelQc.setToolTipText(qcMessagesToHtml(msgs));
 	}
 
 	void notifyUndoManager(int caretPos1, int caretPos2) {
@@ -325,8 +299,6 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
-        jLabelValidationError = new javax.swing.JLabel();
-        jLabelQc = new javax.swing.JLabel();
         jLabelId = new javax.swing.JLabel();
 
         setBackground(BACKGROUND_COLOR);
@@ -373,32 +345,15 @@ public class SegmentView extends javax.swing.JPanel {
         jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(50, 50));
 
-        jLabelValidationError.setForeground(new java.awt.Color(255, 0, 0));
-        jLabelValidationError.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tnt/images/dialog-error.png"))); // NOI18N
-        jLabelValidationError.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        jLabelQc.setForeground(new java.awt.Color(255, 204, 0));
-        jLabelQc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/tnt/images/dialog-information.png"))); // NOI18N
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabelValidationError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelQc)
-                .addContainerGap(65, Short.MAX_VALUE))
+            .addGap(0, 131, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelValidationError)
-                    .addComponent(jLabelQc))
-                .addContainerGap(30, Short.MAX_VALUE))
+            .addGap(0, 87, Short.MAX_VALUE)
         );
 
         jLabelId.setFont(new java.awt.Font("DejaVu Sans Mono", 1, 12)); // NOI18N
@@ -520,8 +475,6 @@ public class SegmentView extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelId;
-    private javax.swing.JLabel jLabelQc;
-    private javax.swing.JLabel jLabelValidationError;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane4;
