@@ -15,9 +15,6 @@ import java.util.regex.Pattern;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 
@@ -41,11 +38,6 @@ public class SegmentView extends javax.swing.JPanel {
 	private final FileView fileView;
 	boolean modifiedFlag = false;
 	private int minHeight = 0;
-	static final Border PADDING_BORDER = new EmptyBorder(5, 0, 5, 0);
-	static final Color NON_INITIAL_LABEL_COLOR = new Color(0, 160, 0);
-	static final Color BACKGROUND_COLOR = Color.WHITE;
-	static final Color GRID_COLOR = new Color(204, 204, 204);
-	static final Color ACTIVE_SEGMENT_COLOR = new Color(241, 247, 255);
 	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
@@ -57,7 +49,6 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
-		markupViewTarget.setBorder(new CompoundBorder(markupViewTarget.getBorder(), PADDING_BORDER));
 		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
 		jScrollPane4.getViewport().setOpaque(false);
 	}
@@ -148,14 +139,6 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	private static SegmentView activeSegmentView = null;
-
-	static void setActiveSegmentView(SegmentView segmentView) {
-		if (activeSegmentView != null) {
-			activeSegmentView.setBackground(BACKGROUND_COLOR);
-		}
-		activeSegmentView = segmentView;
-		activeSegmentView.setBackground(ACTIVE_SEGMENT_COLOR);
-	}
 
 	static SegmentView getActiveSegmentView() {
 		Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -249,10 +232,9 @@ public class SegmentView extends javax.swing.JPanel {
 
         jScrollPane4 = new javax.swing.JScrollPane();
 
-        setBackground(BACKGROUND_COLOR);
-        setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, GRID_COLOR));
+        setBackground(new java.awt.Color(255, 255, 255));
 
-        jScrollPane4.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 0, 0, GRID_COLOR));
+        jScrollPane4.setBorder(null);
         jScrollPane4.setOpaque(false);
 
         markupViewTarget.setOpaque(false);
@@ -267,7 +249,7 @@ public class SegmentView extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,7 +282,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	static int getMinHeightForFont(Font font) {
 		JTextPane textPane = new JTextPane();
-		textPane.setBorder(new CompoundBorder(textPane.getBorder(), PADDING_BORDER));
 		textPane.setFont(font);
 		textPane.setText("\n");
 		return textPane.getPreferredSize().height;

@@ -2,15 +2,8 @@
 
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
-    <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-      <Connection code="BACKGROUND_COLOR" type="code"/>
-    </Property>
-    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-      <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
-        <MatteColorBorder bottom="0" left="0" right="0" top="1">
-          <Connection PropertyName="color" code="GRID_COLOR" type="code"/>
-        </MatteColorBorder>
-      </Border>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="ff" green="ff" red="ff" type="rgb"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -28,7 +21,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jScrollPane4" alignment="0" pref="763" max="32767" attributes="0"/>
+          <Component id="jScrollPane4" alignment="0" pref="765" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -45,11 +38,7 @@
     <Container class="javax.swing.JScrollPane" name="jScrollPane4">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.MatteColorBorderInfo">
-            <MatteColorBorder bottom="0" left="1" right="0" top="0">
-              <Connection PropertyName="color" code="GRID_COLOR" type="code"/>
-            </MatteColorBorder>
-          </Border>
+          <Border info="null"/>
         </Property>
         <Property name="opaque" type="boolean" value="false"/>
       </Properties>
