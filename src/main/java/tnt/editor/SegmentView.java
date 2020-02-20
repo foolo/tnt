@@ -309,19 +309,6 @@ public class SegmentView extends javax.swing.JPanel {
                 markupViewTargetCaretUpdate(evt);
             }
         });
-        markupViewTarget.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                markupViewTargetMousePressed(evt);
-            }
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                markupViewTargetMouseReleased(evt);
-            }
-        });
-        markupViewTarget.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                markupViewTargetKeyPressed(evt);
-            }
-        });
         jScrollPane4.setViewportView(markupViewTarget);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -391,22 +378,6 @@ public class SegmentView extends javax.swing.JPanel {
 		popupMenu.add(menuItem);
 		popupMenu.show(markupViewTarget, evt.getX(), evt.getY());
 	}
-
-    private void markupViewTargetMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewTargetMousePressed
-		if (evt.isPopupTrigger()) {
-			showTargetPopup(evt);
-		}
-    }//GEN-LAST:event_markupViewTargetMousePressed
-
-    private void markupViewTargetMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markupViewTargetMouseReleased
-		if (evt.isPopupTrigger()) {
-			showTargetPopup(evt);
-		}
-    }//GEN-LAST:event_markupViewTargetMouseReleased
-
-    private void markupViewTargetKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_markupViewTargetKeyPressed
-		handleKeyPress(evt);
-    }//GEN-LAST:event_markupViewTargetKeyPressed
 
 	void setEditorFont(Font f, int minHeight) {
 		this.minHeight = minHeight;
