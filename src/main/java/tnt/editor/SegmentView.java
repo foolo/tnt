@@ -1,7 +1,6 @@
 package tnt.editor;
 
 import tnt.editor.search.MatchLocation;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -36,8 +35,6 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentTag segmentTag;
 	private final FileView fileView;
 	boolean modifiedFlag = false;
-	private int minHeight = 0;
-	static final DefaultHighlighter.DefaultHighlightPainter FILTER_MATCH_HIGHLIGHT_PAINTER = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
 	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
 	SegmentView(FileView fileView, String id) {
@@ -169,15 +166,6 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 	}
 
-	void clearHighlighting() {
-		markupViewTarget.getHighlighter().removeAllHighlights();
-	}
-
-	void highlightMatch(int column, EditorRange range) {
-		MarkupView mv = markupViewTarget;
-		mv.applyHighlighting(range, FILTER_MATCH_HIGHLIGHT_PAINTER);
-	}
-
 	void clearSelection(MarkupView mv) {
 		Highlighter.Highlight[] highlights = mv.getHighlighter().getHighlights();
 		for (Highlighter.Highlight hl : highlights) {
@@ -249,11 +237,6 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 		modifiedFlag = false;
     }//GEN-LAST:event_markupViewTargetCaretUpdate
-
-	void setEditorFont(Font f, int minHeight) {
-		this.minHeight = minHeight;
-		markupViewTarget.setFont(f);
-	}
 
 	static int getMinHeightForFont(Font font) {
 		JTextPane textPane = new JTextPane();

@@ -114,7 +114,6 @@ public class SearchBar extends javax.swing.JPanel {
 		boolean includeSource = jRadioButtonSource.isSelected() || jRadioButtonBoth.isSelected();
 		boolean includeTarget = jRadioButtonTarget.isSelected() || jRadioButtonBoth.isSelected();
 		matchLocations = fileView.findMatches(jTextFieldSearchText.getText(), flags, includeSource, includeTarget);
-		fileView.highlightMatches(matchLocations);
 	}
 
 	void updateSearch() {

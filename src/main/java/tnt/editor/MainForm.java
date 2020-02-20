@@ -130,7 +130,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		jPanel2.add(fileView);
 		jPanel2.revalidate();
 
-		fileView.applyFontPreferences();
 		fileView.focusFirstSegment();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
@@ -668,7 +667,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	void applyPreferences() {
 		if (fileView != null) {
-			fileView.applyFontPreferences();
 			fileView.updateHeights();
 		}
 	}

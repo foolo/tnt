@@ -2,10 +2,8 @@ package tnt.editor;
 
 import tnt.editor.search.MatchLocation;
 import java.awt.Component;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import tnt.util.Settings;
 import tnt.xliff_model.SegmentTag;
 import tnt.xliff_model.XliffTag;
 
@@ -137,28 +135,9 @@ public class FileView extends javax.swing.JPanel {
 		return res;
 	}
 
-	public void highlightMatches(ArrayList<MatchLocation> matchLocations) {
-		Component[] components = jPanelItems.getComponents();
-		for (Component c : components) {
-			((SegmentView) c).clearHighlighting();
-		}
-		for (MatchLocation ml : matchLocations) {
-			SegmentView sv = (SegmentView) components[ml.segmentIndex];
-			sv.highlightMatch(ml.column, ml.range);
-		}
-	}
-
 	void focusFirstSegment() {
 		if (jPanelItems.getComponentCount() > 0) {
 			((SegmentView) jPanelItems.getComponent(0)).navigateToView(SegmentView.Column.TARGET, 0);
-		}
-	}
-
-	void applyFontPreferences() {
-		Font f = new Font(Settings.getEditorFontName(), Font.PLAIN, Settings.getEditorFontSize());
-		int minHeight = SegmentView.getMinHeightForFont(f);
-		for (Component c : jPanelItems.getComponents()) {
-			((SegmentView) c).setEditorFont(f, minHeight);
 		}
 	}
 
