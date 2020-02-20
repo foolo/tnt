@@ -15,7 +15,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import tnt.editor.search.EditorRange;
-import tnt.editor.util.MouseWheelScrollListener;
 import tnt.editor.util.UnderlinerEditorKit;
 import tnt.language.SpellCheck;
 import tnt.undo_manager.UndoPosition;
@@ -37,12 +36,10 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentView(FileView fileView, String id) {
 		initComponents();
 		this.fileView = fileView;
-		jScrollPane4.addMouseWheelListener(new MouseWheelScrollListener(jScrollPane4));
 		markupViewTarget.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, InputEvent.CTRL_MASK), "none");
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
-		jScrollPane4.getViewport().setOpaque(false);
 	}
 
 	public void updateSegmentTag(SegmentTag segmentTag) {
