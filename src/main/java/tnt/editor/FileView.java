@@ -30,19 +30,6 @@ public class FileView extends javax.swing.JPanel {
 		}
 	}
 
-	void scroll_to_segment(SegmentView segmentView) {
-		int dest_y = segmentView.getBounds().y;
-		int dest_h = segmentView.getBounds().height;
-		int view_y = jScrollPane1.getVerticalScrollBar().getValue();
-		int view_h = jScrollPane1.getVerticalScrollBar().getVisibleAmount();
-		if (dest_y < view_y) {
-			jScrollPane1.getVerticalScrollBar().setValue(dest_y);
-		}
-		else if (dest_y + dest_h > view_y + view_h) {
-			jScrollPane1.getVerticalScrollBar().setValue(dest_y + dest_h - view_h);
-		}
-	}
-
 	void populate_segments(ArrayList<SegmentTag> segmentTags) {
 		for (SegmentTag st : segmentTags) {
 			jPanelItems.add(new SegmentView(this, st.getInternalId()));
@@ -55,36 +42,6 @@ public class FileView extends javax.swing.JPanel {
 			res.add((SegmentView) c);
 		}
 		return res;
-	}
-
-	void jumpToNextSegment(SegmentView currentSegment) {
-		boolean found = false;
-		for (Component c : jPanelItems.getComponents()) {
-			if (found) {
-				SegmentView segmentView = ((SegmentView) c);
-				segmentView.navigateToView(currentSegment.getActiveColumn(), null);
-				scroll_to_segment(segmentView);
-				segmentView.markupViewTarget.setCaretPosition(0);
-				return;
-			}
-			if ((SegmentView) c == currentSegment) {
-				found = true;
-			}
-		}
-	}
-
-	void jumpToPreviousSegment(SegmentView currentSegment) {
-		SegmentView previousSegment = null;
-		for (Component c : jPanelItems.getComponents()) {
-			if ((SegmentView) c == currentSegment) {
-				if (previousSegment != null) {
-					previousSegment.navigateToView(currentSegment.getActiveColumn(), null);
-					scroll_to_segment(previousSegment);
-				}
-				return;
-			}
-			previousSegment = (SegmentView) c;
-		}
 	}
 
 	boolean match(String term, String text, boolean matchCase) {

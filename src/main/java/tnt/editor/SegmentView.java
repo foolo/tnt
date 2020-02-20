@@ -78,7 +78,6 @@ public class SegmentView extends javax.swing.JPanel {
 	}
 
 	void update(int caretPosition1, int caretPosition2) {
-		fileView.scroll_to_segment(this);
 		segmentTag.setTargetText(markupViewTarget.getTaggedText());
 		setStateField(SegmentTag.State.INITIAL);
 		notifyUndoManager(caretPosition1, caretPosition2);
@@ -195,7 +194,6 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		fileView.scroll_to_segment(this);
 		reportCaretPosition();
 		if (modifiedFlag == false) {
 			Session.getUndoManager().markSnapshot();

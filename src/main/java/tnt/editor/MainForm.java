@@ -252,7 +252,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 		SegmentView segmentView = newEditingPosition.getSegmentView();
 		if (segmentView != null) {
-			segmentView.getFileView().scroll_to_segment(segmentView);
 			// todo why is invokeLater needed?
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
@@ -630,12 +629,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		});
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
-	void jumpToNextSegment(SegmentView currentSegmentView) {
-		if (fileView != null) {
-			fileView.jumpToNextSegment(currentSegmentView);
-		}
-	}
-
     private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
 		Session.getUndoManager().markSnapshot();
 		SegmentView segmentView = SegmentView.getActiveSegmentView();
@@ -656,11 +649,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			errMsg = OpenXliffValidator.validate(segmentView.getSegmentTag());
 			if (errMsg == null) {
 				segmentView.setState(SegmentTag.State.TRANSLATED);
-				jumpToNextSegment(segmentView);
 			}
-		}
-		else {
-			jumpToNextSegment(segmentView);
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 
