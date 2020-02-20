@@ -11,13 +11,11 @@ public class FileView extends javax.swing.JPanel {
 
 	void setLastCaretPosition(SegmentView segmentView, int column, int caretPos) {
 		int segmentIndex = getIndexOfSegmentView(segmentView);
-		searchBar1.setSearchPosition(segmentIndex, column, caretPos);
 	}
 
 	public FileView() {
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
-		searchBar1.setFileView(this);
 	}
 
 	SegmentView getSegmentView(int index) {
@@ -109,17 +107,6 @@ public class FileView extends javax.swing.JPanel {
 		return -1;
 	}
 
-	public void highlightSelection(MatchLocation ml) {
-		SegmentView segmentView = getSegmentView(ml.segmentIndex);
-		segmentView.highlightSelection(ml.column, ml.range);
-		scroll_to_segment(segmentView);
-	}
-
-	public void clearSelection(MatchLocation ml) {
-		SegmentView segmentView = getSegmentView(ml.segmentIndex);
-		segmentView.clearSelection();
-	}
-
 	public ArrayList<MatchLocation> findMatches(String term, int flags, boolean includeSource, boolean includeTarget) {
 		ArrayList<MatchLocation> res = new ArrayList<>();
 		Component[] components = jPanelItems.getComponents();
@@ -164,20 +151,15 @@ public class FileView extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
-            .addComponent(searchBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(searchBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanelItems;
     private javax.swing.JScrollPane jScrollPane1;
-    public final tnt.editor.search.SearchBar searchBar1 = new tnt.editor.search.SearchBar();
     // End of variables declaration//GEN-END:variables
 }

@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
 
 import tnt.editor.search.EditorRange;
 import tnt.editor.util.MouseWheelScrollListener;
@@ -35,7 +33,6 @@ public class SegmentView extends javax.swing.JPanel {
 	SegmentTag segmentTag;
 	private final FileView fileView;
 	boolean modifiedFlag = false;
-	final DefaultHighlighter.DefaultHighlightPainter selectionPainter;
 
 	SegmentView(FileView fileView, String id) {
 		initComponents();
@@ -45,7 +42,6 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.setEditorKit(new UnderlinerEditorKit());
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 		markupViewTarget.addDocumentFilter();
-		selectionPainter = new DefaultHighlighter.DefaultHighlightPainter(markupViewTarget.getSelectionColor());
 		jScrollPane4.getViewport().setOpaque(false);
 	}
 
@@ -96,7 +92,6 @@ public class SegmentView extends javax.swing.JPanel {
 		setStateField(SegmentTag.State.INITIAL);
 		notifyUndoManager(caretPosition1, caretPosition2);
 		modifiedFlag = true;
-		fileView.searchBar1.notifyUpdate();
 		applySpellcheck();
 	}
 
@@ -164,24 +159,6 @@ public class SegmentView extends javax.swing.JPanel {
 		for (EditorRange range : editorRanges) {
 			searchResultsOut.add(new MatchLocation(segmentIndex, column, range));
 		}
-	}
-
-	void clearSelection(MarkupView mv) {
-		Highlighter.Highlight[] highlights = mv.getHighlighter().getHighlights();
-		for (Highlighter.Highlight hl : highlights) {
-			if (hl.getPainter() == selectionPainter) {
-				mv.getHighlighter().removeHighlight(hl);
-			}
-		}
-	}
-
-	void clearSelection() {
-		clearSelection(markupViewTarget);
-	}
-
-	void highlightSelection(int column, EditorRange range) {
-		MarkupView mv = markupViewTarget;
-		mv.applyHighlighting(range, selectionPainter);
 	}
 
 	void updateHeight() {
