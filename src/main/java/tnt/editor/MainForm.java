@@ -27,7 +27,6 @@ import tnt.language.Language;
 import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
 import tnt.language.SpellCheck;
-import tnt.qc.Qc;
 import tnt.undo_manager.UndoPosition;
 import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoableModel;
@@ -650,12 +649,9 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 
-		ArrayList<String> qcRes = Qc.runQc(segmentView.getSegmentTag());
-		segmentView.showQcMsg(qcRes);
 
 		String errMsg = segmentView.getSegmentTag().testEncodeTarget();
 		if (errMsg != null) {
-			segmentView.showValidationError(errMsg);
 			return;
 		}
 		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {
@@ -663,9 +659,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			if (errMsg == null) {
 				segmentView.setState(SegmentTag.State.TRANSLATED);
 				jumpToNextSegment(segmentView);
-			}
-			else {
-				segmentView.showValidationError(errMsg);
 			}
 		}
 		else {
