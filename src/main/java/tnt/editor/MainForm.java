@@ -11,7 +11,6 @@ import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
 import tnt.conversion.OpenXliffHandler;
 import tnt.conversion.ConversionError;
-import tnt.conversion.OpenXliffValidator;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
@@ -638,18 +637,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		if (segmentView.getSegmentTag().getTargetText().getContent().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Can not mark empty segment as translated", "", JOptionPane.ERROR_MESSAGE);
 			return;
-		}
-
-
-		String errMsg = segmentView.getSegmentTag().testEncodeTarget();
-		if (errMsg != null) {
-			return;
-		}
-		if (segmentView.getSegmentTag().getState() == SegmentTag.State.INITIAL) {
-			errMsg = OpenXliffValidator.validate(segmentView.getSegmentTag());
-			if (errMsg == null) {
-				segmentView.setState(SegmentTag.State.TRANSLATED);
-			}
 		}
     }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
 

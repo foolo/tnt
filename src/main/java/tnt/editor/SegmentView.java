@@ -13,7 +13,6 @@ import javax.swing.SwingUtilities;
 
 import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
-import tnt.undo_manager.UndoPosition;
 import tnt.util.RegexUtil;
 import tnt.util.StringUtil;
 import tnt.xliff_model.SegmentTag;
@@ -50,19 +49,6 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.insertText(markupViewTarget.getCaretPosition(), s);
 	}
 
-	private boolean setStateField(SegmentTag.State state) {
-		boolean res = segmentTag.setState(state);
-		return res;
-	}
-
-	void setState(SegmentTag.State state) {
-		if (setStateField(state)) {
-			int pos = markupViewTarget.getCaretPosition();
-			notifyUndoManager(pos, pos);
-			Session.getUndoManager().markSnapshot();
-		}
-	}
-
 	public SegmentTag getSegmentTag() {
 		return segmentTag;
 	}
@@ -71,16 +57,8 @@ public class SegmentView extends javax.swing.JPanel {
 		return fileView;
 	}
 
-	void notifyUndoManager(int caretPos1, int caretPos2) {
-		UndoPosition pos1 = new UndoPosition(this, caretPos1);
-		UndoPosition pos2 = new UndoPosition(this, caretPos2);
-		Session.getUndoManager().getCurrentState().setModified(pos1, pos2);
-	}
-
 	void update(int caretPosition1, int caretPosition2) {
 		segmentTag.setTargetText(markupViewTarget.getTaggedText());
-		setStateField(SegmentTag.State.INITIAL);
-		notifyUndoManager(caretPosition1, caretPosition2);
 		modifiedFlag = true;
 		applySpellcheck();
 	}
