@@ -16,7 +16,6 @@ import tnt.language.SpellCheck;
 import tnt.util.RegexUtil;
 import tnt.util.StringUtil;
 import tnt.xliff_model.SegmentTag;
-import tnt.xliff_model.TaggedText;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -38,10 +37,6 @@ public class SegmentView extends javax.swing.JPanel {
 		this.segmentTag = segmentTag;
 		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
 		applySpellcheck();
-	}
-
-	public void setTargetText(TaggedText t) {
-		markupViewTarget.replaceTaggedText(t);
 	}
 
 	public void insertText(String s) {

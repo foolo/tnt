@@ -74,32 +74,6 @@ public class EditableMarkupView extends MarkupView {
 		}
 	}
 
-	void removeSelection() {
-		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
-		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
-		try {
-			getDocument().remove(p0, p1 - p0);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
-	}
-
-	public void replaceTaggedText(int start, int end, String newText) {
-		documentListener.enabled = false;
-		removeText(start, end - start);
-		documentListener.enabled = true;
-		insertText(start, newText);
-		setCaretPosition(start + newText.length());
-	}
-
-	public void replaceTaggedText(TaggedText t) {
-		documentListener.enabled = false;
-		setTaggedText(t);
-		documentListener.enabled = true;
-		documentListener.update(0, getDocument().getLength());
-	}
-
 	public void updateTaggedText(TaggedText t) {
 		documentListener.enabled = false;
 		setTaggedText(t);
