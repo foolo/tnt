@@ -3,9 +3,7 @@ package tnt.editor;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.StyledDocument;
 import tnt.util.Log;
-import tnt.xliff_model.TaggedText;
 
 public class EditableMarkupView extends MarkupView {
 
@@ -50,12 +48,6 @@ public class EditableMarkupView extends MarkupView {
 		getDocument().addDocumentListener(documentListener);
 	}
 
-	public TaggedText getTaggedText() {
-		StyledDocument doc = getStyledDocument();
-		String segmentInteralId = getSegmentView().getSegmentTag().getInternalId();
-		return new TaggedText(getTaggedText(0, doc.getLength(), doc), segmentInteralId);
-	}
-
 	void insertText(int pos, String s) {
 		try {
 			getDocument().insertString(pos, s, null);
@@ -74,9 +66,9 @@ public class EditableMarkupView extends MarkupView {
 		}
 	}
 
-	public void updateTaggedText(TaggedText t) {
+	public void updateTaggedText(String s) {
 		documentListener.enabled = false;
-		setTaggedText(t);
+		setTaggedText(s);
 		documentListener.enabled = true;
 	}
 }

@@ -15,7 +15,6 @@ import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
 import tnt.util.RegexUtil;
 import tnt.util.StringUtil;
-import tnt.xliff_model.SegmentTag;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -23,7 +22,6 @@ public class SegmentView extends javax.swing.JPanel {
 		SOURCE, TARGET
 	}
 
-	SegmentTag segmentTag;
 	private final FileView fileView;
 	boolean modifiedFlag = false;
 
@@ -33,9 +31,8 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 	}
 
-	public void updateSegmentTag(SegmentTag segmentTag) {
-		this.segmentTag = segmentTag;
-		markupViewTarget.updateTaggedText(segmentTag.getTargetText());
+	public void updateSegmentTag(String s) {
+		markupViewTarget.updateTaggedText(s);
 		applySpellcheck();
 	}
 
@@ -43,16 +40,11 @@ public class SegmentView extends javax.swing.JPanel {
 		markupViewTarget.insertText(markupViewTarget.getCaretPosition(), s);
 	}
 
-	public SegmentTag getSegmentTag() {
-		return segmentTag;
-	}
-
 	public FileView getFileView() {
 		return fileView;
 	}
 
 	void update(int caretPosition1, int caretPosition2) {
-		segmentTag.setTargetText(markupViewTarget.getTaggedText());
 		modifiedFlag = true;
 		applySpellcheck();
 	}

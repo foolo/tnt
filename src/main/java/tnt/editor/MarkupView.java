@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import tnt.xliff_model.TaggedText;
 import tnt.xliff_model.Tag;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -135,13 +134,6 @@ public class MarkupView extends JTextPane {
 		return res;
 	}
 
-	public TaggedText getSelectedTaggedText() {
-		int p0 = Math.min(getCaret().getDot(), getCaret().getMark());
-		int p1 = Math.max(getCaret().getDot(), getCaret().getMark());
-		String segmentInternalId = segmentView.getSegmentTag().getInternalId();
-		return new TaggedText(getTaggedText(p0, p1, getStyledDocument()), segmentInternalId);
-	}
-
 	public String getPlainText(ArrayList<Integer> plainToTaggedIndexes) {
 		StyledDocument doc = getStyledDocument();
 		String docText = getDocText(doc);
@@ -158,29 +150,9 @@ public class MarkupView extends JTextPane {
 		return sb.toString();
 	}
 
-	void appendText(String s) {
-		try {
-			getDocument().insertString(getDocument().getLength(), s, null);
-		}
-		catch (BadLocationException ex) {
-			Log.err(ex);
-		}
-	}
-
-	public void setTaggedText(TaggedText t) {
+	public void setTaggedText(String s) {
 		int caretPosition = getCaretPosition();
-		setText("");
-		for (TaggedTextContent c : t.getContent()) {
-			if (c instanceof Text) {
-				appendText(((Text) c).getContent());
-			}
-			else if (c instanceof Tag) {
-				insertTag((Tag) c);
-			}
-			else {
-				Log.warn("setTaggedText: unexpected instance: " + c.getClass().getName());
-			}
-		}
+		setText(s);
 		setCaretPosition(Math.min(caretPosition, getText().length()));
 	}
 

@@ -26,7 +26,7 @@ public class FileView extends javax.swing.JPanel {
 		ArrayList<SegmentTag> segmentTags = xliffTag.getSegmentsArray();
 		for (int i = 0; i < segmentTags.size(); i++) {
 			SegmentView segmentView = (SegmentView) jPanelItems.getComponent(i);
-			segmentView.updateSegmentTag(segmentTags.get(i));
+			segmentView.updateSegmentTag("Så här hanterar man coronaviruset");
 		}
 	}
 

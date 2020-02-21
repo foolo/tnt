@@ -76,7 +76,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 	void updateMenus() {
 		jMenuItemExport.setEnabled(Session.getInstance() != null);
 		jMenuItemSave.setEnabled(Session.getInstance() != null);
-		jMenuItemMarkTranslated.setEnabled(Session.getInstance() != null);
 		updateRecentFilesMenu();
 	}
 
@@ -286,10 +285,8 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuItemLocateInFileBrowser = new javax.swing.JMenuItem();
         jMenuItemProperties = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItemPreferences = new javax.swing.JMenuItem();
         jMenuItemAddSpecialChar = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItemMarkTranslated = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItemLogs = new javax.swing.JMenuItem();
         jMenuItemAbout = new javax.swing.JMenuItem();
@@ -436,14 +433,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
         jMenu4.setText("Edit");
 
-        jMenuItemPreferences.setText("Preferences");
-        jMenuItemPreferences.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemPreferencesActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItemPreferences);
-
         jMenuItemAddSpecialChar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemAddSpecialChar.setText("Insert special character...");
         jMenuItemAddSpecialChar.addActionListener(new java.awt.event.ActionListener() {
@@ -456,17 +445,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
         jMenuBar1.add(jMenu4);
 
         jMenu2.setText("Segment");
-
-        jMenuItemMarkTranslated.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemMarkTranslated.setText("Mark as translated");
-        jMenuItemMarkTranslated.setEnabled(false);
-        jMenuItemMarkTranslated.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemMarkTranslatedActionPerformed(evt);
-            }
-        });
-        jMenu2.add(jMenuItemMarkTranslated);
-
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Help");
@@ -591,32 +569,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		});
     }//GEN-LAST:event_jMenuItemExportActionPerformed
 
-    private void jMenuItemMarkTranslatedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemMarkTranslatedActionPerformed
-		Session.getUndoManager().markSnapshot();
-		SegmentView segmentView = SegmentView.getActiveSegmentView();
-		if (segmentView == null) {
-			return;
-		}
-		if (segmentView.getSegmentTag().getTargetText().getContent().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Can not mark empty segment as translated", "", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-    }//GEN-LAST:event_jMenuItemMarkTranslatedActionPerformed
-
 	void applyPreferences() {
 		if (fileView != null) {
 			fileView.updateHeights();
 		}
 	}
-
-    private void jMenuItemPreferencesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPreferencesActionPerformed
-		PreferencesForm preferencesForm = new PreferencesForm(this);
-		preferencesForm.setLocationRelativeTo(this);
-		preferencesForm.setVisible(true);
-		if (preferencesForm.getResult()) {
-			applyPreferences();
-		}
-    }//GEN-LAST:event_jMenuItemPreferencesActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
 		addComponentListener(new ComponentAdapter() {
@@ -715,9 +672,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
     private javax.swing.JMenuItem jMenuItemExportTableTarget;
     private javax.swing.JMenuItem jMenuItemLocateInFileBrowser;
     private javax.swing.JMenuItem jMenuItemLogs;
-    private javax.swing.JMenuItem jMenuItemMarkTranslated;
     private javax.swing.JMenuItem jMenuItemOpen;
-    private javax.swing.JMenuItem jMenuItemPreferences;
     private javax.swing.JMenuItem jMenuItemProperties;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenu jMenuRecentFiles;
