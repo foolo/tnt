@@ -2,7 +2,6 @@ package tnt.editor;
 
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -67,9 +66,6 @@ public class Application {
 				ToolTipManager.sharedInstance().setDismissDelay(60000);
 				MainForm mainForm = new MainForm();
 				ArrayList<Image> images = new ArrayList<>();
-				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/tnt/images/Gnome-accessories-character-map_48.png")));
-				images.add(Toolkit.getDefaultToolkit().getImage(mainForm.getClass().getResource("/tnt/images/Gnome-accessories-character-map_64.png")));
-				mainForm.setIconImages(images);
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
 				if (args.length > 0) {
