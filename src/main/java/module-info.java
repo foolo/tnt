@@ -12,6 +12,5 @@ module Tnt {
 	requires junit;
 	requires hamcrest.core;
 
-	exports tnt.qc;
 	exports tnt.util;
 }
