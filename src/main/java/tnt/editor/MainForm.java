@@ -5,12 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.xml.transform.stream.StreamResult;
-import tnt.conversion.OpenXliffHandler;
-import tnt.conversion.ConversionError;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
@@ -19,14 +16,11 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.JMenuItem;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import tnt.editor.util.SelectableOptionPane;
 import tnt.language.Language;
 import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
 import tnt.language.SpellCheck;
-import tnt.util.FileUtil;
 import tnt.util.Log;
 import tnt.util.SegmentsHtmlEncoder;
 import tnt.util.Settings;
@@ -47,33 +41,6 @@ public class MainForm extends javax.swing.JFrame {
 		logWindow = new LogWindow();
 		jLabelProgress.setText("");
 		jLabelSaveStatus.setText("");
-	}
-
-	void updateRecentFilesMenu() {
-		ArrayList<String> recentFiles = Settings.getRecentFiles();
-		jMenuRecentFiles.removeAll();
-		for (int i = recentFiles.size() - 1; i >= 0; i--) {
-			String s = recentFiles.get(i);
-			JMenuItem item = new JMenuItem(s);
-			jMenuRecentFiles.add(item);
-			item.addActionListener(new java.awt.event.ActionListener() {
-				@Override
-				public void actionPerformed(java.awt.event.ActionEvent evt) {
-					if (okToClose() == false) {
-						return;
-					}
-					load_file(new File(item.getText()));
-				}
-			});
-		}
-		jMenuRecentFiles.addSeparator();
-		jMenuRecentFiles.add(jMenuItemClearRecentFiles);
-	}
-
-	void updateMenus() {
-		jMenuItemExport.setEnabled(Session.getInstance() != null);
-		jMenuItemSave.setEnabled(Session.getInstance() != null);
-		updateRecentFilesMenu();
 	}
 
 	void updateTitle() {
@@ -110,7 +77,6 @@ public class MainForm extends javax.swing.JFrame {
 			Log.debug("load_file: " + ex);
 			SelectableOptionPane.show(this, "", "Could not open " + f + "\n\n" + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
 			Settings.removeRecentFile(f.getAbsolutePath());
-			updateRecentFilesMenu();
 			return;
 		}
 		fileView = new FileView();
@@ -121,7 +87,6 @@ public class MainForm extends javax.swing.JFrame {
 
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
-		updateMenus();
 		restartAutosaveTimer();
 		initializeSpelling(Session.getProperties().getTrgLang());
 		SwingUtilities.invokeLater(fileView::updateHeights);
@@ -242,21 +207,6 @@ public class MainForm extends javax.swing.JFrame {
         jLabelSaveStatus = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItemCreatePackage = new javax.swing.JMenuItem();
-        jMenuItemOpen = new javax.swing.JMenuItem();
-        jMenuRecentFiles = new javax.swing.JMenu();
-        jMenuItemClearRecentFiles = new javax.swing.JMenuItem();
-        jMenuItemSave = new javax.swing.JMenuItem();
-        jMenuItemExport = new javax.swing.JMenuItem();
-        jMenuExportTable = new javax.swing.JMenu();
-        jMenuItemExportTableBoth = new javax.swing.JMenuItem();
-        jMenuItemExportTableTarget = new javax.swing.JMenuItem();
-        jMenuItemLocateInFileBrowser = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItemLogs = new javax.swing.JMenuItem();
-        jMenuItemAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(840, 0));
@@ -303,114 +253,10 @@ public class MainForm extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 615, Short.MAX_VALUE)
+            .addGap(0, 636, Short.MAX_VALUE)
         );
 
         jPanel2.add(jPanel3, "card2");
-
-        jMenu1.setText("Project");
-
-        jMenuItemCreatePackage.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemCreatePackage.setText("New project...");
-        jMenuItemCreatePackage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemCreatePackageActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemCreatePackage);
-
-        jMenuItemOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemOpen.setText("Open project...");
-        jMenuItemOpen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOpenActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemOpen);
-
-        jMenuRecentFiles.setText("Recent projects");
-
-        jMenuItemClearRecentFiles.setText("Clear recent projects");
-        jMenuItemClearRecentFiles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemClearRecentFilesActionPerformed(evt);
-            }
-        });
-        jMenuRecentFiles.add(jMenuItemClearRecentFiles);
-
-        jMenu1.add(jMenuRecentFiles);
-
-        jMenuItemSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemSave.setText("Save");
-        jMenuItemSave.setEnabled(false);
-        jMenuItemSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemSaveActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemSave);
-
-        jMenuItemExport.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemExport.setText("Export translated file");
-        jMenuItemExport.setEnabled(false);
-        jMenuItemExport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemExportActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemExport);
-
-        jMenuExportTable.setText("Export as table");
-
-        jMenuItemExportTableBoth.setText("Source and target");
-        jMenuItemExportTableBoth.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemExportTableBothActionPerformed(evt);
-            }
-        });
-        jMenuExportTable.add(jMenuItemExportTableBoth);
-
-        jMenuItemExportTableTarget.setText("Only target");
-        jMenuItemExportTableTarget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemExportTableTargetActionPerformed(evt);
-            }
-        });
-        jMenuExportTable.add(jMenuItemExportTableTarget);
-
-        jMenu1.add(jMenuExportTable);
-
-        jMenuItemLocateInFileBrowser.setText("Locate in file browser");
-        jMenuItemLocateInFileBrowser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemLocateInFileBrowserActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemLocateInFileBrowser);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu3.setText("Help");
-
-        jMenuItemLogs.setText("Show logs");
-        jMenuItemLogs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemLogsActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItemLogs);
-
-        jMenuItemAbout.setText("About");
-        jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemAboutActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItemAbout);
-
-        jMenuBar1.add(jMenu3);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -430,31 +276,6 @@ public class MainForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOpenActionPerformed
-		if (okToClose() == false) {
-			return;
-		}
-		File dir = FileUtil.getExistingDirectory(Settings.getOpenDirectory());
-		JFileChooser fc = new JFileChooser(dir);
-		fc.setPreferredSize(DEFAULT_DIALOG_SIZE);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("XLIFF files", "xlf");
-		fc.addChoosableFileFilter(filter);
-		fc.setFileFilter(filter);
-		int returnVal = fc.showOpenDialog(this);
-		if (returnVal != JFileChooser.APPROVE_OPTION) {
-			return;
-		}
-		Settings.setOpenDirectory(fc.getSelectedFile().getParentFile());
-		load_file(fc.getSelectedFile());
-    }//GEN-LAST:event_jMenuItemOpenActionPerformed
-
-    private void jMenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveActionPerformed
-		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Saving... ");
-		dialog.run(() -> {
-			manual_save_file();
-		});
-    }//GEN-LAST:event_jMenuItemSaveActionPerformed
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 		if (okToClose()) {
 			logWindow.dispose();
@@ -462,55 +283,6 @@ public class MainForm extends javax.swing.JFrame {
 			dispose();
 		}
     }//GEN-LAST:event_formWindowClosing
-
-    private void jMenuItemLogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogsActionPerformed
-		logWindow.open();
-    }//GEN-LAST:event_jMenuItemLogsActionPerformed
-
-    private void jMenuItemCreatePackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCreatePackageActionPerformed
-		if (okToClose() == false) {
-			return;
-		}
-		CreateXliffDialog d = new CreateXliffDialog(this);
-		d.setLocationRelativeTo(this);
-		d.setVisible(true);
-		if (d.getResult() == false) {
-			return;
-		}
-
-		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Importing " + d.getInputFile().getName() + "...");
-		dialog.run(() -> {
-			File xliffFile;
-			OpenXliffHandler converter = new OpenXliffHandler();
-			try {
-				xliffFile = converter.createPackage(d.getInputFile(), d.getXliffFile(), d.getSourceLanguage().originalTagStr, d.getTargetLanguage().originalTagStr);
-				load_file(xliffFile);
-			}
-			catch (ConversionError ex) {
-				JOptionPane.showMessageDialog(this, "Could not create package:\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-    }//GEN-LAST:event_jMenuItemCreatePackageActionPerformed
-
-    private void jMenuItemExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportActionPerformed
-		if (getXliffTag().hasMetadata() == false) {
-			JOptionPane.showMessageDialog(this, "Could not export. No document metadata found in XLIFF file.", "Export result", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		PleaseWaitDialog dialog = new PleaseWaitDialog(this, "Exporting " + getXliffTag().getFile().getName() + "...");
-		dialog.run(() -> {
-			OpenXliffHandler converter = new OpenXliffHandler();
-			try {
-				manual_save_file(); // save file first in case export crashes/hangs
-				String xliffData = save_to_string();
-				File outputFile = converter.exportTranslatedFile(getXliffTag(), xliffData);
-				JOptionPane.showMessageDialog(this, new ExportCompletedPanel(outputFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
-			}
-			catch (IOException | ConversionError | SaveException ex) {
-				JOptionPane.showMessageDialog(this, "Could not export file:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-    }//GEN-LAST:event_jMenuItemExportActionPerformed
 
 	void applyPreferences() {
 		if (fileView != null) {
@@ -528,16 +300,6 @@ public class MainForm extends javax.swing.JFrame {
 			}
 		});
     }//GEN-LAST:event_formWindowActivated
-
-    private void jMenuItemClearRecentFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemClearRecentFilesActionPerformed
-		Settings.clearRecentFiles();
-		updateRecentFilesMenu();
-    }//GEN-LAST:event_jMenuItemClearRecentFilesActionPerformed
-
-    private void jMenuItemLocateInFileBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLocateInFileBrowserActionPerformed
-		File dir = getXliffTag().getFile().getParentFile();
-		FileUtil.desktopOpen(this, dir);
-    }//GEN-LAST:event_jMenuItemLocateInFileBrowserActionPerformed
 
 	void exportTable(boolean includeSource) {
 		SegmentsHtmlEncoder encoder = new SegmentsHtmlEncoder();
@@ -559,36 +321,9 @@ public class MainForm extends javax.swing.JFrame {
 		}
 	}
 
-    private void jMenuItemExportTableTargetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportTableTargetActionPerformed
-		exportTable(false);
-    }//GEN-LAST:event_jMenuItemExportTableTargetActionPerformed
-
-    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
-		JOptionPane.showMessageDialog(this, new AboutPanel(), "About", JOptionPane.INFORMATION_MESSAGE);
-    }//GEN-LAST:event_jMenuItemAboutActionPerformed
-
-    private void jMenuItemExportTableBothActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportTableBothActionPerformed
-		exportTable(true);
-    }//GEN-LAST:event_jMenuItemExportTableBothActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JLabel jLabelSaveStatus;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenu jMenuExportTable;
-    private javax.swing.JMenuItem jMenuItemAbout;
-    private javax.swing.JMenuItem jMenuItemClearRecentFiles;
-    private javax.swing.JMenuItem jMenuItemCreatePackage;
-    private javax.swing.JMenuItem jMenuItemExport;
-    private javax.swing.JMenuItem jMenuItemExportTableBoth;
-    private javax.swing.JMenuItem jMenuItemExportTableTarget;
-    private javax.swing.JMenuItem jMenuItemLocateInFileBrowser;
-    private javax.swing.JMenuItem jMenuItemLogs;
-    private javax.swing.JMenuItem jMenuItemOpen;
-    private javax.swing.JMenuItem jMenuItemSave;
-    private javax.swing.JMenu jMenuRecentFiles;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
