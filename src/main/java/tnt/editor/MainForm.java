@@ -26,7 +26,6 @@ import tnt.language.Language;
 import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
 import tnt.language.SpellCheck;
-import tnt.undo_manager.UndoPosition;
 import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoableModel;
 import tnt.util.FileUtil;
@@ -236,24 +235,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
 		return writer.toString();
-	}
-
-	@Override
-	public void notify_undo(UndoableModel model, UndoPosition newEditingPosition) {
-		XliffTag xliffTag = (XliffTag) model;
-		fileView.update_model(xliffTag);
-
-		SegmentView segmentView = newEditingPosition.getSegmentView();
-		if (segmentView != null) {
-			// todo why is invokeLater needed?
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					segmentView.navigateToView(SegmentView.Column.TARGET, newEditingPosition.getTextPosition(), true);
-					segmentView.reportCaretPosition();
-				}
-			});
-		}
 	}
 
 	@Override

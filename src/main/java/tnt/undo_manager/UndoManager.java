@@ -47,7 +47,6 @@ public class UndoManager {
 
 	private void setNewState(UndoPosition newEditingPosition) {
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
-		listener.notify_undo(currentState.getModel(), newEditingPosition);
 	}
 
 	public void undo() {
@@ -82,7 +81,6 @@ public class UndoManager {
 		UndoableState st = redoBuffer.pop();
 		undoBuffer.add(st);
 		currentState = new UndoableState(undoBuffer.peek().getModel().copy(), this);
-		listener.notify_undo(currentState.getModel(), st.getEndPosition());
 	}
 
 	public UndoableState getCurrentState() {
