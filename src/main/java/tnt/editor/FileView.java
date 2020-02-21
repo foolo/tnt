@@ -9,10 +9,6 @@ import tnt.xliff_model.XliffTag;
 
 public class FileView extends javax.swing.JPanel {
 
-	void setLastCaretPosition(SegmentView segmentView, int column, int caretPos) {
-		int segmentIndex = getIndexOfSegmentView(segmentView);
-	}
-
 	public FileView() {
 		initComponents();
 		jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);

@@ -22,12 +22,10 @@ public class SegmentView extends javax.swing.JPanel {
 		SOURCE, TARGET
 	}
 
-	private final FileView fileView;
 	boolean modifiedFlag = false;
 
 	SegmentView(FileView fileView, String id) {
 		initComponents();
-		this.fileView = fileView;
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 	}
 
@@ -38,10 +36,6 @@ public class SegmentView extends javax.swing.JPanel {
 
 	public void insertText(String s) {
 		markupViewTarget.insertText(markupViewTarget.getCaretPosition(), s);
-	}
-
-	public FileView getFileView() {
-		return fileView;
 	}
 
 	void update(int caretPosition1, int caretPosition2) {
@@ -119,10 +113,6 @@ public class SegmentView extends javax.swing.JPanel {
 		System.out.println("tnt.editor.SegmentView.updateHeight() " + markupViewTarget.getPreferredSize());
 	}
 
-	void reportCaretPosition() {
-		fileView.setLastCaretPosition(this, 1, markupViewTarget.getCaret().getDot());
-	}
-
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -158,7 +148,6 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		reportCaretPosition();
 		if (modifiedFlag == false) {
 			Session.getUndoManager().markSnapshot();
 		}
