@@ -17,7 +17,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import org.w3c.dom.Node;
 
 public class Log {
 
@@ -129,9 +128,5 @@ public class Log {
 
 	public static void debug(String msg) {
 		logger.log(Level.INFO, msg);
-	}
-
-	public static void debug(String msg, Node location) {
-		logger.log(Level.INFO, "{0} : {1}", new Object[]{msg, XmlUtil.getPath(location)});
 	}
 }

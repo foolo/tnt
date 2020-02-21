@@ -1,6 +1,5 @@
 package tnt.editor;
 
-import tnt.editor.search.MatchLocation;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
@@ -11,10 +10,8 @@ import java.util.regex.Pattern;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
-import tnt.editor.search.EditorRange;
 import tnt.language.SpellCheck;
 import tnt.util.RegexUtil;
-import tnt.util.StringUtil;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -86,27 +83,6 @@ public class SegmentView extends javax.swing.JPanel {
 		}
 		Matcher m = Pattern.compile(Pattern.quote(term), flags | Pattern.UNICODE_CHARACTER_CLASS).matcher(text);
 		return RegexUtil.matchAll(m);
-	}
-
-	ArrayList<EditorRange> toEditorRange(ArrayList<MatchResult> matchResults, ArrayList<Integer> plainToTaggedIndexes) {
-		ArrayList<EditorRange> res = new ArrayList<>();
-		for (MatchResult matchResult : matchResults) {
-			int startTagged = StringUtil.plainToTaggedIndex(matchResult.start(), plainToTaggedIndexes);
-			int endTagged = StringUtil.plainToTaggedIndex(matchResult.end(), plainToTaggedIndexes);
-			res.add(new EditorRange(startTagged, endTagged));
-		}
-		return res;
-	}
-
-	void findMatches(String term, int flags, int segmentIndex, int column, ArrayList<MatchLocation> searchResultsOut) {
-		MarkupView mv = markupViewTarget;
-		ArrayList<Integer> indexes = new ArrayList<>();
-		String text = mv.getPlainText(indexes);
-		ArrayList<MatchResult> matchResults = findMatches(term, text, flags);
-		ArrayList<EditorRange> editorRanges = toEditorRange(matchResults, indexes);
-		for (EditorRange range : editorRanges) {
-			searchResultsOut.add(new MatchLocation(segmentIndex, column, range));
-		}
 	}
 
 	void updateHeight() {
