@@ -7,13 +7,9 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
-import tnt.util.RegexUtil;
-import tnt.util.Settings;
-import tnt.util.StringUtil;
 
 public class SpellCheck {
 
@@ -31,19 +27,6 @@ public class SpellCheck {
 			return;
 		}
 		clearStyle(markupView);
-		ArrayList<Integer> indexes = new ArrayList<>();
-		String text = markupView.getPlainText(indexes);
-		Matcher m = RegexUtil.SPELLING_UNIT_PATTERN.matcher(text);
-		while (m.find()) {
-			String word = m.group();
-			int startPlain = m.start();
-			int endPlain = m.end();
-			if (isMisspelled(word)) {
-				int startTagged = StringUtil.plainToTaggedIndex(startPlain, indexes);
-				int endTagged = StringUtil.plainToTaggedIndex(endPlain, indexes);
-				markText(markupView, startTagged, endTagged);
-			}
-		}
 	}
 
 	public static void clearStyle(MarkupView markupView) {
@@ -69,13 +52,7 @@ public class SpellCheck {
 	}
 
 	public static boolean isMisspelled(String word) {
-		if (currentDictionary == null) {
-			return false;
-		}
-		if (Settings.getWordList().contains(word)) {
-			return false;
-		}
-		return currentDictionary.misspelled(word);
+		return false;
 	}
 
 	public static List<String> getSuggestions(String word) {
