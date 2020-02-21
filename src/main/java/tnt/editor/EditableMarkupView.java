@@ -2,13 +2,10 @@ package tnt.editor;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import tnt.util.Log;
 import tnt.xliff_model.Tag;
-import javax.swing.text.DocumentFilter;
 import tnt.xliff_model.TaggedText;
 import tnt.xliff_model.TaggedTextContent;
 import tnt.xliff_model.Text;
@@ -42,55 +39,6 @@ public class EditableMarkupView extends MarkupView {
 		}
 	};
 
-	private static class MyDocumentFilter extends DocumentFilter {
-
-		enum InputState {
-			UNDEFINED, INPUT_NON_SPACE, INPUT_STRING, INPUT_SPACE, REMOVE
-		}
-		InputState lastState = InputState.UNDEFINED;
-
-		boolean isSnapshotNeeded(InputState oldState, InputState newState) {
-			if (newState == oldState) {
-				return false;
-			}
-			if (newState == InputState.INPUT_NON_SPACE && oldState == InputState.INPUT_SPACE) {
-				return false;
-			}
-			return true;
-		}
-
-		void newInputState(InputState newState) {
-			if (isSnapshotNeeded(lastState, newState)) {
-				Session.getUndoManager().markSnapshot();
-			}
-			lastState = newState;
-		}
-
-		@Override
-		public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String s, AttributeSet attrs) throws BadLocationException {
-			s = s.replaceAll("\\R|\t", "");
-			if (s.codePoints().count() == 1) {
-				newInputState(Character.isSpaceChar(s.codePointAt(0)) ? InputState.INPUT_SPACE : InputState.INPUT_NON_SPACE);
-			}
-			if (s.codePoints().count() > 1) {
-				newInputState(InputState.INPUT_STRING);
-			}
-			super.replace(fb, offset, length, s, attrs);
-		}
-
-		@Override
-		public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-			newInputState(InputState.INPUT_STRING);
-			super.insertString(fb, offset, string, attr);
-		}
-
-		@Override
-		public void remove(DocumentFilter.FilterBypass fb, int offset, int length) throws BadLocationException {
-			newInputState(InputState.REMOVE);
-			super.remove(fb, offset, length);
-		}
-	}
-
 	private TargetDocumentListener documentListener;
 
 	public EditableMarkupView() {
@@ -103,10 +51,6 @@ public class EditableMarkupView extends MarkupView {
 	void addDocumentListener() {
 		documentListener = new TargetDocumentListener();
 		getDocument().addDocumentListener(documentListener);
-	}
-
-	void addDocumentFilter() {
-		((AbstractDocument) getDocument()).setDocumentFilter(new MyDocumentFilter());
 	}
 
 	public TaggedText getTaggedText() {

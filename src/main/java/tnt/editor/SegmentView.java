@@ -32,7 +32,6 @@ public class SegmentView extends javax.swing.JPanel {
 		initComponents();
 		this.fileView = fileView;
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
-		markupViewTarget.addDocumentFilter();
 	}
 
 	public void updateSegmentTag(SegmentTag segmentTag) {
