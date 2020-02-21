@@ -8,7 +8,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import tnt.undo_manager.UndoPosition;
-import tnt.undo_manager.UndoEventListener;
 import tnt.undo_manager.UndoManager;
 import tnt.undo_manager.UndoableState;
 import tnt.util.Log;
@@ -66,7 +65,7 @@ public class Session {
 	private static Session session;
 	private static int idSegmentCounter = 1;
 
-	public static void newSession(File f, UndoEventListener undoEventListener) throws LoadException {
+	public static void newSession(File f) throws LoadException {
 		idSegmentCounter = 1;
 
 		Document doc;
@@ -92,7 +91,7 @@ public class Session {
 			Log.debug("newSession: " + ex);
 			throw new LoadException(ex.getMessage());
 		}
-		session = new Session(xliffTag, undoEventListener);
+		session = new Session(xliffTag);
 	}
 
 	public static Session getInstance() {
@@ -123,10 +122,10 @@ public class Session {
 		return "" + idSegmentCounter++;
 	}
 
-	public Session(XliffTag xliffTag, UndoEventListener undoEventListener) {
+	public Session(XliffTag xliffTag) {
 		undoManager = new UndoManager();
 		UndoPosition pos = new UndoPosition(null, 0);
-		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager), undoEventListener);
+		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager));
 		properties = new Properties(xliffTag.getDocument());
 	}
 }

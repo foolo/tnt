@@ -8,14 +8,12 @@ public class UndoManager {
 	private final Stack<UndoableState> redoBuffer = new Stack<>();
 	private UndoableState currentState;
 	private UndoableState savedState;
-	private UndoEventListener listener;
 
 	public UndoManager() {
 	}
 
-	public void initialize(UndoableState currentState, UndoEventListener listener) {
+	public void initialize(UndoableState currentState) {
 		this.currentState = currentState;
-		this.listener = listener;
 		push_snapshot();
 		markSaved();
 	}
@@ -30,10 +28,6 @@ public class UndoManager {
 		if (currentState.isModified()) {
 			push_snapshot();
 		}
-	}
-
-	public void updateProgress() {
-		listener.updateProgress(currentState.getModel());
 	}
 
 	public void markSaved() {

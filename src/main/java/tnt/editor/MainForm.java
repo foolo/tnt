@@ -26,8 +26,6 @@ import tnt.language.Language;
 import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
 import tnt.language.SpellCheck;
-import tnt.undo_manager.UndoEventListener;
-import tnt.undo_manager.UndoableModel;
 import tnt.util.FileUtil;
 import tnt.util.Log;
 import tnt.util.SegmentsHtmlEncoder;
@@ -37,7 +35,7 @@ import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
 import tnt.xliff_model.exceptions.SaveException;
 
-public class MainForm extends javax.swing.JFrame implements UndoEventListener {
+public class MainForm extends javax.swing.JFrame {
 
 	private final LogWindow logWindow;
 	private FileView fileView = null;
@@ -106,7 +104,7 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 
 	public void load_file(File f) {
 		try {
-			Session.newSession(f, this);
+			Session.newSession(f);
 		}
 		catch (LoadException ex) {
 			Log.debug("load_file: " + ex);
@@ -233,12 +231,6 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 		StringWriter writer = new StringWriter();
 		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
 		return writer.toString();
-	}
-
-	@Override
-	public void updateProgress(UndoableModel model) {
-		XliffTag xliffTag = (XliffTag) model;
-		jLabelProgress.setText(xliffTag.getProgress());
 	}
 
 	@SuppressWarnings("unchecked")
