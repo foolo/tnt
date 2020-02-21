@@ -8,13 +8,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import tnt.language.DictionaryList;
-import tnt.language.DictionaryMapper;
 import tnt.util.Log;
 import tnt.util.Settings;
 
@@ -37,21 +34,6 @@ public class Application {
 		protected void handleException(String tname, Throwable thrown) {
 			Log.err(thrown);
 		}
-	}
-
-	static void loadDictionaries() {
-		String dir = "dictionaries";
-		File f = new File(dir);
-		if (f.exists() == false) {
-			JOptionPane.showMessageDialog(null, "Dictionaries path '" + dir + "' not found.\nSpellcheck will not be available.", "", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		DictionaryList dictionaryList = new DictionaryList();
-		if (dictionaryList.load(f) == false) {
-			JOptionPane.showMessageDialog(null, "Could not load dictionaries from " + dir + ".\nSpellcheck will not be available.", "", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		DictionaryMapper.mapDictionaries(dictionaryList);
 	}
 
 	public static void setUIFont() {
@@ -81,7 +63,6 @@ public class Application {
 			@Override
 			public void run() {
 				Log.initializeLogger();
-				loadDictionaries();
 				ToolTipManager.sharedInstance().setInitialDelay(500);
 				ToolTipManager.sharedInstance().setDismissDelay(60000);
 				MainForm mainForm = new MainForm();
