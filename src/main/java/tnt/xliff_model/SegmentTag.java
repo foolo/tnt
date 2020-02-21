@@ -1,6 +1,5 @@
 package tnt.xliff_model;
 
-import tnt.editor.Session;
 import tnt.xliff_model.exceptions.EncodeException;
 import tnt.xliff_model.exceptions.ParseException;
 import java.util.ArrayList;
@@ -62,7 +61,7 @@ public class SegmentTag {
 			tn = node.getOwnerDocument().renameNode(tn, null, "target");
 		}
 		targetNode = tn;
-		internalId = Session.generateSegmentId();
+		internalId = "0";
 		sourceText = new TaggedText(sourceNode, internalId);
 		targetText = new TaggedText(targetNode, internalId);
 		if (Settings.getShowWhitespace()) {

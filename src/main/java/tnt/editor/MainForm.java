@@ -2,16 +2,12 @@ package tnt.editor;
 
 import java.awt.Dimension;
 import java.io.File;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import tnt.editor.util.SelectableOptionPane;
-import tnt.util.Log;
 import tnt.util.Settings;
-import tnt.xliff_model.exceptions.LoadException;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -25,15 +21,6 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public void load_file(File f) {
-		try {
-			Session.newSession(f);
-		}
-		catch (LoadException ex) {
-			Log.debug("load_file: " + ex);
-			SelectableOptionPane.show(this, "", "Could not open " + f + "\n\n" + ex.getMessage(), JOptionPane.ERROR_MESSAGE);
-			Settings.removeRecentFile(f.getAbsolutePath());
-			return;
-		}
 		fileView = new FileView();
 		fileView.update_model();
 		jPanel2.removeAll();
@@ -47,8 +34,6 @@ public class MainForm extends javax.swing.JFrame {
 	String getAutosaveTimestamp() {
 		return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	}
-
-
 
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
