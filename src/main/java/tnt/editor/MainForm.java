@@ -2,7 +2,6 @@ package tnt.editor;
 
 import java.awt.Dimension;
 import java.io.File;
-import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import java.awt.event.ComponentAdapter;
@@ -10,10 +9,6 @@ import java.awt.event.ComponentEvent;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import tnt.editor.util.SelectableOptionPane;
-import tnt.language.Language;
-import tnt.language.LanguageCollection;
-import tnt.language.LanguageTag;
-import tnt.language.SpellCheck;
 import tnt.util.Log;
 import tnt.util.Settings;
 import tnt.xliff_model.exceptions.LoadException;
@@ -46,38 +41,7 @@ public class MainForm extends javax.swing.JFrame {
 		jPanel2.revalidate();
 
 		Settings.addRecentFile(f.getAbsolutePath());
-		initializeSpelling(Session.getProperties().getTrgLang());
 		SwingUtilities.invokeLater(fileView::updateHeights);
-	}
-
-	void initializeSpelling(String trgLang) {
-		SpellCheck.unloadDictionary();
-		for (SegmentView segmentView : fileView.getSegmentViews()) {
-			segmentView.clearSpellcheck();
-		}
-		if (trgLang.isEmpty()) {
-			Log.debug("loadDictionary: trgLang empty, disable spelling");
-			return;
-		}
-		Language l = LanguageCollection.findLanguageWithFallback(new LanguageTag(trgLang));
-		if (l == null) {
-			JOptionPane.showMessageDialog(this, "Unrecognized target language code: '" + trgLang + "'\nSpellcheck will not be available", "", JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		Log.debug("Target language " + trgLang + " mapped to " + l);
-
-		if (l.dictionaryPath == null) {
-			Log.debug("No spellcheck dictionary available for target language '" + trgLang + "'");
-			return;
-		}
-
-		Log.debug("Using spelling language " + l + " for target language " + trgLang);
-		try {
-			SpellCheck.loadDictionary(l);
-		}
-		catch (IOException ex) {
-			JOptionPane.showMessageDialog(this, "Could not load dictionary for target language '" + l + "'\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-		}
 	}
 
 	String getAutosaveTimestamp() {
