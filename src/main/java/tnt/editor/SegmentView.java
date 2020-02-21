@@ -148,9 +148,6 @@ public class SegmentView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void markupViewTargetCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_markupViewTargetCaretUpdate
-		if (modifiedFlag == false) {
-			Session.getUndoManager().markSnapshot();
-		}
 		if (modifiedFlag) {
 			updateHeight();
 		}

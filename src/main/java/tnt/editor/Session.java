@@ -7,9 +7,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import tnt.undo_manager.UndoPosition;
-import tnt.undo_manager.UndoManager;
-import tnt.undo_manager.UndoableState;
 import tnt.util.Log;
 import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
@@ -98,24 +95,18 @@ public class Session {
 		return session;
 	}
 
-	private final UndoManager undoManager;
 	public final Properties properties;
-
-	public static UndoManager getUndoManager() {
-		return session.undoManager;
-	}
 
 	public static Properties getProperties() {
 		return session.properties;
 	}
 
 	static boolean isModified() {
-		return session.properties.modified || session.undoManager.isModified();
+		return session.properties.modified;
 	}
 
 	static void markSaved() {
 		session.properties.modified = false;
-		session.undoManager.markSaved();
 	}
 
 	public static String generateSegmentId() {
@@ -123,9 +114,6 @@ public class Session {
 	}
 
 	public Session(XliffTag xliffTag) {
-		undoManager = new UndoManager();
-		UndoPosition pos = new UndoPosition(null, 0);
-		undoManager.initialize(new UndoableState(xliffTag, pos, pos, undoManager));
 		properties = new Properties(xliffTag.getDocument());
 	}
 }

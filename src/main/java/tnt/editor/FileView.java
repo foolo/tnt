@@ -1,7 +1,6 @@
 package tnt.editor;
 
 import java.util.ArrayList;
-import tnt.xliff_model.XliffTag;
 
 public class FileView extends javax.swing.JPanel {
 
@@ -19,7 +18,7 @@ public class FileView extends javax.swing.JPanel {
 		return res;
 	}
 
-	public void update_model(XliffTag xliffTag) {
+	public void update_model() {
 		segmentView1.updateSegmentTag("Så här hanterar man coronaviruset");
 	}
 

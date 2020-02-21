@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import tnt.undo_manager.UndoableModel;
 import tnt.util.Log;
 import tnt.util.NodeArray;
 
-public class XliffTag implements UndoableModel {
+public class XliffTag {
 
 	private ArrayList<FileTag> files = new ArrayList<>();
 	private ArrayList<SegmentTag> segmentArray = null;
@@ -96,10 +95,5 @@ public class XliffTag implements UndoableModel {
 		document = xt.document;
 		version = xt.version;
 		file = xt.file;
-	}
-
-	@Override
-	public UndoableModel copy() {
-		return new XliffTag(this);
 	}
 }

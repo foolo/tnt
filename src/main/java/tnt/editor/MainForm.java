@@ -3,31 +3,21 @@ package tnt.editor;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import javax.xml.transform.stream.StreamResult;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Timer;
-import java.util.TimerTask;
 import tnt.editor.util.SelectableOptionPane;
 import tnt.language.Language;
 import tnt.language.LanguageCollection;
 import tnt.language.LanguageTag;
 import tnt.language.SpellCheck;
 import tnt.util.Log;
-import tnt.util.SegmentsHtmlEncoder;
 import tnt.util.Settings;
-import tnt.util.XmlUtil;
-import tnt.xliff_model.XliffTag;
 import tnt.xliff_model.exceptions.LoadException;
-import tnt.xliff_model.exceptions.SaveException;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -43,32 +33,6 @@ public class MainForm extends javax.swing.JFrame {
 		jLabelSaveStatus.setText("");
 	}
 
-	void updateTitle() {
-		String srcLang = Session.getProperties().getSrcLang();
-		String trgLang = Session.getProperties().getTrgLang();
-		String languageInfo = "";
-		if ((srcLang.isEmpty() == false) && (trgLang.isEmpty() == false)) {
-			languageInfo = " (" + srcLang + " -> " + trgLang + ")";
-		}
-		String fileInfo = getXliffTag().getFile().getName() + " (" + getXliffTag().getFile().getParent() + ")";
-		String applicationInfo = " - " + Application.APPLICATION_NAME + " " + Application.APPLICATION_VERSION;
-		String title = fileInfo + languageInfo + applicationInfo;
-		setTitle(title);
-	}
-
-	void restartAutosaveTimer() {
-		TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				autosave_file();
-			}
-		};
-		autosaveTimer.cancel();
-		autosaveTimer = new Timer();
-		long delay = 600000;
-		autosaveTimer.scheduleAtFixedRate(timerTask, delay, delay);
-	}
-
 	public void load_file(File f) {
 		try {
 			Session.newSession(f);
@@ -80,14 +44,12 @@ public class MainForm extends javax.swing.JFrame {
 			return;
 		}
 		fileView = new FileView();
-		fileView.update_model(getXliffTag());
+		fileView.update_model();
 		jPanel2.removeAll();
 		jPanel2.add(fileView);
 		jPanel2.revalidate();
 
-		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
-		restartAutosaveTimer();
 		initializeSpelling(Session.getProperties().getTrgLang());
 		SwingUtilities.invokeLater(fileView::updateHeights);
 	}
@@ -122,81 +84,11 @@ public class MainForm extends javax.swing.JFrame {
 		}
 	}
 
-	XliffTag getXliffTag() {
-		return (XliffTag) Session.getUndoManager().getCurrentState().getModel();
-	}
-
 	String getAutosaveTimestamp() {
 		return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	}
 
-	boolean manual_save_file() {
-		try {
-			save_file();
-			jLabelSaveStatus.setText("Saved at " + getAutosaveTimestamp());
-			restartAutosaveTimer();
-		}
-		catch (SaveException ex) {
-			jLabelSaveStatus.setText("Save failed");
-			JOptionPane.showMessageDialog(this, "Could not save file\n" + ex.getMessage(), "", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		return true;
-	}
 
-	void autosave_file() {
-		try {
-			save_file();
-			jLabelSaveStatus.setText("Autosaved at " + getAutosaveTimestamp());
-		}
-		catch (SaveException ex) {
-			Log.err(ex);
-			jLabelSaveStatus.setText("Autosave failed " + getAutosaveTimestamp());
-		}
-	}
-
-	void save_file() throws SaveException {
-		ArrayList<String> errors = new ArrayList<>();
-		getXliffTag().encode(errors, false);
-		Session.getProperties().encode(getXliffTag().getDocument());
-		for (String e : errors) {
-			Log.debug("showValidationErrors: ValidationError: " + e);
-		}
-		Log.debug("save_to_file: " + getXliffTag().getFile());
-		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(getXliffTag().getFile()));
-		Session.markSaved();
-	}
-
-	boolean okToClose() {
-		if (Session.getInstance() == null) {
-			return true;
-		}
-		if (Session.isModified() == false) {
-			return true;
-		}
-		int choice = JOptionPane.showConfirmDialog(this, "Save changes before closing?", "Save changes", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-		switch (choice) {
-			case JOptionPane.YES_OPTION:
-				return manual_save_file();
-			case JOptionPane.NO_OPTION:
-				return true;
-			case JOptionPane.CANCEL_OPTION:
-			default:
-				return false;
-		}
-	}
-
-	String save_to_string() throws SaveException {
-		ArrayList<String> encodeErrors = new ArrayList<>();
-		getXliffTag().encode(encodeErrors, true);
-		for (String e : encodeErrors) {
-			// there should be no invalid non-initial segments, log for debugging only
-			Log.err("validateFile: ValidationError: " + e);
-		}
-		StringWriter writer = new StringWriter();
-		XmlUtil.write_xml(getXliffTag().getDocument(), new StreamResult(writer));
-		return writer.toString();
-	}
 
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -277,11 +169,9 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-		if (okToClose()) {
 			logWindow.dispose();
 			autosaveTimer.cancel();
 			dispose();
-		}
     }//GEN-LAST:event_formWindowClosing
 
 	void applyPreferences() {
@@ -301,25 +191,6 @@ public class MainForm extends javax.swing.JFrame {
 		});
     }//GEN-LAST:event_formWindowActivated
 
-	void exportTable(boolean includeSource) {
-		SegmentsHtmlEncoder encoder = new SegmentsHtmlEncoder();
-		XliffTag xliffTag = getXliffTag();
-		String htmlData = encoder.encode(xliffTag, includeSource);
-		String originalFilename = new File(xliffTag.getFiles().get(0).getOriginalFilePath()).getName();
-		String sourceLanguage = includeSource ? (Session.getProperties().getSrcLang() + "-") : "";
-		String targetLanguage = Session.getProperties().getTrgLang();
-		String tableFilename = originalFilename + " (" + sourceLanguage + targetLanguage + " table).html";
-		File targetFile = new File(xliffTag.getFile().getParentFile(), tableFilename);
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile));
-			writer.write(htmlData);
-			writer.close();
-			JOptionPane.showMessageDialog(this, new ExportCompletedPanel(targetFile), "Export result", JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (IOException ex) {
-			JOptionPane.showMessageDialog(this, "Could not export table:\n" + ex.toString(), "Export result", JOptionPane.ERROR_MESSAGE);
-		}
-	}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabelProgress;
