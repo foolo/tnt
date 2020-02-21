@@ -1,6 +1,5 @@
 package tnt.editor;
 
-import tnt.editor.util.TaggedTextTransferHandler;
 import tnt.editor.util.SelectWordCaret;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -32,7 +31,6 @@ public class MarkupView extends JTextPane {
 
 	public MarkupView(SegmentView segmentView) {
 		this.segmentView = segmentView;
-		setTransferHandler(new TaggedTextTransferHandler());
 		init();
 	}
 

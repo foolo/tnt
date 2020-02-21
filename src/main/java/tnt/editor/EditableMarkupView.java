@@ -5,10 +5,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import tnt.util.Log;
-import tnt.xliff_model.Tag;
 import tnt.xliff_model.TaggedText;
-import tnt.xliff_model.TaggedTextContent;
-import tnt.xliff_model.Text;
 
 public class EditableMarkupView extends MarkupView {
 
@@ -86,29 +83,6 @@ public class EditableMarkupView extends MarkupView {
 		catch (BadLocationException ex) {
 			Log.err(ex);
 		}
-	}
-
-	public void pasteTaggedText(TaggedText t, boolean includeTags) {
-		int caretPosition1 = getCaretPosition();
-		documentListener.enabled = false;
-		removeSelection();
-		for (TaggedTextContent c : t.getContent()) {
-			if (c instanceof Text) {
-				String text = ((Text) c).getContent();
-				insertText(getCaretPosition(), text);
-			}
-			else if (c instanceof Tag) {
-				if (includeTags) {
-					insertTag((Tag) c);
-				}
-			}
-			else {
-				Log.warn("insertTaggedText: unexpected instance: " + c.getClass().getName());
-			}
-		}
-		documentListener.enabled = true;
-		int caretPosition2 = getCaretPosition();
-		getSegmentView().update(caretPosition1, caretPosition2);
 	}
 
 	public void replaceTaggedText(int start, int end, String newText) {
