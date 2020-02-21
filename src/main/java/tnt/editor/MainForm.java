@@ -254,10 +254,6 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItemExportTableBoth = new javax.swing.JMenuItem();
         jMenuItemExportTableTarget = new javax.swing.JMenuItem();
         jMenuItemLocateInFileBrowser = new javax.swing.JMenuItem();
-        jMenuItemProperties = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
-        jMenuItemAddSpecialChar = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItemLogs = new javax.swing.JMenuItem();
         jMenuItemAbout = new javax.swing.JMenuItem();
@@ -392,31 +388,7 @@ public class MainForm extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItemLocateInFileBrowser);
 
-        jMenuItemProperties.setText("Project properties");
-        jMenuItemProperties.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemPropertiesActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItemProperties);
-
         jMenuBar1.add(jMenu1);
-
-        jMenu4.setText("Edit");
-
-        jMenuItemAddSpecialChar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItemAddSpecialChar.setText("Insert special character...");
-        jMenuItemAddSpecialChar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemAddSpecialCharActionPerformed(evt);
-            }
-        });
-        jMenu4.add(jMenuItemAddSpecialChar);
-
-        jMenuBar1.add(jMenu4);
-
-        jMenu2.setText("Segment");
-        jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Help");
 
@@ -562,32 +534,6 @@ public class MainForm extends javax.swing.JFrame {
 		updateRecentFilesMenu();
     }//GEN-LAST:event_jMenuItemClearRecentFilesActionPerformed
 
-    private void jMenuItemPropertiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPropertiesActionPerformed
-		PropertiesDialog propertiesDialog = new PropertiesDialog(this);
-		propertiesDialog.setLocationRelativeTo(this);
-		propertiesDialog.setVisible(true);
-		if (propertiesDialog.getResult()) {
-			Session.getUndoManager().markSnapshot();
-			updateTitle();
-			initializeSpelling(Session.getProperties().getTrgLang());
-		}
-    }//GEN-LAST:event_jMenuItemPropertiesActionPerformed
-
-    private void jMenuItemAddSpecialCharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAddSpecialCharActionPerformed
-		SpecialCharacterDialog dialog = new SpecialCharacterDialog(this);
-		dialog.setLocationRelativeTo(this);
-		dialog.setVisible(true);
-		if (dialog.getResult()) {
-			Session.getUndoManager().markSnapshot();
-			SegmentView segmentView = SegmentView.getActiveSegmentView();
-			if (segmentView == null) {
-				return;
-			}
-			segmentView.insertText(dialog.getSelectedChar());
-			Session.getUndoManager().markSnapshot();
-		}
-    }//GEN-LAST:event_jMenuItemAddSpecialCharActionPerformed
-
     private void jMenuItemLocateInFileBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLocateInFileBrowserActionPerformed
 		File dir = getXliffTag().getFile().getParentFile();
 		FileUtil.desktopOpen(this, dir);
@@ -629,13 +575,10 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelProgress;
     private javax.swing.JLabel jLabelSaveStatus;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuExportTable;
     private javax.swing.JMenuItem jMenuItemAbout;
-    private javax.swing.JMenuItem jMenuItemAddSpecialChar;
     private javax.swing.JMenuItem jMenuItemClearRecentFiles;
     private javax.swing.JMenuItem jMenuItemCreatePackage;
     private javax.swing.JMenuItem jMenuItemExport;
@@ -644,7 +587,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItemLocateInFileBrowser;
     private javax.swing.JMenuItem jMenuItemLogs;
     private javax.swing.JMenuItem jMenuItemOpen;
-    private javax.swing.JMenuItem jMenuItemProperties;
     private javax.swing.JMenuItem jMenuItemSave;
     private javax.swing.JMenu jMenuRecentFiles;
     private javax.swing.JPanel jPanel1;
