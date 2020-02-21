@@ -116,13 +116,11 @@ public class MainForm extends javax.swing.JFrame implements UndoEventListener {
 			return;
 		}
 		fileView = new FileView();
-		fileView.populate_segments(getXliffTag().getSegmentsArray());
 		fileView.update_model(getXliffTag());
 		jPanel2.removeAll();
 		jPanel2.add(fileView);
 		jPanel2.revalidate();
 
-		fileView.focusFirstSegment();
 		updateTitle();
 		Settings.addRecentFile(f.getAbsolutePath());
 		updateMenus();

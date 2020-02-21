@@ -24,7 +24,7 @@ public class SegmentView extends javax.swing.JPanel {
 
 	boolean modifiedFlag = false;
 
-	SegmentView(FileView fileView, String id) {
+	public SegmentView() {
 		initComponents();
 		markupViewTarget.addDocumentListener(); // done after setEditorKit which resets the internal document
 	}
