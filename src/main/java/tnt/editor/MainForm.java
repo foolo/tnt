@@ -9,7 +9,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Timer;
 import tnt.editor.util.SelectableOptionPane;
 import tnt.language.Language;
 import tnt.language.LanguageCollection;
@@ -21,14 +20,11 @@ import tnt.xliff_model.exceptions.LoadException;
 
 public class MainForm extends javax.swing.JFrame {
 
-	private final LogWindow logWindow;
 	private FileView fileView = null;
-	private Timer autosaveTimer = new Timer();
 	static final Dimension DEFAULT_DIALOG_SIZE = new Dimension(850, 550);
 
 	public MainForm() {
 		initComponents();
-		logWindow = new LogWindow();
 		jLabelProgress.setText("");
 		jLabelSaveStatus.setText("");
 	}
@@ -169,8 +165,6 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-			logWindow.dispose();
-			autosaveTimer.cancel();
 			dispose();
     }//GEN-LAST:event_formWindowClosing
 
