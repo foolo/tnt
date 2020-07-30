@@ -2,7 +2,6 @@ package tnt.editor;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 
 public class EditableMarkupView extends MarkupView {
 
@@ -45,24 +44,6 @@ public class EditableMarkupView extends MarkupView {
 	void addDocumentListener() {
 		documentListener = new TargetDocumentListener();
 		getDocument().addDocumentListener(documentListener);
-	}
-
-	void insertText(int pos, String s) {
-		try {
-			getDocument().insertString(pos, s, null);
-		}
-		catch (BadLocationException ex) {
-			System.err.println(ex);
-		}
-	}
-
-	void removeText(int start, int length) {
-		try {
-			getDocument().remove(start, length);
-		}
-		catch (BadLocationException ex) {
-			System.err.println(ex);
-		}
 	}
 
 	public void updateTaggedText(String s) {

@@ -1,21 +1,9 @@
 package tnt.editor;
 
-import java.util.ArrayList;
-
 public class FileView extends javax.swing.JPanel {
 
 	public FileView() {
 		initComponents();
-	}
-
-	SegmentView getSegmentView(int index) {
-		return segmentView1;
-	}
-
-	ArrayList<SegmentView> getSegmentViews() {
-		ArrayList<SegmentView> res = new ArrayList<>();
-		res.add(segmentView1);
-		return res;
 	}
 
 	public void update_model() {
