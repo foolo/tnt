@@ -1,9 +1,13 @@
 package tnt.editor;
 
+import javax.swing.JTextPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Caret;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultHighlighter;
 
-public class EditableMarkupView extends MarkupView {
+public class EditableMarkupView extends JTextPane {
 
 	private class TargetDocumentListener implements DocumentListener {
 
@@ -33,12 +37,38 @@ public class EditableMarkupView extends MarkupView {
 	};
 
 	private TargetDocumentListener documentListener;
+	private SegmentView segmentView;
 
 	public EditableMarkupView() {
 	}
 
 	EditableMarkupView(SegmentView segmentView) {
-		super(segmentView);
+		this.segmentView = segmentView;
+		init();
+	}
+
+	private void init() {
+		((DefaultHighlighter) getHighlighter()).setDrawsLayeredHighlights(false);
+	}
+
+	public SegmentView getSegmentView() {
+		return segmentView;
+	}
+
+	public void setTaggedText(String s) {
+		int caretPosition = getCaretPosition();
+		setText(s);
+		setCaretPosition(Math.min(caretPosition, getText().length()));
+	}
+
+	@Override
+	public void updateUI() {
+		setCaret(null);
+		super.updateUI();
+		Caret oldCaret = getCaret();
+		Caret caret = new DefaultCaret();
+		caret.setBlinkRate(oldCaret.getBlinkRate());
+		setCaret(caret);
 	}
 
 	void addDocumentListener() {

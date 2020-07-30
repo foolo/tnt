@@ -1,10 +1,10 @@
 package tnt.language;
 
 import java.awt.Color;
-import tnt.editor.MarkupView;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
+import tnt.editor.EditableMarkupView;
 
 public class SpellCheck {
 
@@ -14,11 +14,11 @@ public class SpellCheck {
 		CLEAR_MISSPELLED_ATTRIBUTE_SET.addAttribute("ul_attr", Color.MAGENTA);
 	}
 
-	public static void spellCheck(MarkupView markupView) {
+	public static void spellCheck(EditableMarkupView markupView) {
 		clearStyle(markupView);
 	}
 
-	public static void clearStyle(MarkupView markupView) {
+	public static void clearStyle(EditableMarkupView markupView) {
 		MutableAttributeSet inputAttributes = markupView.getInputAttributes();
 		inputAttributes.removeAttributes(inputAttributes);
 		StyledDocument doc = markupView.getStyledDocument();
