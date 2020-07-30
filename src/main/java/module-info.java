@@ -11,6 +11,4 @@ module Tnt {
 	requires mapdb;
 	requires junit;
 	requires hamcrest.core;
-
-	exports tnt.util;
 }

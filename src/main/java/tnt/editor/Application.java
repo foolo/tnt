@@ -10,28 +10,11 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import tnt.util.Log;
 
 public class Application {
 
 	public static final String APPLICATION_NAME = "tnt";
 	public static final String APPLICATION_VERSION = "0.3";
-
-	public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
-
-		public void handle(Throwable thrown) {
-			handleException(Thread.currentThread().getName(), thrown);
-		}
-
-		@Override
-		public void uncaughtException(Thread thread, Throwable thrown) {
-			handleException(thread.getName(), thrown);
-		}
-
-		protected void handleException(String tname, Throwable thrown) {
-			Log.err(thrown);
-		}
-	}
 
 	public static void setUIFont() {
 		FontUIResource f = new FontUIResource(Font.SANS_SERIF, Font.PLAIN, 11);
@@ -46,8 +29,6 @@ public class Application {
 	}
 
 	public static void main(String args[]) {
-		Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-		System.setProperty("sun.awt.exception.handler", ExceptionHandler.class.getName());
 		try {
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 			UIManager.put("swing.boldMetal", Boolean.FALSE);
@@ -59,7 +40,6 @@ public class Application {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				Log.initializeLogger();
 				ToolTipManager.sharedInstance().setInitialDelay(500);
 				ToolTipManager.sharedInstance().setDismissDelay(60000);
 				MainForm mainForm = new MainForm();
