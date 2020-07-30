@@ -1,17 +1,10 @@
 package tnt.editor;
 
-import java.awt.Component;
 import java.awt.Font;
-import java.awt.KeyboardFocusManager;
-import java.util.ArrayList;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
 import tnt.language.SpellCheck;
-import tnt.util.RegexUtil;
 
 public class SegmentView extends javax.swing.JPanel {
 
@@ -62,28 +55,12 @@ public class SegmentView extends javax.swing.JPanel {
 
 	private static SegmentView activeSegmentView = null;
 
-	static SegmentView getActiveSegmentView() {
-		Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-		if (c instanceof MarkupView) {
-			MarkupView mv = (MarkupView) c;
-			return mv.getSegmentView();
-		}
-		return activeSegmentView;
-	}
-
 	void applySpellcheck() {
 		SwingUtilities.invokeLater(() -> {
 			SpellCheck.spellCheck(markupViewTarget);
 		});
 	}
 
-	ArrayList<MatchResult> findMatches(String term, String text, int flags) {
-		if (term.isEmpty()) {
-			return new ArrayList<>();
-		}
-		Matcher m = Pattern.compile(Pattern.quote(term), flags | Pattern.UNICODE_CHARACTER_CLASS).matcher(text);
-		return RegexUtil.matchAll(m);
-	}
 
 	void updateHeight() {
 		System.out.println("tnt.editor.SegmentView.updateHeight() " + markupViewTarget.getPreferredSize());
