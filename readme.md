@@ -1,8 +1,3 @@
-# Get submodules
-
-	git submodule init
-	git submodule update
-
 # Prerequisities
 
 ## Linux
@@ -33,13 +28,6 @@ On corresponding platform, run:
 
 	jlink --add-modules java.base,java.datatransfer,java.desktop,java.logging,java.prefs,java.xml,java.sql --output jre
 	7z a tnt-jre-PLATFORM.7z jre
-
-## HunspellJNA artifacts
-
-To build ```hunspell-1.6.2-SNAPSHOT.jar``` and ```hunspell-1.6.2-SNAPSHOT-sources.jar``` in ```HunspellJNA/build/jar```, run:
-
-	cd HunspellJNA
-	mvn -Dmaven.test.skip=true -Dmaven.javadoc.skip=true package
 
 ## Windows icon
 
