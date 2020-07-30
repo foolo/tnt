@@ -1,7 +1,7 @@
 package tnt.language;
 
+import java.awt.Color;
 import tnt.editor.MarkupView;
-import tnt.editor.util.UnderlinerEditorKit;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
@@ -11,7 +11,7 @@ public class SpellCheck {
 	static final SimpleAttributeSet CLEAR_MISSPELLED_ATTRIBUTE_SET = new SimpleAttributeSet();
 
 	static {
-		CLEAR_MISSPELLED_ATTRIBUTE_SET.addAttribute(UnderlinerEditorKit.UNDERLINE_COLOR_ATTRIBUTE, new UnderlinerEditorKit.UnderlinedAttribute(false, null));
+		CLEAR_MISSPELLED_ATTRIBUTE_SET.addAttribute("ul_attr", Color.MAGENTA);
 	}
 
 	public static void spellCheck(MarkupView markupView) {
