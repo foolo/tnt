@@ -19,7 +19,7 @@ public class FileView extends javax.swing.JPanel {
 	}
 
 	public void update_model() {
-		segmentView1.updateSegmentTag("Så här hanterar man coronaviruset");
+		segmentView1.updateSegmentTag("sample text sample text");
 	}
 
 	void updateHeights() {
