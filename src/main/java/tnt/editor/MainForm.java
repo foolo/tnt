@@ -1,10 +1,6 @@
 package tnt.editor;
 
-import java.awt.Dimension;
-
 public class MainForm extends javax.swing.JFrame {
-
-	static final Dimension DEFAULT_DIALOG_SIZE = new Dimension(850, 550);
 
 	public MainForm() {
 		initComponents();

@@ -6,10 +6,6 @@ import tnt.language.SpellCheck;
 
 public class SegmentView extends javax.swing.JPanel {
 
-	public enum Column {
-		SOURCE, TARGET
-	}
-
 	boolean modifiedFlag = false;
 
 	public SegmentView() {

@@ -5,7 +5,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultCaret;
-import javax.swing.text.DefaultHighlighter;
 
 public class EditableMarkupView extends JTextPane {
 
@@ -44,11 +43,6 @@ public class EditableMarkupView extends JTextPane {
 
 	EditableMarkupView(SegmentView segmentView) {
 		this.segmentView = segmentView;
-		init();
-	}
-
-	private void init() {
-		((DefaultHighlighter) getHighlighter()).setDrawsLayeredHighlights(false);
 	}
 
 	public SegmentView getSegmentView() {
