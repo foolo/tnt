@@ -1,6 +1,5 @@
 package tnt.editor;
 
-import tnt.editor.util.SelectWordCaret;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -9,6 +8,7 @@ import javax.swing.JTextPane;
 import javax.swing.TransferHandler;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.StyledDocument;
@@ -91,7 +91,7 @@ public class MarkupView extends JTextPane {
 		setCaret(null);
 		super.updateUI();
 		Caret oldCaret = getCaret();
-		Caret caret = new SelectWordCaret();
+		Caret caret = new DefaultCaret();
 		caret.setBlinkRate(oldCaret.getBlinkRate());
 		setCaret(caret);
 	}
