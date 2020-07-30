@@ -2,7 +2,6 @@ package tnt.editor;
 
 import java.awt.Font;
 import java.awt.Image;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -12,7 +11,6 @@ import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import tnt.util.Log;
-import tnt.util.Settings;
 
 public class Application {
 
@@ -68,15 +66,7 @@ public class Application {
 				ArrayList<Image> images = new ArrayList<>();
 				mainForm.setLocationRelativeTo(null);
 				mainForm.setVisible(true);
-				if (args.length > 0) {
-					mainForm.load_file(new File(args[0]));
-				}
-				else {
-					File lastOpenedFile = Settings.getLastOpenedFile();
-					if (lastOpenedFile != null) {
-						mainForm.load_file(lastOpenedFile);
-					}
-				}
+				mainForm.load_file();
 			}
 		});
 	}

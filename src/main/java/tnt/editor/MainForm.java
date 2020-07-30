@@ -1,13 +1,11 @@
 package tnt.editor;
 
 import java.awt.Dimension;
-import java.io.File;
 import javax.swing.SwingUtilities;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import tnt.util.Settings;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -20,14 +18,13 @@ public class MainForm extends javax.swing.JFrame {
 		jLabelSaveStatus.setText("");
 	}
 
-	public void load_file(File f) {
+	public void load_file() {
 		fileView = new FileView();
 		fileView.update_model();
 		jPanel2.removeAll();
 		jPanel2.add(fileView);
 		jPanel2.revalidate();
 
-		Settings.addRecentFile(f.getAbsolutePath());
 		SwingUtilities.invokeLater(fileView::updateHeights);
 	}
 
