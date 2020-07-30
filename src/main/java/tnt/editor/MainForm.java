@@ -1,11 +1,6 @@
 package tnt.editor;
 
 import java.awt.Dimension;
-import javax.swing.SwingUtilities;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -24,12 +19,6 @@ public class MainForm extends javax.swing.JFrame {
 		jPanel2.removeAll();
 		jPanel2.add(fileView);
 		jPanel2.revalidate();
-
-		SwingUtilities.invokeLater(fileView::updateHeights);
-	}
-
-	String getAutosaveTimestamp() {
-		return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -45,9 +34,6 @@ public class MainForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(840, 0));
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowActivated(java.awt.event.WindowEvent evt) {
-                formWindowActivated(evt);
-            }
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
             }
@@ -113,23 +99,6 @@ public class MainForm extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
 			dispose();
     }//GEN-LAST:event_formWindowClosing
-
-	void applyPreferences() {
-		if (fileView != null) {
-			fileView.updateHeights();
-		}
-	}
-
-    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-		addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent componentEvent) {
-				if (fileView != null) {
-					fileView.updateHeights();
-				}
-			}
-		});
-    }//GEN-LAST:event_formWindowActivated
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

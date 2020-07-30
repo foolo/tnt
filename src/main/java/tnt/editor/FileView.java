@@ -22,10 +22,6 @@ public class FileView extends javax.swing.JPanel {
 		segmentView1.updateSegmentTag("sample text sample text");
 	}
 
-	void updateHeights() {
-		segmentView1.updateHeight();
-	}
-
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
