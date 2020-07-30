@@ -1,10 +1,12 @@
 package tnt.editor;
 
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultCaret;
+import tnt.language.SpellCheck;
 
 public class EditableMarkupView extends JTextPane {
 
@@ -13,7 +15,7 @@ public class EditableMarkupView extends JTextPane {
 		boolean enabled = true;
 
 		void update(int caretPosition1, int caretPosition2) {
-			getSegmentView().update(caretPosition1, caretPosition2);
+			EditableMarkupView.this.update(caretPosition1, caretPosition2);
 		}
 
 		@Override
@@ -36,17 +38,29 @@ public class EditableMarkupView extends JTextPane {
 	};
 
 	private TargetDocumentListener documentListener;
-	private SegmentView segmentView;
+	boolean modifiedFlag = false;
 
 	public EditableMarkupView() {
 	}
 
-	EditableMarkupView(SegmentView segmentView) {
-		this.segmentView = segmentView;
+	public void updateSegmentTag(String s) {
+		updateTaggedText(s);
+		applySpellcheck();
 	}
 
-	public SegmentView getSegmentView() {
-		return segmentView;
+	void update(int caretPosition1, int caretPosition2) {
+		modifiedFlag = true;
+		applySpellcheck();
+	}
+
+	void applySpellcheck() {
+		SwingUtilities.invokeLater(() -> {
+			SpellCheck.spellCheck(this);
+		});
+	}
+
+	void updateHeight() {
+		System.out.println("tnt.editor.SegmentView.updateHeight() " + getPreferredSize());
 	}
 
 	public void setTaggedText(String s) {
@@ -63,6 +77,13 @@ public class EditableMarkupView extends JTextPane {
 		Caret caret = new DefaultCaret();
 		caret.setBlinkRate(oldCaret.getBlinkRate());
 		setCaret(caret);
+	}
+
+	void caretUpdate() {
+		if (modifiedFlag) {
+			updateHeight();
+		}
+		modifiedFlag = false;
 	}
 
 	void addDocumentListener() {

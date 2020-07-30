@@ -4,20 +4,29 @@ public class MainForm extends javax.swing.JFrame {
 
 	public MainForm() {
 		initComponents();
+		editableMarkupView1.addDocumentListener(); // done after setEditorKit which resets the internal document
 	}
 
 	public void load_file() {
-		segmentView1.updateSegmentTag("sample text sample text");
+		editableMarkupView1.updateSegmentTag("sample text sample text");
 	}
 
 	@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        segmentView1 = new tnt.editor.SegmentView();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        editableMarkupView1 = new tnt.editor.EditableMarkupView();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(840, 0));
+
+        editableMarkupView1.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                editableMarkupView1CaretUpdate(evt);
+            }
+        });
+        jScrollPane1.setViewportView(editableMarkupView1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -25,22 +34,27 @@ public class MainForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(segmentView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(423, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(segmentView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(442, Short.MAX_VALUE))
+                .addGap(119, 119, 119)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(315, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void editableMarkupView1CaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_editableMarkupView1CaretUpdate
+		editableMarkupView1.caretUpdate();
+    }//GEN-LAST:event_editableMarkupView1CaretUpdate
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private tnt.editor.SegmentView segmentView1;
+    private tnt.editor.EditableMarkupView editableMarkupView1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
