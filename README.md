@@ -1,4 +1,4 @@
-This repository contains the source code of the website of the TNT project.
+This repository contains the website of the TNT project.
 
 The website is published here: https://foolo.github.io/tnt-homepage/
 
