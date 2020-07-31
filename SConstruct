@@ -3,13 +3,20 @@ import re
 import shutil
 import subprocess
 from os.path import join
+from sys import stderr
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 AddOption('--release_version', default="snapshot")
 version = GetOption('release_version')
 TARGET_LINUX_X64='linux-x64'
 TARGET_WINDOWS_X64='windows-x64'
+TARGETS = [TARGET_LINUX_X64, TARGET_WINDOWS_X64]
 AddOption('--target', default=TARGET_LINUX_X64)
 target = GetOption('target')
+
+if not target in TARGETS:
+	print("Unknown target:", target, file=stderr)
+	print("Valid targets:", TARGETS, file=stderr)
+	exit(1)
 
 subprocess.call(["git", "submodule", "init"])
 subprocess.call(["git", "submodule", "update"])
@@ -30,11 +37,10 @@ env.AlwaysBuild("dist/tnt.jar")
 jre_artifact = "tnt-artifacts/" + {TARGET_LINUX_X64: "tnt-jre-linux-x64.7z", TARGET_WINDOWS_X64: "tnt-jre-windows-x64.7z"}[target]
 env.Command(jredir, None, "7z x " + jre_artifact + " -o" + appdir)
 
-def exit_error(ex):
-	raise Exception(ex)
-	exit(1)
 
 def add_resources(target_path, res_path, pattern=None):
+	def exit_error(ex):
+		raise Exception(ex)
 	for path, dirs, files in os.walk(res_path, onerror=exit_error):
 		if pattern:
 			files = [x for x in files if re.search(pattern, x)]
@@ -65,7 +71,7 @@ env.Install(appdirlib, native_libs[target])
 
 def zipdir(target, source, env):
 	if (len(target) != 1) or (len(source) != 1):
-		exit_error("unexpected target/source: " + str(target) + ", " + str(source))
+		raise Exception("unexpected target/source length")
 	zip_name = re.sub("\.zip$", "", str(target[0]))
 	shutil.make_archive(zip_name, 'zip', str(source[0]))
 
