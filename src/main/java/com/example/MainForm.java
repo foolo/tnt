@@ -7,6 +7,7 @@ public class MainForm extends javax.swing.JFrame {
 	public MainForm() {
 		init();
 		editableMarkupView1.addDocumentListener(); // done after setEditorKit which resets the internal document
+		editableMarkupView1.setText("sample text sample text");
 	}
 
 	private void init() {
@@ -20,18 +21,13 @@ public class MainForm extends javax.swing.JFrame {
 		pack();
 	}
 
-	public void load_file() {
-		editableMarkupView1.setText("sample text sample text");
-	}
-
 	public static void main(String args[]) {
 		java.awt.EventQueue.invokeLater(() -> {
 			MainForm mainForm = new MainForm();
 			mainForm.setLocationRelativeTo(null);
 			mainForm.setVisible(true);
-			mainForm.load_file();
 		});
 	}
 
-    private EditableMarkupView editableMarkupView1;
+	private EditableMarkupView editableMarkupView1;
 }
