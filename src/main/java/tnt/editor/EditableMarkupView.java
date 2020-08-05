@@ -35,7 +35,8 @@ public class EditableMarkupView extends JTextPane {
 	}
 
 	public void updateSegmentTag(String s) {
-		updateTaggedText(s);
+		setText(s);
+		setCaretPosition(0);
 	}
 
 	void update() {
@@ -65,10 +66,5 @@ public class EditableMarkupView extends JTextPane {
 	void addDocumentListener() {
 		documentListener = new TargetDocumentListener();
 		getDocument().addDocumentListener(documentListener);
-	}
-
-	public void updateTaggedText(String s) {
-		setText(s);
-		setCaretPosition(0);
 	}
 }
