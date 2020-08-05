@@ -38,7 +38,7 @@ public class EditableMarkupView extends JTextPane {
 	};
 
 	private TargetDocumentListener documentListener;
-	boolean modifiedFlag = false;
+	boolean modifiedFlag = true;
 
 	public EditableMarkupView() {
 	}
@@ -59,16 +59,6 @@ public class EditableMarkupView extends JTextPane {
 		});
 	}
 
-	void updateHeight() {
-		System.out.println("tnt.editor.SegmentView.updateHeight() " + getPreferredSize());
-	}
-
-	public void setTaggedText(String s) {
-		int caretPosition = getCaretPosition();
-		setText(s);
-		setCaretPosition(Math.min(caretPosition, getText().length()));
-	}
-
 	@Override
 	public void updateUI() {
 		setCaret(null);
@@ -81,7 +71,7 @@ public class EditableMarkupView extends JTextPane {
 
 	void caretUpdate() {
 		if (modifiedFlag) {
-			updateHeight();
+			System.out.println("tnt.editor.SegmentView.updateHeight() " + getPreferredSize());
 		}
 		modifiedFlag = false;
 	}
@@ -93,7 +83,8 @@ public class EditableMarkupView extends JTextPane {
 
 	public void updateTaggedText(String s) {
 		documentListener.enabled = false;
-		setTaggedText(s);
+		setText(s);
+		setCaretPosition(0);
 		documentListener.enabled = true;
 	}
 }
