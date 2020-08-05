@@ -13,4 +13,9 @@ public class Language {
 		tag = new LanguageTag(tagStr);
 		this.dictionaryPath = dictionaryPath;
 	}
+
+	@Override
+	public String toString() {
+		return name + tag;
+	}
 }
