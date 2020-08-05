@@ -1,4 +1,4 @@
-package tnt.editor;
+package com.example;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -16,7 +16,7 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        editableMarkupView1 = new tnt.editor.EditableMarkupView();
+        editableMarkupView1 = new com.example.EditableMarkupView();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(840, 0));
@@ -54,7 +54,7 @@ public class MainForm extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private tnt.editor.EditableMarkupView editableMarkupView1;
+    private com.example.EditableMarkupView editableMarkupView1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

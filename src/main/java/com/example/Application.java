@@ -1,4 +1,4 @@
-package tnt.editor;
+package com.example;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.metal.MetalLookAndFeel;

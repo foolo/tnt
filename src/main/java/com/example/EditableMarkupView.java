@@ -1,4 +1,4 @@
-package tnt.editor;
+package com.example;
 
 import java.awt.Color;
 import javax.swing.JTextPane;

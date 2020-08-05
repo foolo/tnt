@@ -51,7 +51,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="tnt.editor.EditableMarkupView" name="editableMarkupView1">
+        <Component class="com.example.EditableMarkupView" name="editableMarkupView1">
           <Events>
             <EventHandler event="caretUpdate" listener="javax.swing.event.CaretListener" parameters="javax.swing.event.CaretEvent" handler="editableMarkupView1CaretUpdate"/>
           </Events>
