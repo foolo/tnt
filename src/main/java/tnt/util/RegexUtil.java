@@ -58,6 +58,7 @@ public class RegexUtil {
 	static String normalizePunctuation(String s) {
 		s = s.replaceAll(QUOTES_PATTERN, "'");
 		s = s.replaceAll(DASH_PATTERN, "-");
+		s = s.replaceAll("…", "...");
 		return s;
 	}
 
