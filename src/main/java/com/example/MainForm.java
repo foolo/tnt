@@ -12,14 +12,11 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public static void main(String args[]) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				MainForm mainForm = new MainForm();
-				mainForm.setLocationRelativeTo(null);
-				mainForm.setVisible(true);
-				mainForm.load_file();
-			}
+		java.awt.EventQueue.invokeLater(() -> {
+			MainForm mainForm = new MainForm();
+			mainForm.setLocationRelativeTo(null);
+			mainForm.setVisible(true);
+			mainForm.load_file();
 		});
 	}
 
