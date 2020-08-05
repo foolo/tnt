@@ -1,8 +1,5 @@
 package com.example;
 
-import javax.swing.UIManager;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-
 public class MainForm extends javax.swing.JFrame {
 
 	public MainForm() {
@@ -15,12 +12,6 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public static void main(String args[]) {
-		try {
-			UIManager.setLookAndFeel(new MetalLookAndFeel());
-		}
-		catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			System.err.println(ex);
-		}
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
