@@ -72,6 +72,9 @@ public class SpellCheck {
 		if (currentDictionary == null) {
 			return false;
 		}
+		if (RegexUtil.NUMBER_PATTERN.matcher(word).find()) {
+			return false;
+		}
 		if (Settings.getWordList().contains(word)) {
 			return false;
 		}
