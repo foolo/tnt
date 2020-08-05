@@ -12,24 +12,18 @@ public class EditableMarkupView extends JTextPane {
 
 	private class TargetDocumentListener implements DocumentListener {
 
-		boolean enabled = true;
-
 		void update(int caretPosition1, int caretPosition2) {
 			EditableMarkupView.this.update(caretPosition1, caretPosition2);
 		}
 
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			if (enabled) {
-				update(e.getOffset(), e.getOffset() + e.getLength());
-			}
+			update(e.getOffset(), e.getOffset() + e.getLength());
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			if (enabled) {
-				update(e.getOffset() + e.getLength(), e.getOffset());
-			}
+			update(e.getOffset() + e.getLength(), e.getOffset());
 		}
 
 		@Override
@@ -77,9 +71,7 @@ public class EditableMarkupView extends JTextPane {
 	}
 
 	public void updateTaggedText(String s) {
-		documentListener.enabled = false;
 		setText(s);
 		setCaretPosition(0);
-		documentListener.enabled = true;
 	}
 }
