@@ -8,7 +8,7 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	public void load_file() {
-		editableMarkupView1.updateSegmentTag("sample text sample text");
+		editableMarkupView1.setText("sample text sample text");
 	}
 
 	@SuppressWarnings("unchecked")
