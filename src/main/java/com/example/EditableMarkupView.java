@@ -34,9 +34,6 @@ public class EditableMarkupView extends JTextPane {
 
 	private TargetDocumentListener documentListener;
 
-	public EditableMarkupView() {
-	}
-
 	static final SimpleAttributeSet EXAMPLE_ATTRIBUTE_SET = new SimpleAttributeSet();
 
 	static {

@@ -11,7 +11,7 @@ public class MainForm extends javax.swing.JFrame {
 	}
 
 	private void init() {
-		editableMarkupView1 = new com.example.EditableMarkupView();
+		editableMarkupView1 = new EditableMarkupView();
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		add(editableMarkupView1);
 		setMinimumSize(new java.awt.Dimension(400, 300));
