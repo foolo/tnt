@@ -1,12 +1,15 @@
 package tnt.editor;
 
+import java.awt.Color;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultCaret;
-import tnt.language.SpellCheck;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyledDocument;
 
 public class EditableMarkupView extends JTextPane {
 
@@ -34,13 +37,18 @@ public class EditableMarkupView extends JTextPane {
 	public EditableMarkupView() {
 	}
 
-	void update() {
-		applySpellcheck();
+	static final SimpleAttributeSet EXAMPLE_ATTRIBUTE_SET = new SimpleAttributeSet();
+
+	static {
+		EXAMPLE_ATTRIBUTE_SET.addAttribute("EXAMPLE_ATTRIBUTE_SET", Color.MAGENTA);
 	}
 
-	void applySpellcheck() {
+	void update() {
 		SwingUtilities.invokeLater(() -> {
-			SpellCheck.spellCheck(this);
+			MutableAttributeSet inputAttributes = getInputAttributes();
+			inputAttributes.removeAttributes(inputAttributes);
+			StyledDocument doc = getStyledDocument();
+			doc.setCharacterAttributes(0, doc.getLength(), EXAMPLE_ATTRIBUTE_SET, false);
 		});
 	}
 
