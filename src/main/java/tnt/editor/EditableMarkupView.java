@@ -12,18 +12,16 @@ public class EditableMarkupView extends JTextPane {
 
 	private class TargetDocumentListener implements DocumentListener {
 
-		void update(int caretPosition1, int caretPosition2) {
-			EditableMarkupView.this.update(caretPosition1, caretPosition2);
-		}
-
 		@Override
 		public void insertUpdate(DocumentEvent e) {
-			update(e.getOffset(), e.getOffset() + e.getLength());
+			System.out.println("tnt.editor.EditableMarkupView.TargetDocumentListener.insertUpdate()");
+			EditableMarkupView.this.update();
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent e) {
-			update(e.getOffset() + e.getLength(), e.getOffset());
+			System.out.println("tnt.editor.EditableMarkupView.TargetDocumentListener.removeUpdate()");
+			EditableMarkupView.this.update();
 		}
 
 		@Override
@@ -41,7 +39,7 @@ public class EditableMarkupView extends JTextPane {
 		applySpellcheck();
 	}
 
-	void update(int caretPosition1, int caretPosition2) {
+	void update() {
 		applySpellcheck();
 	}
 
