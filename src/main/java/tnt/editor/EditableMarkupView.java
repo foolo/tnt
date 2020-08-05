@@ -36,7 +36,6 @@ public class EditableMarkupView extends JTextPane {
 
 	public void updateSegmentTag(String s) {
 		updateTaggedText(s);
-		applySpellcheck();
 	}
 
 	void update() {
