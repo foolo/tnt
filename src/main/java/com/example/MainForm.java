@@ -1,5 +1,8 @@
 package com.example;
 
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+
 public class MainForm extends javax.swing.JFrame {
 
 	public MainForm() {
@@ -9,6 +12,24 @@ public class MainForm extends javax.swing.JFrame {
 
 	public void load_file() {
 		editableMarkupView1.setText("sample text sample text");
+	}
+
+	public static void main(String args[]) {
+		try {
+			UIManager.setLookAndFeel(new MetalLookAndFeel());
+		}
+		catch (javax.swing.UnsupportedLookAndFeelException ex) {
+			System.err.println(ex);
+		}
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				MainForm mainForm = new MainForm();
+				mainForm.setLocationRelativeTo(null);
+				mainForm.setVisible(true);
+				mainForm.load_file();
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
