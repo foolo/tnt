@@ -168,9 +168,9 @@ public class TaggedText {
 		TaggedTextContent start = content.get(0);
 		if (start instanceof Text) {
 			Text text = (Text) start;
-			Pattern p = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
+			Pattern p = Pattern.compile("^(\\s*)(\\S|$)", Pattern.UNICODE_CHARACTER_CLASS);
 			Matcher m = p.matcher(text.getContent());
-			if (m.find() && m.groupCount() == 1 && m.start(1) == 0) {
+			if (m.find() && m.groupCount() > 0 && m.start(1) == 0) {
 				content.set(0, new Text(text.getContent().substring(m.end(1), text.getContent().length())));
 				return m.group(1);
 			}
