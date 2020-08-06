@@ -50,14 +50,18 @@ public class Qc {
 	}
 
 	static void checkLeadingCasing(String st, String tt, ArrayList<String> messages) {
-		String s1 = RegexUtil.getFirstLetter(st);
-		String s2 = RegexUtil.getFirstLetter(tt);
-		if (s1.isEmpty() == false && s2.isEmpty() == false) {
-			boolean s1Uppercase = Character.isUpperCase(s1.codePointAt(0));
-			boolean s2Uppercase = Character.isUpperCase(s2.codePointAt(0));
-			if (s1Uppercase != s2Uppercase) {
-				messages.add("Source and target begin with different case");
-			}
+		String s1 = RegexUtil.getFirstLetterOrDigit(st);
+		String s2 = RegexUtil.getFirstLetterOrDigit(tt);
+		if (s1.isEmpty() || s2.isEmpty()) {
+			return;
+		}
+		if (Character.isDigit(s1.codePointAt(0)) || Character.isDigit(s2.codePointAt(0))) {
+			return;
+		}
+		boolean s1Uppercase = Character.isUpperCase(s1.codePointAt(0));
+		boolean s2Uppercase = Character.isUpperCase(s2.codePointAt(0));
+		if (s1Uppercase != s2Uppercase) {
+			messages.add("Source and target begin with different case");
 		}
 	}
 

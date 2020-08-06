@@ -15,7 +15,7 @@ public class RegexUtil {
 	public static final Pattern TRAILING_PUNCTUATION_PATTERN = Pattern.compile("(?:(?=[^%])[\\pP])+$", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern LEADING_WHITESPACE_PATTERN = Pattern.compile("^(\\s*)\\S", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern TRAILING_WHITESPACE_PATTERN = Pattern.compile("\\S(\\s*)$", Pattern.UNICODE_CHARACTER_CLASS);
-	public static final Pattern LETTER_PATTERN = Pattern.compile("\\pL", Pattern.UNICODE_CHARACTER_CLASS);
+	public static final Pattern LETTER_OR_DIGIT_PATTERN = Pattern.compile("(\\pL|\\d)", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final Pattern MULTIPLE_SPACES_PATTERN = Pattern.compile("\\b\\pZ\\pZ+\\b", Pattern.UNICODE_CHARACTER_CLASS);
 	public static final String QUOTES_PATTERN = "[\\p{Pi}\\p{Pf}'\"\u201A\u201E\u2E42\u301D\u301E\u301F\uFF02]";
 	public static final String DASH_PATTERN = "\\p{Pd}";
@@ -115,8 +115,8 @@ public class RegexUtil {
 		return res;
 	}
 
-	public static String getFirstLetter(String s) {
-		Matcher m = LETTER_PATTERN.matcher(s);
+	public static String getFirstLetterOrDigit(String s) {
+		Matcher m = LETTER_OR_DIGIT_PATTERN.matcher(s);
 		if (m.find()) {
 			return m.group();
 		}
