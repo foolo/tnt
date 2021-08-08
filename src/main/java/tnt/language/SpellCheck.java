@@ -47,8 +47,6 @@ public class SpellCheck {
 	}
 
 	public static void clearStyle(MarkupView markupView) {
-		MutableAttributeSet inputAttributes = markupView.getInputAttributes();
-		inputAttributes.removeAttributes(inputAttributes);
 		StyledDocument doc = markupView.getStyledDocument();
 		doc.setCharacterAttributes(0, doc.getLength(), CLEAR_MISSPELLED_ATTRIBUTE_SET, false);
 	}
