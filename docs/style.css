@@ -1,0 +1,168 @@
+html {
+	font-family: sans-serif;
+}
+
+body {
+	margin: 0
+}
+
+section {
+	display: block
+}
+
+a {
+	background-color: transparent
+}
+
+h1 {
+	font-size: 2em;
+	margin: 0.67em 0
+}
+
+img {
+	border: 0
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0
+}
+
+td,
+th {
+	padding: 0
+}
+
+.highlight {
+	background-color: #f8f8f8
+}
+
+* {
+	box-sizing: border-box
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #606c71
+}
+
+a {
+	color: #1e6bb8;
+	text-decoration: none
+}
+
+.page-header {
+	color: #fff;
+	text-align: center;
+	background-color: #159957;
+	background-image: linear-gradient(120deg, #155799, #159957)
+}
+
+.page-header {
+	padding: 1rem 1rem
+}
+
+.project-name {
+	margin-top: 0;
+	margin-bottom: 0.1rem
+}
+
+.project-name {
+	font-size: 3.25rem
+}
+
+.project-tagline {
+	margin-bottom: 2rem;
+	font-weight: normal;
+	opacity: 0.7
+}
+
+.project-tagline {
+	font-size: 1.25rem
+}
+
+.main-content {
+	word-wrap: break-word
+}
+
+.main-content :first-child {
+	margin-top: 0
+}
+
+.main-content {
+	max-width: 54rem;
+	padding: 2rem 1rem;
+	margin: 0 auto;
+	font-size: 1.1rem
+}
+
+.main-content img {
+	max-width: 100%
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+	font-weight: normal;
+	color: #159957
+}
+
+.main-content p {
+	margin-bottom: 1em
+}
+
+code {
+	padding: 2px 4px;
+	font-size: 0.9rem;
+	color: #567482;
+	background-color: #f3f6fa;
+	border: solid 1px #dce6f0;
+	border-radius: 0.3rem
+}
+
+pre {
+	padding: 0.8rem;
+	margin-top: 0;
+	margin-bottom: 1rem;
+	color: #567482;
+	word-wrap: normal;
+	background-color: #f3f6fa;
+	border: solid 1px #dce6f0;
+	border-radius: 0.3rem
+	overflow: auto;
+	font-size: 0.9rem;
+	line-height: 1.45;
+}
+
+.main-content .highlight {
+	margin-bottom: 1rem
+}
+
+.main-content ul,
+.main-content ol {
+	margin-top: 0
+}
+
+.main-content table {
+	display: block;
+	width: 100%;
+	overflow: auto;
+	word-break: normal;
+	word-break: keep-all;
+}
+
+.main-content table th,
+.main-content table td {
+	padding: 0.5rem 1rem;
+	border: 1px solid #e9ebec
+}
+
